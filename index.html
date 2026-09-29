@@ -260,6 +260,7 @@ h2 .gi.sm{margin-right:8px}
 .au-sw{border:0;background:none;color:var(--aor);font-size:15px;padding:6px;cursor:pointer}.au-sw:hover{color:var(--ac)}.au-sw[hidden]{display:none}
 .au-er{margin:-4px 2px 0;color:#ff6b70;font-size:14px;text-align:center;min-height:0}.au-er:empty{display:none}
 .au-note{max-width:440px;margin:14px auto 0;text-align:center;color:var(--mu);font-size:13px}
+#ai-pw{text-align:center;padding:48px 8px;max-width:440px;margin:0 auto}#ai-pw h3{margin:0 0 8px;font-size:22px}#ai-pw p{color:var(--mu);margin:0 0 20px}#ai-pw .pw-b{padding:13px 26px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;font-size:16px;cursor:pointer}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b></header>
 <div id="ov"></div>
@@ -300,11 +301,12 @@ h2 .gi.sm{margin-right:8px}
 <div class="chips" id="ch"></div>
 <div class="info" id="in"></div>
 <div class="grid" id="g"></div>
+<p style="text-align:center;font-size:13px;color:var(--mu);margin:28px 0 8px"><a href="pricing.html">Pricing</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="refunds.html">Refunds</a></p>
 </div></main>
 <main id="v-set" hidden><div class="wrap pg"><h2><span data-gi="set sm"></span><span data-t="set"></span></h2>
 <h3 data-t="lang"></h3><div class="lg" id="lg"></div>
 <h3 data-t="theme"></h3><div class="lg"><button class="chip" data-m="light"><span data-ic="sun"></span> <span data-t="light"></span></button><button class="chip" data-m="dark"><span data-ic="moon"></span> <span data-t="dark"></span></button></div></div></main>
-<main id="v-ai" hidden><div class="wrap pg"><h2><span data-gi="bot sm"></span><span data-t="aiT"></span></h2><div id="chat"></div></div>
+<main id="v-ai" hidden><div class="wrap pg"><h2><span data-gi="bot sm"></span><span data-t="aiT"></span></h2><div id="chat"></div><div id="ai-pw" style="display:none"></div></div>
 <div class="bar"><input id="ai-q" data-p="aiPh" autocomplete="off"><button id="sd" data-t="ask"></button></div></main>
 <script>
 var L=["Kirish va muhit sozlash","HTML asoslari I","HTML asoslari II","CSS asoslari I","CSS asoslari II — Box Model","CSS Flexbox va Responsive"];
@@ -841,7 +843,7 @@ window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
  E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
 onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
- if(u){const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
+ if(u){proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30),base=(dn.toLowerCase().replace(/[^a-z0-9]/g,"")||"user").slice(0,15);
    for(let t=0;t<5;t++){const un0=base+(100+Math.floor(Math.random()*900));
     try{const tk=await getDoc(doc(db,"usernames",un0));if(tk.exists())continue;
@@ -849,7 +851,7 @@ onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
   im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
- }else{MY={};US=[];UM={};inbox=[];room=null;navAv()}
+ }else{proWatch(null);MY={};US=[];UM={};inbox=[];room=null;navAv()}
  window.RV();const q=new URLSearchParams(location.search).get("u");if(u&&q&&!deep){deep=true;openU(q)}});
 navAv();window.show("home");
 
@@ -879,8 +881,36 @@ function aiRender(el,t){
  t.split(/```[a-zA-Z0-9]*\n?/).forEach((part,i)=>{
   if(i%2){const pre=document.createElement("pre");pre.textContent=part.replace(/\n$/,"");el.appendChild(pre)}
   else{const s=part.replace(/\*\*/g,"").replace(/^\n+|\n+$/g,"");if(s)el.appendChild(document.createTextNode(s))}})}
+/* ===== Платный доступ к ИИ ===== */
+/* Вставь ссылку на оплату (Payme, Click, Lemon Squeezy, Paddle и т.п.). К ней добавится ?client_reference_id=UID пользователя. */
+const PAY_URL="";
+const AI_PRICE="$7";
+/* Доступ = документ subs/{uid} с полем until (Timestamp). Писать в него можно только с сервера или из консоли Firebase (см. firestore.rules). */
+const PW={
+ ru:{t:"ИИ-помощник KodYol Pro",d:"Нейросеть отвечает на вопросы по HTML, CSS, JavaScript и коду. Доступ — "+AI_PRICE+".",b:"Купить за "+AI_PRICE,l:"Войти, чтобы купить доступ",s:"Уже оплатили? Доступ включится автоматически после подтверждения оплаты.",n:"Оплата ещё не подключена."},
+ uz:{t:"KodYol AI yordamchi Pro",d:"Neyrotarmoq HTML, CSS, JavaScript va kod bo'yicha savollarga javob beradi. Narxi — "+AI_PRICE+".",b:AI_PRICE+" evaziga sotib olish",l:"Kirish va sotib olish",s:"To'lov qildingizmi? To'lov tasdiqlangach, kirish avtomatik ochiladi.",n:"To'lov hali ulanmagan."},
+ en:{t:"KodYol AI Assistant Pro",d:"The AI answers questions about HTML, CSS, JavaScript and code. Access — "+AI_PRICE+".",b:"Buy for "+AI_PRICE,l:"Sign in to buy access",s:"Already paid? Access turns on automatically once the payment is confirmed.",n:"Payments are not connected yet."}};
+let PRO=false,proUn=null;
+function proWatch(u){proUn&&proUn();proUn=null;PRO=false;
+ if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{const t=d.exists()?d.data().until:null;PRO=!!t&&(t.toMillis?t.toMillis():+t)>Date.now();aiGate()},()=>{PRO=false;aiGate()});
+ else aiGate()}
+function aiGate(){
+ if(window.curV!="ai")return;
+ const p=E("ai-pw"),bar=document.querySelector("#v-ai .bar"),c=E("chat"),x=PW[window.lang]||PW.en;
+ c.style.display=PRO?"":"none";bar.style.display=PRO?"":"none";p.style.display=PRO?"none":"";
+ if(PRO)return;
+ p.textContent="";
+ const h=document.createElement("h3");h.textContent=x.t;
+ const d=document.createElement("p");d.textContent=x.d;
+ const b=document.createElement("button");b.className="pw-b";
+ if(me){b.textContent=x.b;b.onclick=()=>{if(!PAY_URL){alert(x.n);return}window.open(PAY_URL+(PAY_URL.includes("?")?"&":"?")+"client_reference_id="+encodeURIComponent(me.uid),"_blank","noopener")}}
+ else{b.textContent=x.l;b.onclick=()=>window.show("me")}
+ const n=document.createElement("p");n.className="au-note";n.textContent=x.s;
+ const lk=document.createElement("a");lk.href="pricing.html";lk.textContent="Pricing · Terms · Refunds";lk.className="au-note";lk.style.display="block";p.append(h,d,b);if(me)p.append(n);p.append(lk)}
+const _shAI=window.show;window.show=function(v){_shAI(v);if(v=="ai")aiGate()};
 window.ask=async function(t){
  t=(t||"").trim();if(!t||aiBusy)return;
+ if(!PRO){aiGate();return}
  const lg=window.lang,now=Date.now();
  aiTimes=aiTimes.filter(x=>now-x<6e5);
  const u=add("u");u.textContent=t;aq.value="";

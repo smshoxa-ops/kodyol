@@ -79,6 +79,12 @@ service cloud.firestore {
       }
     }
 
+    // Платный доступ к ИИ: читать может только владелец, писать нельзя (только сервер / консоль Firebase)
+    match /subs/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
     // Жалобы: только создавать
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.by == request.auth.uid;
