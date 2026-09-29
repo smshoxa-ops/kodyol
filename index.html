@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="uz"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KodYol — HTML va CSS ni o'zbek tilida o'rganing</title>
+<title>KodYol — Full Stack, Backend, Frontend, Cybersecurity va Data Science o'zbek tilida</title>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6c5ce7"><link rel="apple-touch-icon" href="icon-192.png">
-<meta name="description" content="KodYol — Full Stack dasturlashni o'rganuvchilar uchun o'zbekcha qo'llanma: HTML, CSS, input, flexbox, margin va boshqa mavzular misollar bilan. Qidiruv orqali tez toping.">
-<meta name="keywords" content="KodYol, HTML o'zbekcha, CSS o'zbekcha, dasturlash o'rganish, full stack, input, flexbox">
+<meta name="description" content="KodYol — o'zbekcha dasturlash qo'llanmasi: Full Stack, Frontend, Backend, Kiberxavfsizlik va Data Science. Misollar, testlar, kod maydoni va qidiruv.">
+<meta name="keywords" content="KodYol, dasturlash o'zbekcha, HTML, CSS, JavaScript, Backend, Frontend, Full Stack, Kiberxavfsizlik, Data Science, Python">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://smshoxa-ops.github.io/kodyol/">
-<meta property="og:title" content="KodYol — HTML va CSS ni o'zbek tilida o'rganing">
-<meta property="og:description" content="Darslar bo'yicha qidiruvli o'zbekcha dasturlash qo'llanmasi.">
+<meta property="og:title" content="KodYol — Full Stack, Backend, Frontend, Cybersecurity va Data Science o'zbek tilida">
+<meta property="og:description" content="Darslar, testlar va kod maydoni bilan o'zbekcha dasturlash qo'llanmasi.">
 <meta property="og:type" content="website"><meta property="og:url" content="https://smshoxa-ops.github.io/kodyol/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💻%3C/text%3E%3C/svg%3E">
 
@@ -621,7 +621,10 @@ window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
 onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
  if(u){const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
-  if(s&&!s.exists())await setDoc(r,{name:(u.displayName||(u.email||"").split("@")[0]).slice(0,30),username:((u.displayName||(u.email||"").split("@")[0]||"user").toLowerCase().replace(/[^a-z0-9]/g,"")||"user").slice(0,15)+(100+Math.floor(Math.random()*900)),bio:"",photo:u.photoURL||"",nl:(u.displayName||(u.email||"").split("@")[0]).slice(0,30).toLowerCase(),learned:0,ts:serverTimestamp()}).catch(()=>{});
+  if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30),base=(dn.toLowerCase().replace(/[^a-z0-9]/g,"")||"user").slice(0,15);
+   for(let t=0;t<5;t++){const un0=base+(100+Math.floor(Math.random()*900));
+    try{const tk=await getDoc(doc(db,"usernames",un0));if(tk.exists())continue;
+     const w=writeBatch(db);w.set(doc(db,"usernames",un0),{uid:u.uid});w.set(r,{name:dn,username:un0,bio:"",photo:u.photoURL||"",nl:dn.toLowerCase(),learned:0,ts:serverTimestamp()});await w.commit();break}catch(e){}}}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
   im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
