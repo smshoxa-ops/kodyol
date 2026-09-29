@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kodyol-uz.netlify.app/sitemap.xml

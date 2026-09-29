@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KodYol — HTML va CSS ni o'zbek tilida o'rganing</title>
+<meta name="description" content="KodYol — Full Stack dasturlashni o'rganuvchilar uchun o'zbekcha qo'llanma: HTML, CSS, input, flexbox, margin va boshqa mavzular misollar bilan. Qidiruv orqali tez toping.">
+<meta name="keywords" content="KodYol, HTML o'zbekcha, CSS o'zbekcha, dasturlash o'rganish, full stack, input, flexbox">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://kodyol-uz.netlify.app/">
+<meta property="og:title" content="KodYol — HTML va CSS ni o'zbek tilida o'rganing">
+<meta property="og:description" content="Darslar bo'yicha qidiruvli o'zbekcha dasturlash qo'llanmasi.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://kodyol-uz.netlify.app/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💻%3C/text%3E%3C/svg%3E">
+
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5fb;--card:#fff;--tx:#1b1d2a;--mu:#6b6f85;--ac:#6c5ce7;--ac2:#00b8d9;--bd:#e3e5f0;--cb:#12131c;--ct:#b9f6ca}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0e17;--card:#171927;--tx:#eceefb;--mu:#8b90ab;--bd:#262940}}
+:root[data-theme="dark"]{--bg:#0d0e17;--card:#171927;--tx:#eceefb;--mu:#8b90ab;--bd:#262940}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.hero{padding:48px 20px 70px;text-align:center;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff}
+.hero h1{margin:0 0 6px;font-size:clamp(28px,6vw,46px);letter-spacing:-1px}
+.hero p{margin:0;opacity:.9}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 60px}
+.sb{margin:-30px auto 18px;max-width:640px;position:relative}
+.sb input{width:100%;padding:18px 20px 18px 52px;border:0;border-radius:18px;font-size:18px;background:var(--card);color:var(--tx);box-shadow:0 10px 30px rgba(60,40,160,.25);outline:2px solid transparent}
+.sb input:focus{outline-color:var(--ac)}
+.sb span{position:absolute;left:19px;top:15px;font-size:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 14px;border-radius:99px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.info{text-align:center;color:var(--mu);font-size:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;transition:transform .15s}
+.c:hover{transform:translateY(-3px)}
+.c h3{margin:0 0 4px;font:700 19px ui-monospace,Menlo,monospace;color:var(--ac)}
+.b{display:inline-block;font-size:11px;background:var(--bd);color:var(--mu);padding:2px 9px;border-radius:99px;margin-bottom:8px}
+.c p{margin:0 0 10px;font-size:14.5px}
+pre{margin:0;background:var(--cb);color:var(--ct);padding:11px 12px;border-radius:10px;font:13px/1.5 ui-monospace,Menlo,monospace;overflow-x:auto}
+.empty{text-align:center;color:var(--mu);padding:40px}
+</style></head><body>
+<div class="hero"><h1>💻 KodYol</h1><p>Full Stack · HTML + CSS · darslaringiz bo'yicha qo'llanma</p></div>
+<div class="wrap">
+<div class="sb"><span>🔍</span><input id="q" placeholder="Nimani tushuntiray? Masalan: input, flex, margin…" autocomplete="off"></div>
+<div class="chips" id="ch"></div>
+<div class="info" id="in"></div>
+<div class="grid" id="g"></div>
+</div>
+<script>
+var L=["Kirish va muhit sozlash","HTML asoslari I","HTML asoslari II","CSS asoslari I","CSS asoslari II — Box Model","CSS Flexbox va Responsive"];
+var D=[
+"1|Brauzer|Saytlarni yuklab ko'rsatadigan dastur (Chrome, Safari). HTML, CSS va JS ni o'qiydi.|chrome, safari",
+"1|Server|Saytni saqlaydigan va brauzer so'raganda yuboradigan kompyuter.|Brauzer → so'rov → Server\nBrauzer ← HTML ← Server",
+"1|VS Code|Kod yozish muharriri. Kerakli kengaytmalar: Live Server, Prettier.|Live Server → Go Live",
+"1|Fayl va papkalar|Sayt — bu papka: index.html, style.css va img/ papkasi.|site/\n ├ index.html\n ├ style.css\n └ img/",
+"2|DOCTYPE|Birinchi qator: brauzerga bu HTML5 ekanini aytadi.|<!DOCTYPE html>",
+"2|html|Asosiy (ildiz) teg, qolgan hamma narsa uning ichida.|<html lang=\"uz\">…</html>",
+"2|head|Xizmat qismi: title, meta, CSS ulash. Sahifada ko'rinmaydi.|<head>\n <title>Mening saytim</title>\n</head>",
+"2|body|Sahifaning ko'rinadigan qismi: matn, rasm, tugma.|<body>Salom!</body>",
+"2|h1–h6|Sarlavhalar. h1 — asosiy (sahifada bitta), h6 — eng kichik.|<h1>Sarlavha</h1>\n<h2>Kichik sarlavha</h2>",
+"2|p|Matn abzatsi (paragraf).|<p>Birinchi abzatsim</p>",
+"2|strong|Qalin, muhim matn.|<strong>Muhim</strong>",
+"2|em|Kursiv matn, urg'u berish uchun.|<em>Urg'u</em>",
+"2|br|Yangi qatorga o'tish. Yopuvchi teg kerak emas.|1-qator<br>2-qator",
+"2|ul li|Belgili ro'yxat (ul) va uning bandlari (li).|<ul>\n <li>HTML</li>\n <li>CSS</li>\n</ul>",
+"2|ol|Raqamli ro'yxat: 1, 2, 3…|<ol>\n <li>Qadam</li>\n</ol>",
+"2|Izoh qoldirish|Koddagi eslatma, sahifada ko'rinmaydi. Tezkor tugma: Ctrl+/|<!-- eslatma -->",
+"3|a href|Havola. href — qayerga olib borishini bildiradi.|<a href=\"https://google.com\">Google</a>",
+"3|img src alt|Rasm. src — fayl manzili, alt — rasm yuklanmasa chiqadigan tavsif.|<img src=\"cat.jpg\" alt=\"Mushuk\">",
+"3|table tr td th|Jadval. table — butun jadval, tr — qator, th — sarlavha katak, td — oddiy katak.|<table>\n <tr><th>Ism</th></tr>\n <tr><td>Ali</td></tr>\n</table>",
+"3|form|Forma — kiritish maydonlari konteyneri, ma'lumotni serverga yuboradi.|<form action=\"/send\" method=\"post\">…</form>",
+"3|input|Ma'lumot kiritish maydoni. type orqali turi tanlanadi: text, password, email, number, checkbox. placeholder — maydon ichidagi maslahat. Yopuvchi teg kerak emas.|<input type=\"text\" placeholder=\"Ism\">\n<input type=\"email\">\n<input type=\"password\">",
+"3|button|Tugma. Forma ichida uni yuboradi (type=\"submit\").|<button type=\"submit\">Yuborish</button>",
+"3|label|Maydon yorlig'i. Ustiga bosilsa maydon faollashadi (for va id orqali bog'lanadi).|<label for=\"n\">Ism</label>\n<input id=\"n\">",
+"3|Semantik teglar|Blok ma'nosini bildiruvchi teglar (oddiy div emas). SEO va qulaylikka yordam beradi.|<header>sarlavha qismi</header>\n<nav>menyu</nav>\n<main>asosiy</main>\n<section>bo'lim</section>\n<footer>pastki qism</footer>",
+"3|header|Sayt yoki bo'limning yuqori qismi: logotip, sarlavha.|<header><h1>Logo</h1></header>",
+"3|nav|Navigatsiya bloki — havolalari bor menyu.|<nav><a href=\"#\">Bosh sahifa</a></nav>",
+"3|main|Sahifaning asosiy mazmuni (sahifada bitta bo'ladi).|<main>…</main>",
+"3|section|Sahifaning mavzuli bo'limi.|<section><h2>Biz haqimizda</h2></section>",
+"3|footer|Pastki qism: aloqa, mualliflik huquqi.|<footer>© 2026</footer>",
+"4|CSS ni HTML ga ulash|Uch usul: tashqi fayl (eng yaxshisi), style tegi, style atributi.|<link rel=\"stylesheet\" href=\"style.css\">",
+"4|Selektor: teg|Bir xil turdagi barcha teglarga stil beradi.|p { color: red; }",
+"4|Selektor: class (sinf)|CSS da nuqta bilan yoziladi. Ko'p elementga qo'llash mumkin.|.card { padding: 10px; }\n<div class=\"card\">",
+"4|Selektor: id|Noyob identifikator, CSS da # bilan yoziladi. Sahifada bitta bo'ladi.|#logo { width: 100px; }\n<div id=\"logo\">",
+"4|color|Matn rangi. Nom, HEX yoki rgb bilan beriladi.|color: #6c5ce7;",
+"4|font-size|Shrift o'lchami: px, rem, em.|font-size: 18px;",
+"4|font-family|Shrift turi, zaxira variantlar bilan.|font-family: Arial, sans-serif;",
+"4|font-weight|Shrift qalinligi: 400 oddiy, 700 qalin.|font-weight: 700;",
+"4|text-align|Matnni tekislash: left, center, right.|text-align: center;",
+"4|line-height|Qator balandligi (qatorlar orasidagi masofa).|line-height: 1.6;",
+"4|text-decoration|Tagiga chizish yoki ustidan chizish. none havolaning tagidagi chiziqni olib tashlaydi.|a { text-decoration: none; }",
+"5|Box model|Har bir elementda 4 qatlam bor: content → padding → border → margin.|margin: 20px;\npadding: 10px;\nborder: 1px solid #000;",
+"5|margin|Tashqi bo'shliq — qo'shni elementlargacha masofa.|margin: 0 auto; /* o'rtaga */",
+"5|padding|Ichki bo'shliq — mazmun va chegara orasida.|padding: 10px 20px;",
+"5|border|Ramka: qalinligi, turi, rangi. border-radius — burchakni yumaloqlash.|border: 2px solid red;\nborder-radius: 10px;",
+"5|width height|Elementning eni va bo'yi.|width: 300px;\nheight: 200px;",
+"5|display|Ko'rinish turi: block (butun kenglik), inline (qator ichida), inline-block (qator ichida, lekin o'lchami bor).|display: block;\ndisplay: inline-block;",
+"5|background-color|Orqa fon rangi.|background-color: #f4f5fb;",
+"5|background-image|Rasmni fon qilish. background-size: cover ham kerak bo'ladi.|background-image: url(bg.jpg);\nbackground-size: cover;",
+"6|Flexbox|Ota elementga display:flex beriladi, bolalar qatorga tizilib, oson tekislanadi.|.row { display: flex; }",
+"6|justify-content|Asosiy o'q (gorizontal) bo'yicha tekislash: center, space-between, flex-end.|justify-content: space-between;",
+"6|align-items|Ko'ndalang o'q (vertikal) bo'yicha tekislash: center, stretch.|align-items: center;",
+"6|flex-wrap|Elementlarni yangi qatorga o'tkazishga ruxsat beradi.|flex-wrap: wrap;",
+"6|gap|Flex elementlar orasidagi masofa.|gap: 16px;",
+"6|Media queries @media|Faqat shart bajarilganda ishlaydigan stillar, masalan ekran eni. Moslashuvchan sayt asosi.|@media (max-width: 600px) {\n .row { flex-direction: column; }\n}",
+"6|Moslashuvchan sahifa|Telefon va kompyuterda qulay ko'rinadigan sayt. meta viewport tegi kerak.|<meta name=\"viewport\"\n content=\"width=device-width, initial-scale=1\">"
+].map(function(s){var a=s.split("|");return{l:+a[0],t:a[1],d:a[2],c:a.slice(3).join("|")}});
+var cur=0,q=document.getElementById("q"),g=document.getElementById("g"),ch=document.getElementById("ch"),inf=document.getElementById("in");
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function chips(){ch.innerHTML=["Hammasi"].concat(L.map(function(x,i){return (i+1)+"-dars"})).map(function(x,i){return '<button class="chip'+(i==cur?' on':'')+'" data-i="'+i+'">'+x+'</button>'}).join("")}
+ch.onclick=function(e){if(e.target.dataset.i!=null){cur=+e.target.dataset.i;chips();r()}};
+function r(){var k=q.value.trim().toLowerCase().replace(/\s+/g,""),o=D.filter(function(x){
+ if(cur&&x.l!=cur)return false;if(!k)return true;
+ return (x.t+x.d+x.c).toLowerCase().replace(/\s+/g,"").indexOf(k)>-1});
+ o.sort(function(a,b){return (b.t.toLowerCase().indexOf(k)>-1)-(a.t.toLowerCase().indexOf(k)>-1)});
+ inf.textContent=cur?(cur+"-dars: "+L[cur-1]+" · topildi: "+o.length):"Topildi: "+o.length;
+ g.innerHTML=o.length?o.map(function(x){return '<div class="c"><span class="b">'+x.l+'-dars</span><h3>'+esc(x.t)+'</h3><p>'+esc(x.d)+'</p><pre>'+esc(x.c)+'</pre></div>'}).join(""):'<div class="empty" style="grid-column:1/-1">Hech narsa topilmadi 🤷 Boshqa so\'zni sinab ko\'ring</div>'}
+q.oninput=r;chips();r();
+</script></body></html>
