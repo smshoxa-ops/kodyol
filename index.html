@@ -152,6 +152,42 @@ body{padding-bottom:112px}body.nonav{padding-bottom:0}body.nonav #bn{display:non
 #v-lessons .sb{margin:6px auto 18px}
 #v-lessons .chips{display:none}
 #v-lessons .hd,#v-course .hd{font-size:20px}
+
+/* ===== Анимации (v17) ===== */
+@keyframes vin{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0;transform:translateY(34px) scale(.85)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+@keyframes cin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes grow{from{width:0}}
+@keyframes rp{to{transform:scale(3.4);opacity:0}}
+@keyframes zoomout{0%{transform:scale(1)}40%{transform:scale(.92)}100%{transform:scale(1.35);opacity:0}}
+@keyframes dn{0%{transform:scale(1)}40%{transform:scale(1.18) rotate(-3deg)}100%{transform:none}}
+@keyframes shine{0%{transform:translateX(-130%) skewX(-20deg)}100%{transform:translateX(330%) skewX(-20deg)}}
+@keyframes hg{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+main:not([hidden])>.wrap{animation:vin .38s cubic-bezier(.2,.8,.2,1)}
+.hero{background-size:220% 220%;animation:hg 9s ease-in-out infinite}
+.hero h1{animation:fin .7s .05s both}.hero p{animation:cin .7s .25s both}
+.fg{animation:fin .65s cubic-bezier(.2,.9,.3,1.2) both}
+.fg:nth-child(1){animation-delay:.05s}.fg:nth-child(2){animation-delay:.15s}.fg:nth-child(3){animation-delay:.25s}.fg:nth-child(4){animation-delay:.35s}.fg:nth-child(5){animation-delay:.45s}
+.fold{overflow:hidden}
+.fold::after{content:"";position:absolute;top:0;left:0;width:34%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-130%) skewX(-20deg);pointer-events:none}
+.fold:hover::after{animation:shine .9s ease}
+.fold svg{transition:transform .35s cubic-bezier(.3,1.6,.5,1)}.fold:hover svg{transform:scale(1.12) rotate(-5deg)}
+.fold.pop{animation:zoomout .28s ease-in forwards}
+.ls{position:relative;overflow:hidden;animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.ls:hover .ar{transform:translateX(5px);color:var(--ac)}.ls .ar{transition:transform .2s,color .2s}
+.ls:hover .n{transform:scale(1.08) rotate(-4deg)}.ls .n{transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.cl .ls:nth-child(1){animation-delay:.04s}.cl .ls:nth-child(2){animation-delay:.09s}.cl .ls:nth-child(3){animation-delay:.14s}.cl .ls:nth-child(4){animation-delay:.19s}.cl .ls:nth-child(5){animation-delay:.24s}.cl .ls:nth-child(6){animation-delay:.29s}.cl .ls:nth-child(7){animation-delay:.34s}.cl .ls:nth-child(8){animation-delay:.39s}.cl .ls:nth-child(9){animation-delay:.44s}.cl .ls:nth-child(10){animation-delay:.49s}.cl .ls:nth-child(11){animation-delay:.54s}
+.grid>.c{animation:cin .4s cubic-bezier(.2,.8,.2,1) both}
+.grid>.c:nth-child(1){animation-delay:.02s}.grid>.c:nth-child(2){animation-delay:.06s}.grid>.c:nth-child(3){animation-delay:.10s}.grid>.c:nth-child(4){animation-delay:.14s}.grid>.c:nth-child(5){animation-delay:.18s}.grid>.c:nth-child(6){animation-delay:.22s}.grid>.c:nth-child(n+7){animation-delay:.26s}
+.c{transition:transform .2s,box-shadow .2s,border-color .2s}.c:hover{box-shadow:0 12px 28px rgba(60,40,160,.16);border-color:var(--ac)}
+.pb i{animation:grow .9s .2s cubic-bezier(.2,.8,.2,1) both}
+.chip{transition:transform .15s,background .2s,color .2s,border-color .2s}.chip:hover{transform:translateY(-2px)}.chip:active{transform:scale(.93)}
+.ac button{transition:transform .15s}.ac button:active{transform:scale(.88)}.ac button.on{animation:dn .45s ease}
+#bn button{transition:transform .2s cubic-bezier(.3,1.6,.5,1)}#bn button:active{transform:scale(.85)}#bn button.on{transform:translateY(-3px) scale(1.12)}
+.rp{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);width:40px;height:40px;margin:-20px 0 0 -20px;pointer-events:none;animation:rp .6s ease-out forwards}
+.ls .rp{background:rgba(108,92,231,.25)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu">☰</button><b>💻 KodYol</b></header>
 <div id="ov"></div>
@@ -506,11 +542,13 @@ R.home=function(){var w=CW[lang]||CW.en;$("fcnt").textContent="📚 "+CR.fs.ls.l
 R.course=function(){var w=CW[lang]||CW.en;$("ct").textContent="📁 "+CR[cc].n;$("cl").innerHTML=CR[cc].ls.map(function(l,i){var n=i+1,nm=LL[l-1],a=D.filter(function(x){return x.l==l}),d=a.filter(function(x){return st.dn.indexOf(D.indexOf(x))>-1}).length,off=!a.length;
  return '<button class="ls'+(off?' off':'')+'" data-l="'+l+'"'+(off?' disabled':'')+'><span class="n">'+n+'</span><span class="tx"><small>'+esc(T.dars.replace("{n}",n))+'</small><b>'+esc(nm)+'</b><span>'+(off?w[1]:a.length+' '+w[0]+' · '+d+'/'+a.length+' ✓')+'</span>'+(off?'':bar(d/a.length))+'</span><i class="ar">›</i></button>'}).join("")};
 R.lessons=function(){if(cur)$("lt").textContent=lessonTitle(cur)};
-$("fold").onclick=function(){cc="fs";show("course")};
-$("fold2").onclick=function(){cc="fe";show("course")};
-$("fold3").onclick=function(){cc="be";show("course")};
-$("fold4").onclick=function(){cc="cy";show("course")};
-$("fold5").onclick=function(){cc="ds";show("course")};
+function go(v,el){var rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;if(rm||!el){show(v);return}el.classList.add("pop");setTimeout(function(){el.classList.remove("pop");show(v)},260)}
+document.addEventListener("pointerdown",function(e){var t=e.target.closest&&e.target.closest(".fold,.ls:not(.off)");if(!t)return;var r=t.getBoundingClientRect(),s=document.createElement("span");s.className="rp";s.style.left=(e.clientX-r.left)+"px";s.style.top=(e.clientY-r.top)+"px";t.appendChild(s);setTimeout(function(){s.remove()},650)});
+$("fold").onclick=function(){cc="fs";go("course",this)};
+$("fold2").onclick=function(){cc="fe";go("course",this)};
+$("fold3").onclick=function(){cc="be";go("course",this)};
+$("fold4").onclick=function(){cc="cy";go("course",this)};
+$("fold5").onclick=function(){cc="ds";go("course",this)};
 $("cb").onclick=function(){show("home")};
 $("lb").onclick=function(){show("course")};
 $("cl").onclick=function(e){var b=e.target.closest("button[data-l]");if(b&&!b.disabled)openLesson(+b.dataset.l)};
