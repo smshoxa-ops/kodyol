@@ -666,7 +666,7 @@ setLang(ld("kl")&&TT[ld("kl")]?ld("kl"):"uz");
 /* KodYol sounds: твои mp3 встроены прямо в страницу (base64), отдельные файлы не нужны */
 (function(){
 var AC=window.AudioContext||window.webkitAudioContext,KS=window.KS={on:true},ctx=null,bufs={},raw={};
-try{KS.on=localStorage.getItem("ks")!=="0"}catch(e){}
+try{KS.on=localStorage.getItem("kssnd")!=="0"}catch(e){}
 /* звук: [mp3 в base64, громкость 0..1] */
 var FILES={
 a:["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",.22],
@@ -690,7 +690,7 @@ function init(){
  if(AC&&!ctx){ctx=new AC();Object.keys(FILES).forEach(function(k){dec(k,function(){})})}
  if(ctx&&ctx.state!="running"&&ctx.resume)ctx.resume()}
 KS.play=function(n){if(!KS.on)return;var k=MAP[n];if(!k)return;try{init();fire(k)}catch(e){}};
-KS.set=function(v){KS.on=!!v;try{localStorage.setItem("ks",v?"1":"0")}catch(e){}if(v)KS.play("pop")};
+KS.set=function(v){KS.on=!!v;try{localStorage.setItem("kssnd",v?"1":"0")}catch(e){}if(v)KS.play("pop")};
 /* разбудить звук при первом касании, чтобы первый клик тоже звучал */
 document.addEventListener("pointerdown",function(){if(KS.on)try{init()}catch(e){}},{capture:true,once:true});
 function pick(t){
@@ -728,7 +728,7 @@ if(document.readyState=="loading")document.addEventListener("DOMContentLoaded",u
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import{getFirestore,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,where,orderBy,limit,onSnapshot,serverTimestamp,updateDoc,arrayUnion,writeBatch}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const app=initializeApp({apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol-cc1e7.firebaseapp.com",projectId:"kodyol-cc1e7",storageBucket:"kodyol-cc1e7.firebasestorage.app",messagingSenderId:"127627076102",appId:"1:127627076102:web:bab284f58ba48955fc5987"});
+const FBCFG={apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol-cc1e7.firebaseapp.com",projectId:"kodyol-cc1e7",storageBucket:"kodyol-cc1e7.firebasestorage.app",messagingSenderId:"127627076102",appId:"1:127627076102:web:bab284f58ba48955fc5987"};const app=initializeApp(FBCFG);
 const auth=getAuth(app),db=getFirestore(app);
 const E=i=>document.getElementById(i),mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 let me=null,MY={},US=[],UM={},room=null,un=null,uu=null,um=null,im=null,lt=0,vu=null,prev="home",inbox=[],cs=[],deep=false;
@@ -852,6 +852,56 @@ onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
  }else{MY={};US=[];UM={};inbox=[];room=null;navAv()}
  window.RV();const q=new URLSearchParams(location.search).get("u");if(u&&q&&!deep){deep=true;openU(q)}});
 navAv();window.show("home");
+
+/* ===== KodYol AI: настоящая нейросеть Gemini через Firebase AI Logic ===== */
+/* Вставь сюда ключ reCAPTCHA (site key) из шага App Check. Пока пусто, ИИ может не отвечать. */
+const APPCHECK_KEY="6LfpE9YtAAAAAH3qEwkefSsgrdLp7JizkRjKuRZD";
+/* Модели по порядку: если первая не отвечает, пробуем следующую */
+const AI_MODELS=["gemini-3.8-flash","gemini-2.5-flash"];
+const AI_SYS="Ты ИИ-помощник учебного приложения KodYol. Помогаешь новичкам с HTML, CSS, JavaScript и основами программирования. Отвечай коротко (до 150 слов), простым языком, дружелюбно и на том языке, на котором задан вопрос. Примеры кода давай короткими, в блоках ```. Если вопрос не про учёбу или программирование, вежливо верни разговор к теме.";
+const AI_LIM={ru:"Слишком много вопросов подряд. Подожди пару минут и спроси снова.",uz:"Juda ko'p savol. Bir necha daqiqa kuting.",en:"Too many questions in a row. Please wait a couple of minutes."};
+const AI_OFF={ru:"ИИ сейчас недоступен, отвечаю из встроенной базы.",uz:"AI hozir mavjud emas, ichki bazadan javob beraman.",en:"AI is unavailable right now, answering from the built-in base."};
+let aiP=null,aiChat=null,aiIdx=0,aiBusy=false,aiTimes=[];
+const oldAsk=window.ask;
+function aiLoad(){
+ if(aiP)return aiP;
+ aiP=(async()=>{
+  const B="https://www.gstatic.com/firebasejs/12.18.0/";
+  const [A,I]=await Promise.all([import(B+"firebase-app.js"),import(B+"firebase-ai.js")]);
+  const a=A.initializeApp(FBCFG,"ai");
+  if(APPCHECK_KEY){const C=await import(B+"firebase-app-check.js");C.initializeAppCheck(a,{provider:new C.ReCaptchaEnterpriseProvider(APPCHECK_KEY),isTokenAutoRefreshEnabled:true})}
+  return{I,ai:I.getAI(a,{backend:new I.GoogleAIBackend()})}
+ })();
+ aiP.catch(()=>{aiP=null});
+ return aiP}
+function aiRender(el,t){
+ el.textContent="";
+ t.split(/```[a-zA-Z0-9]*\n?/).forEach((part,i)=>{
+  if(i%2){const pre=document.createElement("pre");pre.textContent=part.replace(/\n$/,"");el.appendChild(pre)}
+  else{const s=part.replace(/\*\*/g,"").replace(/^\n+|\n+$/g,"");if(s)el.appendChild(document.createTextNode(s))}})}
+window.ask=async function(t){
+ t=(t||"").trim();if(!t||aiBusy)return;
+ const lg=window.lang,now=Date.now();
+ aiTimes=aiTimes.filter(x=>now-x<6e5);
+ const u=add("u");u.textContent=t;aq.value="";
+ if(aiTimes.length>=15){const n=add("bt");n.textContent=AI_LIM[lg]||AI_LIM.en;return}
+ aiTimes.push(now);aiBusy=true;
+ const b=add("bt");b.textContent="…";
+ let ok=false;
+ try{
+  const{I,ai}=await aiLoad();
+  for(;aiIdx<AI_MODELS.length&&!ok;aiIdx++){
+   try{
+    if(!aiChat)aiChat=I.getGenerativeModel(ai,{model:AI_MODELS[aiIdx],systemInstruction:AI_SYS,generationConfig:{maxOutputTokens:700,temperature:.6}}).startChat();
+    const r=await aiChat.sendMessageStream(t);let full="";
+    for await(const c of r.stream){full+=c.text();aiRender(b,full);window.scrollTo(0,document.body.scrollHeight)}
+    if(!full.trim())throw new Error("empty answer");
+    ok=true;aiIdx--;
+   }catch(e){console.warn("KodYol AI:",AI_MODELS[aiIdx],e);aiChat=null}}
+ }catch(e){console.warn("KodYol AI load:",e)}
+ aiBusy=false;
+ if(!ok){aiIdx=0;u.remove();b.remove();const n=add("bt");n.textContent=AI_OFF[lg]||AI_OFF.en;oldAsk(t)}
+ else window.scrollTo(0,document.body.scrollHeight)};
 </script>
 
 </body></html>

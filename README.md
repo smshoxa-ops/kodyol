@@ -22,3 +22,13 @@ Google Cloud Console → Credentials → API key проекта → **HTTP refer
 ## Как устроены данные
 `users/{uid}` профиль · `follows/{a_b}` подписки · `chats/{uidA_uidB}` (members, last, lu, rd, del) · `chats/{id}/msgs/{id}` сообщения (hid = «удалено у себя») · `reports`.
 Пароли хранит и хэширует Firebase Auth; email виден только владельцу (в `users` не сохраняется).
+
+## ИИ-помощник (Gemini через Firebase AI Logic)
+1. Firebase Console → проект `kodyol-cc1e7` → тариф **Spark** (без привязанной карты, иначе бесплатный уровень Gemini не работает).
+2. **AI Services → AI Logic → Get started** → провайдер **Gemini Developer API** → пройти мастер до конца.
+3. Ключ reCAPTCHA Enterprise: Google Cloud Console (тот же проект `kodyol-cc1e7`) → **Fraud Defense / reCAPTCHA Enterprise** → включить API → **Create key** → тип **Website**, без проверки «я не робот» (score-based) → домены `smshoxa-ops.github.io` и `localhost` → скопировать **site key**. Платёжный аккаунт не нужен.
+   Затем Firebase Console → **App Check → Apps → Web** → вставить site key → **Save**.
+4. В `index.html` найти `const APPCHECK_KEY=""` и вставить site key между кавычками.
+5. Firebase Console → Authentication → Settings → Authorized domains: твой домен (`smshoxa-ops.github.io`) уже должен быть.
+6. Залить `index.html` и `sw.js` на хостинг, открыть сайт, кнопка «ИИ» в нижнем меню.
+Модели меняются в списке `AI_MODELS`. Если ИИ недоступен, сайт отвечает по старой встроенной базе.
