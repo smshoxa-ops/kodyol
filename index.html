@@ -321,8 +321,8 @@ setTheme(ld("kt")||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)"
 setLang(ld("kl")&&TT[ld("kl")]?ld("kl"):"uz");
 </script><script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,where,orderBy,limit,onSnapshot,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,where,orderBy,limit,onSnapshot,serverTimestamp,updateDoc,arrayUnion}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol-cc1e7.firebaseapp.com",projectId:"kodyol-cc1e7",storageBucket:"kodyol-cc1e7.firebasestorage.app",messagingSenderId:"127627076102",appId:"1:127627076102:web:bab284f58ba48955fc5987"});
 const auth=getAuth(app),db=getFirestore(app);
 const E=i=>document.getElementById(i),mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
@@ -330,7 +330,15 @@ let me=null,MY={},US=[],UM={},room=null,un=null,uu=null,um=null,im=null,lt=0,vu=
 const nm=u=>(u&&(u.username||u.name))||"?",tms=c=>c.ts&&c.ts.toMillis?c.ts.toMillis():0,tf=c=>c.ts&&c.ts.toDate?c.ts.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"";
 function av(u,s){u=u||{};let e;if(u.photo){e=mk("img","av");e.src=u.photo;e.referrerPolicy="no-referrer";e.alt=""}else e=mk("div","av",(u.name||u.username||"?")[0].toUpperCase());e.style.width=e.style.height=s+"px";e.style.fontSize=(s*.42)+"px";return e}
 function row(u,sub,fn){const r=mk("div","rw");r.append(av(u,54));const d=mk("div");d.append(mk("b",null,nm(u)),mk("small",null,sub||""));r.append(d);r.onclick=fn;return r}
-function login(b){b.innerHTML="";b.append(mk("p","info",T.cnote));const x=mk("button","chip on","G  "+T.csi);x.onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>alert(e.message));b.append(x)}
+const LT={uz:{em:"Email",pw:"Parol (kamida 6 belgi)",li:"Kirish",su:"Ro'yxatdan o'tish",out:"Chiqish",del:"O'chirish",cf:"Chat faqat sizda o'chiriladi. Davom etasizmi?",e1:"Email yoki parol noto'g'ri",e2:"Bu email band",e3:"Parol kamida 6 belgi"},ru:{em:"Email",pw:"Пароль (минимум 6 символов)",li:"Войти",su:"Регистрация",out:"Выйти",del:"Удалить у себя",cf:"Чат будет удалён только у вас. Продолжить?",e1:"Неверный email или пароль",e2:"Этот email уже занят",e3:"Пароль минимум 6 символов"},en:{em:"Email",pw:"Password (min 6 chars)",li:"Sign in",su:"Sign up",out:"Sign out",del:"Delete for me",cf:"The chat will be deleted only for you. Continue?",e1:"Wrong email or password",e2:"This email is already used",e3:"Password must be 6+ characters"}};
+const X=k=>(LT[window.lang]||LT.en)[k];
+function login(b){b.innerHTML="";b.append(mk("p","info",T.cnote));
+ const f=(t,ph)=>{const d=mk("div","fld"),i=mk("input");i.type=t;i.placeholder=ph;i.autocomplete=t=="password"?"current-password":"email";d.append(i);b.append(d);return i};
+ const e=f("email",X("em")),w=f("password",X("pw")),er=mk("p","info");
+ const go=up=>{const a=e.value.trim();if(!a||w.value.length<6){er.textContent=X("e3");return}er.textContent="";(up?createUserWithEmailAndPassword:signInWithEmailAndPassword)(auth,a,w.value).catch(x=>{er.textContent=x.code=="auth/email-already-in-use"?X("e2"):x.code=="auth/weak-password"?X("e3"):X("e1")})};
+ const s1=mk("button","chip on",X("li")),s2=mk("button","chip",X("su"));s1.onclick=()=>go(0);s2.onclick=()=>go(1);w.onkeydown=k=>{if(k.key=="Enter")go(0)};
+ const bx=mk("div","lg");bx.style.margin="12px 0";bx.append(s1,s2);b.append(bx,er);
+ const x=mk("button","chip on","G  "+T.csi);x.style.width="100%";x.onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>alert(e.message));b.append(x)}
 window.VS.push("me","edit","user","find");
 ["me","edit","user","find"].forEach(x=>{const m=document.createElement("main");m.id="v-"+x;m.hidden=true;m.innerHTML='<div class="wrap pg" id="c-'+x+'"></div>';document.body.insertBefore(m,document.querySelector("script"))});
 const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',ai:'<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M10 8l6 4-6 4z"/>',chat:'<path d="M21 3L3 10l7 3 3 7z"/>',find:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/>'};
@@ -352,7 +360,7 @@ function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  box.append(mk("b",null,u.name||""));const bi=mk("div",null,u.bio||"");bi.style.cssText="color:var(--mu);margin-top:2px";box.append(bi);
  const pr=mk("div","pr");box.append(pr);
  counts(uid,(f1,f2,isf)=>{box.querySelector(".s1").textContent=f1;box.querySelector(".s2").textContent=f2;pr.innerHTML="";
-  if(own){const e=mk("button",null,T.edt);e.onclick=()=>window.show("edit");const h=mk("button",null,T.shr);h.onclick=share;pr.append(e,h)}
+  if(own){const e=mk("button",null,T.edt);e.onclick=()=>window.show("edit");const h=mk("button",null,T.shr);h.onclick=share;pr.append(e,h);if(!box.querySelector(".so")){const m=mk("div","info",me.email||"");m.style.textAlign="left";const o=mk("button","chip so",X("out"));o.onclick=()=>signOut(auth);box.append(m,o)}}
   else{const f=mk("button",isf?"":"pri",isf?T.fwd:T.flw),r=doc(db,"follows",me.uid+"_"+uid);f.onclick=()=>(isf?deleteDoc(r):setDoc(r,{a:me.uid,b:uid,ts:serverTimestamp()})).catch(e=>alert(e.message));
    const m=mk("button",null,T.msgB);m.onclick=()=>{room=[me.uid,uid].sort().join("_");window.show("chat")};pr.append(f,m)}})}
 function openU(id){if(me&&id==me.uid)return window.show("me");vu=id;window.show("user")}
@@ -374,24 +382,27 @@ function fl2(){const q=E("fq").value.trim().toLowerCase(),l=E("fl");l.innerHTML=
 window.R.find=()=>{const b=E("c-find");if(!me){login(b);return}if(!E("fq")){b.innerHTML='<div class="sb" style="margin:0 0 16px"><span>🔍</span><input id="fq" autocomplete="off"></div><div id="fl"></div>';E("fq").oninput=fl2}E("fq").placeholder=T.sch;fl2()};
 function inb(){const b=E("ib");if(!b)return;b.innerHTML="";b.append(mk("div","hd",T.inb));
  const g=mk("div","rw"),gi=mk("div","av","🌍");gi.style.cssText="width:54px;height:54px;font-size:26px;background:var(--bd)";g.append(gi);const d=mk("div");d.append(mk("b",null,T.cgen),mk("small",null,T.cnote));g.append(d);g.onclick=()=>{room="general";window.R.chat()};b.append(g);
- inbox.slice().sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid);b.append(row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()}))})}
+ inbox.filter(c=>!(c.del&&c.del[me.uid]&&c.del[me.uid].toMillis&&c.del[me.uid].toMillis()>=tms(c))).sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid),rt=c.rd&&c.rd[me.uid]&&c.rd[me.uid].toMillis?c.rd[me.uid].toMillis():0,unr=c.lu&&c.lu!=me.uid&&tms(c)>rt,r=row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()});if(unr){r.querySelector("b").style.fontWeight="900";const dt=mk("i");dt.style.cssText="margin-left:auto;width:11px;height:11px;border-radius:50%;background:var(--ac);flex:none";r.append(dt)}b.append(r)})}
 function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const bk=mk("button",null,"←");bk.onclick=()=>{un&&un();room=null;window.R.chat()};h.append(bk);
- if(room=="general")h.append(mk("span",null,"🌍 "+T.cgen));else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)}}
+ if(room=="general")h.append(mk("span",null,"🌍 "+T.cgen));else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button",null,"🗑");dc.style.marginLeft="auto";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};h.append(dc)}
+ const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
+ const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
  un=onSnapshot(query(collection(db,"chats",room,"msgs"),orderBy("ts","desc"),limit(100)),s=>{m.innerHTML="";
-  s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid,b=mk("div","m "+(mine?"u":"bt"));
+  s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid;if((d.hid||[]).includes(me.uid)||tms(d)<=dl())return;const b=mk("div","m "+(mine?"u":"bt"));
    if(!mine&&room=="general")b.append(mk("b",null,d.name+"\n"));b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
    if(!mine){const f=mk("button","chip","⚑ "+T.crep);f.style.cssText="font-size:11px;padding:2px 8px";f.onclick=()=>{addDoc(collection(db,"reports"),{chat:room,msg:x.id,by:me.uid,ts:serverTimestamp()});f.textContent="✓";f.disabled=true};b.append(f)}
-   m.append(b)});window.scrollTo(0,document.body.scrollHeight)},e=>{m.textContent=e.code})}
+   if(room!="general"){const z=mk("button","chip","🗑 "+X("del"));z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
+   m.append(b)});window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
 async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt<1000)return;lt=Date.now();i.value="";const id=room;
  try{await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:t.slice(0,500),ts:serverTimestamp()});
-  if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:t.slice(0,80),ts:serverTimestamp()},{merge:true})}catch(e){alert(e.message)}}
+  if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:t.slice(0,80),lu:me.uid,ts:serverTimestamp()},{merge:true})}catch(e){alert(e.message)}}
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
  E("ci").placeholder=T.cph;E("cs").textContent=T.ask;const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
 onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
  if(u){const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
-  if(s&&!s.exists())await setDoc(r,{name:u.displayName||"",username:((u.displayName||"user").toLowerCase().replace(/[^a-z0-9]/g,"")||"user")+(100+Math.floor(Math.random()*900)),bio:"",photo:u.photoURL||"",learned:0,ts:serverTimestamp()}).catch(()=>{});
+  if(s&&!s.exists())await setDoc(r,{name:(u.displayName||(u.email||"").split("@")[0]).slice(0,30),username:((u.displayName||(u.email||"").split("@")[0]||"user").toLowerCase().replace(/[^a-z0-9]/g,"")||"user").slice(0,15)+(100+Math.floor(Math.random()*900)),bio:"",photo:u.photoURL||"",learned:0,ts:serverTimestamp()}).catch(()=>{});
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   uu=onSnapshot(query(collection(db,"users"),limit(100)),s=>{US=s.docs.map(d=>({id:d.id,...d.data()}));UM={};US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()},()=>{});
   im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(window.curV=="chat"&&room==null)inb()},()=>{});
