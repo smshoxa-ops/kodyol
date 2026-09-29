@@ -1,1 +1,10 @@
-{ "firestore": { "rules": "firestore.rules" } }
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+serviceAccount*.json
+.firebase/
+firebase-debug.log
+node_modules/
+.DS_Store
