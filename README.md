@@ -1,6 +1,6 @@
 # KodYol
 
-Обучающий PWA по HTML/CSS/JS. Две папки на главной: **FULL STACK** (11 уроков) и **FRONTEND** (7 уроков: HTML I–II, CSS I–II, Flexbox+Responsive, JavaScript, React). Аккаунты, профили и чат работают на Firebase (Auth + Firestore realtime).
+Обучающий PWA по HTML/CSS/JS. Пять папок на главной: **DATA SCIENCE** (8 уроков: основы, Python, NumPy, Pandas, очистка данных, визуализация, ML, оценка и проект), **FULL STACK** (11 уроков), **CYBERSECURITY** (8 уроков: основы, пароли и 2FA, фишинг, сеть, криптография, веб-безопасность, практика защиты, инциденты), **BACKEND** (8 уроков: Backend основы, HTTP/REST, Express, БД и JOIN, JWT, безопасность, ошибки и тесты, деплой и Docker) и **FRONTEND** (7 уроков: HTML I–II, CSS I–II, Flexbox+Responsive, JavaScript, React). Аккаунты, профили и чат работают на Firebase (Auth + Firestore realtime).
 
 ## Что настроить в Firebase (один раз)
 1. https://console.firebase.google.com → проект `kodyol-cc1e7`.

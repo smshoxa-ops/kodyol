@@ -126,10 +126,15 @@ body{padding-bottom:112px}body.nonav{padding-bottom:0}body.nonav #bn{display:non
 .fold:active{transform:scale(.96);animation:none}
 .fold svg{width:46%;height:auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.25))}
 .fold b{font-size:clamp(17px,4.6vw,22px);letter-spacing:2px;font-weight:800}
+.fold.cy b{font-size:clamp(14px,3.8vw,18px);letter-spacing:1px}
 .fold small{position:absolute;top:12px;right:14px;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}
 .fcap{margin-top:16px;color:var(--mu);font-size:14px}
 .fg{display:flex;flex-direction:column;align-items:center;margin-bottom:30px}
 .fold.fe{background:linear-gradient(145deg,#00b894,#0984e3);box-shadow:0 18px 44px rgba(9,132,227,.35),inset 0 1px 0 rgba(255,255,255,.35);animation-delay:-1.8s}
+.fold.be{background:linear-gradient(145deg,#ff9f43,#ee5253);box-shadow:0 18px 44px rgba(238,82,83,.35),inset 0 1px 0 rgba(255,255,255,.35);animation-delay:-.9s}
+.fold.cy{background:linear-gradient(145deg,#e84393,#6c5ce7);box-shadow:0 18px 44px rgba(232,67,147,.35),inset 0 1px 0 rgba(255,255,255,.35);animation-delay:-2.7s}
+.fold.ds{background:linear-gradient(145deg,#f9ca24,#f0932b);box-shadow:0 18px 44px rgba(240,147,43,.35),inset 0 1px 0 rgba(255,255,255,.35);animation-delay:-3.4s}
+.fold.ds b{font-size:clamp(15px,4vw,20px);letter-spacing:1px}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .cl{display:flex;flex-direction:column;gap:12px;margin-top:8px}
 .ls{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px 16px;color:var(--tx);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
@@ -165,6 +170,18 @@ body{padding-bottom:112px}body.nonav{padding-bottom:0}body.nonav #bn{display:non
 <svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#0984e3" stroke-opacity=".25" stroke-width="2"/><path d="M27 36l-6 5 6 5M37 36l6 5-6 5" stroke="#0984e3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <b>FRONTEND</b></button>
 <div class="fcap" id="fcap2"></div></div>
+<div class="fg"><button class="fold be" id="fold3" aria-label="Backend"><small id="fcnt3"></small>
+<svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#ee5253" stroke-opacity=".25" stroke-width="2"/><path d="M27 36l-6 5 6 5M37 36l6 5-6 5" stroke="#ee5253" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<b>BACKEND</b></button>
+<div class="fcap" id="fcap3"></div></div>
+<div class="fg"><button class="fold cy" id="fold4" aria-label="Cybersecurity"><small id="fcnt4"></small>
+<svg viewBox="0 0 64 64" fill="none"><path d="M32 5l21 8v16c0 14-9 25-21 30C20 54 11 43 11 29V13z" fill="#fff" fill-opacity=".96"/><path d="M23 32l6 6 12-13" stroke="#e84393" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<b>CYBERSECURITY</b></button>
+<div class="fcap" id="fcap4"></div></div>
+<div class="fg"><button class="fold ds" id="fold5" aria-label="Data Science"><small id="fcnt5"></small>
+<svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#f0932b" stroke-opacity=".25" stroke-width="2"/><path d="M22 47V40M32 47V34M42 47V37" stroke="#f0932b" stroke-width="5" stroke-linecap="round"/></svg>
+<b>DATA SCIENCE</b></button>
+<div class="fcap" id="fcap5"></div></div>
 </div></div></main>
 <main id="v-course" hidden><div class="wrap lw">
 <div class="hd"><button id="cb" aria-label="back">←</button><span id="ct">📁 FULL STACK</span></div>
@@ -258,6 +275,9 @@ zh:"测验|记忆卡|代码练习|任务|进度|收藏|词汇表|关于|已学�
 es:"Pruebas|Tarjetas|Práctica de código|Tareas|Progreso|Favoritos|Glosario|Acerca de|Aprendido|Ver solución|Copiar|Siguiente|Puntaje|Ejecutar|días seguidos|Girar|Reintentar|KodYol es un proyecto personal para aprender Full Stack: lecciones, pruebas, práctica y tutor IA en un solo lugar.",
 de:"Tests|Lernkarten|Code-Labor|Aufgaben|Fortschritt|Favoriten|Glossar|Über uns|Gelernt|Lösung zeigen|Kopieren|Weiter|Ergebnis|Ausführen|Tage in Folge|Umdrehen|Nochmal|KodYol ist ein persönliches Projekt zum Lernen von Full Stack: Lektionen, Tests, Übungen und KI-Tutor an einem Ort."};
 for(var _l in X){TT[_l]+="|"+X[_l];LLt[_l]+="|JavaScript|Git & GitHub|Node.js|SQL|React"}
+var BN={"uz": "Backend nima?|HTTP va REST API|Express: marshrutlar va middleware|Ma'lumotlar bazasi: CRUD va JOIN|Autentifikatsiya va JWT|Xavfsizlik|Xatolar va testlash|Deploy va Docker", "ru": "Что такое Backend|HTTP и REST API|Express: маршруты и middleware|База данных: CRUD и JOIN|Аутентификация и JWT|Безопасность|Ошибки и тестирование|Деплой и Docker", "en": "What is Backend|HTTP and REST API|Express: routes and middleware|Database: CRUD and JOIN|Authentication and JWT|Security|Errors and testing|Deploy and Docker", "zh": "什么是后端|HTTP 与 REST API|Express：路由与中间件|数据库：CRUD 与 JOIN|身份验证与 JWT|安全|错误处理与测试|部署与 Docker", "es": "Qué es Backend|HTTP y REST API|Express: rutas y middleware|Base de datos: CRUD y JOIN|Autenticación y JWT|Seguridad|Errores y pruebas|Despliegue y Docker", "de": "Was ist Backend|HTTP und REST API|Express: Routen und Middleware|Datenbank: CRUD und JOIN|Authentifizierung und JWT|Sicherheit|Fehler und Tests|Deployment und Docker"};for(var _l in BN)LLt[_l]+="|"+BN[_l];
+var CN={"uz": "Kiberxavfsizlik asoslari|Parollar va 2FA|Fishing va ijtimoiy muhandislik|Tarmoq xavfsizligi|Kriptografiya asoslari|Veb-ilova xavfsizligi|Himoya amaliyoti|Hodisalar va kasb", "ru": "Основы кибербезопасности|Пароли и 2FA|Фишинг и социальная инженерия|Сетевая безопасность|Основы криптографии|Безопасность веб-приложений|Практика защиты|Инциденты и профессия", "en": "Cybersecurity basics|Passwords and 2FA|Phishing and social engineering|Network security|Cryptography basics|Web application security|Defense in practice|Incidents and career", "zh": "网络安全基础|密码与双因素认证|网络钓鱼与社会工程|网络安全防护|密码学基础|Web 应用安全|防御实践|事件响应与职业", "es": "Fundamentos de ciberseguridad|Contraseñas y 2FA|Phishing e ingeniería social|Seguridad de red|Fundamentos de criptografía|Seguridad de aplicaciones web|Defensa en la práctica|Incidentes y carrera", "de": "Grundlagen der Cybersicherheit|Passwörter und 2FA|Phishing und Social Engineering|Netzwerksicherheit|Grundlagen der Kryptografie|Websicherheit|Schutz in der Praxis|Vorfälle und Beruf"};for(var _l in CN)LLt[_l]+="|"+CN[_l];
+var DN={"uz": "Data Science asoslari|Python ma'lumot uchun|NumPy|Pandas|Ma'lumotni tozalash|Vizualizatsiya|Machine Learning asoslari|Baholash va loyiha", "ru": "Основы Data Science|Python для данных|NumPy|Pandas|Очистка данных|Визуализация|Основы Machine Learning|Оценка модели и проект", "en": "Data Science basics|Python for data|NumPy|Pandas|Data cleaning|Visualization|Machine Learning basics|Evaluation and project", "zh": "数据科学基础|数据分析用 Python|NumPy|Pandas|数据清洗|数据可视化|机器学习基础|模型评估与项目", "es": "Fundamentos de Data Science|Python para datos|NumPy|Pandas|Limpieza de datos|Visualización|Fundamentos de Machine Learning|Evaluación y proyecto", "de": "Grundlagen Data Science|Python für Daten|NumPy|Pandas|Datenbereinigung|Visualisierung|Grundlagen Machine Learning|Bewertung und Projekt"};for(var _l in DN)LLt[_l]+="|"+DN[_l];
 K=K.concat("chat|csi|cgen|cph|cout|crep|cnote".split("|"));var CHT={"uz": "Chat|Google bilan kirish|Umumiy chat|Xabar yozing…|Chiqish|Shikoyat|Xabarlar hammaga ko'rinadi. Odobli bo'ling!", "ru": "Чат|Войти через Google|Общий чат|Напишите сообщение…|Выйти|Пожаловаться|Сообщения видны всем. Будьте вежливы!", "en": "Chat|Sign in with Google|General chat|Write a message…|Sign out|Report|Messages are visible to everyone. Be polite!", "zh": "聊天|使用 Google 登录|公共聊天|输入消息…|退出|举报|消息对所有人可见，请文明发言！", "es": "Chat|Iniciar sesión con Google|Chat general|Escribe un mensaje…|Salir|Reportar|Los mensajes son visibles para todos. ¡Sé amable!", "de": "Chat|Mit Google anmelden|Allgemeiner Chat|Nachricht schreiben…|Abmelden|Melden|Nachrichten sind für alle sichtbar. Bitte höflich bleiben!"};for(var _l in CHT)TT[_l]+="|"+CHT[_l];
 K=K.concat("edt|shr|fol|fng|flw|fwd|msgB|nm|un|bio|sav|sch|inb|cpy|chp".split("|"));var NPT={"uz": "Tahrirlash|Profilni ulashish|Obunachilar|Obunalar|Obuna bo'lish|Obuna bo'lgansiz|Xabar|Ism|Foydalanuvchi nomi|Men haqimda|Saqlash|Odamlarni qidirish…|Xabarlar|Havola nusxalandi|Rasmni o'zgartirish", "ru": "Редактировать|Поделиться профилем|Подписчики|Подписки|Подписаться|Вы подписаны|Сообщение|Имя|Имя пользователя|О себе|Сохранить|Поиск людей…|Сообщения|Ссылка скопирована|Изменить фото", "en": "Edit profile|Share profile|Followers|Following|Follow|Following|Message|Name|Username|About|Save|Search people…|Messages|Link copied|Change photo", "zh": "编辑资料|分享主页|粉丝|关注|关注|已关注|发消息|姓名|用户名|简介|保存|搜索用户…|消息|链接已复制|更换照片", "es": "Editar perfil|Compartir perfil|Seguidores|Siguiendo|Seguir|Siguiendo|Mensaje|Nombre|Usuario|Sobre mí|Guardar|Buscar personas…|Mensajes|Enlace copiado|Cambiar foto", "de": "Profil bearbeiten|Profil teilen|Follower|Folge ich|Folgen|Gefolgt|Nachricht|Name|Benutzername|Über mich|Speichern|Personen suchen…|Nachrichten|Link kopiert|Foto ändern"};for(var _l in NPT)TT[_l]+="|"+NPT[_l];
 [
@@ -278,6 +298,84 @@ K=K.concat("edt|shr|fol|fng|flw|fwd|msgB|nm|un|bio|sav|sch|inb|cpy|chp".split("|
 "11|React komponent|Interfeysning qayta ishlatiladigan bo'lagi: funksiya, JSX qaytaradi.|function Salom() {\n return <h1>Salom!</h1>;\n}",
 "11|useState|Komponent holatini (state) saqlaydi; o'zgarsa sahifa yangilanadi.|const [n, setN] = useState(0);\n<button onClick={() => setN(n+1)}>{n}</button>",
 "11|props|Komponentga tashqaridan beriladigan ma'lumot.|function Salom({ism}) {\n return <h1>Salom, {ism}</h1>;\n}"
+].forEach(function(s){var a=s.split("|");D.push({l:+a[0],t:a[1],d:a[2],c:a.slice(3).join("|")})});
+[
+"12|Backend nima|Saytning serverda ishlaydigan, foydalanuvchi ko'rmaydigan qismi: mantiq, ma'lumotlar bazasi, xavfsizlik.|Frontend (brauzer) ⇄ Backend (server) ⇄ Baza",
+"12|Backend tillari|Backend ni JavaScript (Node.js), Python, Java, PHP, Go va boshqa tillarda yozish mumkin.|Node.js → JavaScript\nDjango → Python\nSpring → Java\nLaravel → PHP",
+"12|Backend loyiha tuzilishi|Loyiha papkalarga bo'linadi: marshrutlar, kontrollerlar, modellar. Bu kodni tartibli saqlaydi.|server/\n ├ routes/\n ├ controllers/\n ├ models/\n └ app.js",
+"13|HTTP metodlari|GET — o'qish, POST — yaratish, PUT/PATCH — yangilash, DELETE — o'chirish.|GET /users\nPOST /users\nPUT /users/5\nDELETE /users/5",
+"13|Status kodlar|Server javobining natijasi: 200 OK, 201 Created, 400 noto'g'ri so'rov, 401 ruxsat yo'q, 404 topilmadi, 500 server xatosi.|200 OK\n404 Not Found\n500 Server Error",
+"13|REST API|Resurslar (users, posts) uchun aniq URL va metodlar qoidasi. Javob odatda JSON formatida qaytadi.|GET /api/users/5\n→ {\"id\": 5, \"ism\": \"Ali\"}",
+"14|Route parametrlari|URL ichidagi o'zgaruvchan qism (:id) va so'rov parametrlari (?page=2).|app.get(\"/users/:id\", (req, res) => {\n  res.send(req.params.id);\n});",
+"14|Middleware|So'rov va javob orasida ishlaydigan funksiya: log, tekshiruv, JSON o'qish. next() keyingisiga o'tkazadi.|app.use(express.json());\napp.use((req, res, next) => {\n  console.log(req.method, req.url);\n  next();\n});",
+"14|JSON javob va body|POST da yuborilgan ma'lumot req.body da bo'ladi; res.json() JSON qaytaradi.|app.post(\"/users\", (req, res) => {\n  res.status(201).json(req.body);\n});",
+"15|SQL UPDATE va DELETE|UPDATE — mavjud qatorni o'zgartiradi, DELETE — o'chiradi. WHERE ni unutmang, aks holda hamma qator o'zgaradi!|UPDATE users SET ism = 'Vali'\nWHERE id = 1;\nDELETE FROM users WHERE id = 1;",
+"15|JOIN|Ikki jadvalni umumiy ustun bo'yicha birlashtiradi.|SELECT users.ism, orders.summa\nFROM users\nJOIN orders ON orders.user_id = users.id;",
+"15|Node.js dan baza bilan ishlash|pg kutubxonasi orqali PostgreSQL ga so'rov yuboriladi. Qiymatlar uchun har doim $1 kabi parametrlardan foydalaning.|const { rows } = await pool.query(\n  \"SELECT * FROM users WHERE id = $1\", [id]\n);",
+"16|Parolni hash qilish|Parol hech qachon ochiq holda saqlanmaydi. bcrypt uni qaytarib bo'lmaydigan hash ga aylantiradi.|const hash = await bcrypt.hash(parol, 10);\nconst ok = await bcrypt.compare(parol, hash);",
+"16|JWT token|Login dan keyin server imzolangan token beradi; klient uni har so'rovda yuboradi.|const token = jwt.sign(\n  { id: user.id },\n  process.env.JWT_SECRET,\n  { expiresIn: \"1h\" }\n);",
+"16|Himoyalangan marshrut|Auth middleware tokenni tekshiradi; noto'g'ri bo'lsa 401 qaytaradi.|function auth(req, res, next) {\n  const t = req.headers.authorization?.split(\" \")[1];\n  try { req.user = jwt.verify(t, process.env.JWT_SECRET); next(); }\n  catch { res.status(401).json({ xato: \"Ruxsat yo'q\" }); }\n}",
+"17|CORS|Brauzer boshqa domendan kelgan so'rovni odatda bloklaydi. CORS qaysi saytlarga ruxsat berilishini belgilaydi.|const cors = require(\"cors\");\napp.use(cors({ origin: \"https://mysite.uz\" }));",
+"17|.env va sirlar|Parol va kalitlarni kodga yozmang: .env faylda saqlang va uni .gitignore ga qo'shing.|# .env\nJWT_SECRET=maxfiy\n\nprocess.env.JWT_SECRET",
+"17|SQL injection va validatsiya|Foydalanuvchi kiritganini so'rovga to'g'ridan-to'g'ri qo'shmang: tekshiring va parametrli so'rov ishlating.|// Yomon:\n\"... WHERE id = \" + id\n// Yaxshi:\n\"... WHERE id = $1\", [id]",
+"18|try/catch va async xatolar|async funksiyadagi xatolarni try/catch bilan ushlab, next(err) ga uzating.|app.get(\"/u\", async (req, res, next) => {\n  try { res.json(await getUsers()); }\n  catch (e) { next(e); }\n});",
+"18|Xato middleware|4 parametrli funksiya barcha xatolarni bir joyda ushlaydi.|app.use((err, req, res, next) => {\n  console.error(err);\n  res.status(500).json({ xato: \"Server xatosi\" });\n});",
+"18|API testlash|Jest va supertest yordamida endpoint larni avtomatik tekshirish mumkin.|const r = await request(app).get(\"/users\");\nexpect(r.status).toBe(200);",
+"19|Deploy|Backend ni internetdagi serverga joylash: Render, Railway, VPS. Portni muhit o'zgaruvchisidan oling.|app.listen(process.env.PORT ?? 3000);",
+"19|Docker|Dastur va uning muhitini konteynerga o'raydi — hamma joyda bir xil ishlaydi.|FROM node:20\nWORKDIR /app\nCOPY . .\nRUN npm install\nCMD [\"node\", \"app.js\"]",
+"19|CI/CD va loglar|Git ga push qilganda avtomatik test va deploy (GitHub Actions). Xatolarni loglar orqali kuzating.|git push → testlar → deploy\nconsole.log / pino / morgan"
+].forEach(function(s){var a=s.split("|");D.push({l:+a[0],t:a[1],d:a[2],c:a.slice(3).join("|")})});
+[
+"20|Kiberxavfsizlik nima|Ma'lumot, tizim va tarmoqlarni ruxsatsiz kirish, o'g'irlash va buzishdan himoya qilish sohasi.|Maqsad: CIA\nConfidentiality — maxfiylik\nIntegrity — yaxlitlik\nAvailability — mavjudlik",
+"20|Tahdid turlari|Eng keng tarqalgan tahdidlar: zararli dastur (malware), fishing, parol o'g'irlash, DDoS va ichki xodim xatosi.|Malware · Phishing · DDoS\nRansomware · Parol o'g'irlash",
+"20|Xavf va himoya qatlamlari|Xavf = tahdid × zaiflik × ta'sir. Himoya bitta emas, ko'p qatlamli bo'ladi (defense in depth).|Foydalanuvchi → Parol + 2FA\nTarmoq → Firewall\nDastur → Yangilanishlar\nMa'lumot → Shifrlash",
+"21|Kuchli parol|Uzun (12+ belgi) va noyob parol eng yaxshi. Har sayt uchun alohida parol ishlating.|Yomon: 12345678, ali2005\nYaxshi: uzun jumla,\nmasalan 4 ta tasodifiy so'z",
+"21|Parol menejeri|Barcha parollarni shifrlangan omborda saqlaydi va noyob parollar yaratadi. Faqat bitta master parolni eslab qolasiz.|Bitwarden, KeePass,\n1Password",
+"21|2FA va passkey|Ikki bosqichli tasdiqlash parol o'g'irlansa ham hisobni himoya qiladi. SMS dan ko'ra ilova yoki kalit yaxshiroq.|Parol + kod (Authenticator)\nParol + xavfsizlik kaliti\nPasskey — parolsiz kirish",
+"22|Fishing (phishing)|Firibgar soxta xat, SMS yoki sayt orqali sizdan parol va karta ma'lumotini olishga urinadi.|Belgilar: shoshirish, qo'rqitish,\nnoma'lum havola, xato domen\n(pay-pal.com ≠ paypal.com)",
+"22|Ijtimoiy muhandislik|Texnikani emas, odamni aldash: ishonch qozonib, kerakli ma'lumotni o'zi aytishga majburlash.|Soxta \"bank xodimi\" qo'ng'irog'i\n→ Kodni hech kimga aytmang!",
+"22|Havola va faylni tekshirish|Bosishdan oldin manzilni ko'rib chiqing. Shubhali faylni ochmang, kerak bo'lsa VirusTotal da tekshiring.|https://ХАТО-domen.com/login\n✔ HTTPS bor — lekin bu sayt\nishonchli degani emas",
+"23|Tarmoq asoslari|IP manzil qurilmani, port esa xizmatni aniqlaydi. HTTP → 80, HTTPS → 443, SSH → 22.|192.168.1.10:443",
+"23|Firewall va VPN|Firewall kiruvchi/chiquvchi trafikni qoidalar bilan filtrlaydi. VPN trafikni shifrlab, ochiq Wi-Fi da himoya qiladi.|Qoida: 22 port faqat\nishonchli IP dan ruxsat",
+"23|HTTPS va TLS|TLS ma'lumotni shifrlaydi va serverni sertifikat orqali tasdiqlaydi. Ochiq HTTP da ma'lumotni ushlab olish mumkin.|http://  ❌ ochiq\nhttps:// ✔ shifrlangan",
+"24|Shifrlash turlari|Simmetrik — bitta kalit (AES). Asimmetrik — ochiq va yopiq kalit juftligi (RSA). Yopiq kalitni hech kimga bermang.|AES → tez, fayllar uchun\nRSA → kalit almashish, imzo",
+"24|Hash|Hash — ma'lumotdan qaytarib bo'lmaydigan iz. Parollar uchun bcrypt/argon2 ishlating, MD5 va SHA-1 eskirgan.|SHA-256(\"salom\") → 64 belgi\nParol uchun: bcrypt, argon2",
+"24|Raqamli imzo va sertifikat|Imzo hujjat o'zgarmaganini va kim tomonidan ekanini tasdiqlaydi. Sertifikatni ishonchli tashkilot (CA) beradi.|Imzolash: yopiq kalit\nTekshirish: ochiq kalit",
+"25|OWASP Top 10|Veb-ilovalardagi eng xavfli zaifliklar ro'yxati (owasp.org). Har dasturchi uni bilishi kerak.|Broken Access Control\nInjection · Cryptographic Failures\nSecurity Misconfiguration ...",
+"25|Injection va himoya|Foydalanuvchi kiritgani buyruq sifatida bajarilishi — injection. Himoya: parametrli so'rov va kiritishni tekshirish.|db.query(\n  \"SELECT * FROM users WHERE id = $1\",\n  [id]\n);",
+"25|XSS va CSRF|XSS — sahifaga begona skript kirishi; himoya: chiqishni escape qilish, CSP. CSRF — foydalanuvchi nomidan soxta so'rov; himoya: CSRF token, SameSite cookie.|el.textContent = kiritma;   // xavfsiz\nel.innerHTML = kiritma;     // xavfli\nSet-Cookie: sid=...; HttpOnly;\n  Secure; SameSite=Lax",
+"26|Yangilanishlar va bog'liqliklar|Eski dastur va kutubxonalarda ma'lum zaifliklar bo'ladi. Muntazam yangilang va tekshiring.|npm audit\nnpm audit fix",
+"26|Zaxira nusxa (backup)|Ransomware yoki xatodan saqlanish uchun 3-2-1 qoidasi: 3 nusxa, 2 xil muhit, 1 tasi boshqa joyda.|3 nusxa · 2 tashuvchi · 1 tashqarida",
+"26|Eng kam huquq tamoyili|Foydalanuvchi va dasturga faqat kerakli ruxsat bering. Bu buzilganda zararni kamaytiradi.|Oddiy foydalanuvchi ≠ admin\nBaza akkaunti: faqat kerakli jadval",
+"27|Hodisaga javob berish|Hujum shubhasi bo'lsa: to'xtatish, izolyatsiya qilish, sabab topish, tiklash va xulosa chiqarish.|1) Aniqlash\n2) Cheklash\n3) Yo'q qilish\n4) Tiklash\n5) Xulosa",
+"27|Loglar va monitoring|Kirish urinishlari va xatolarni yozib boring: g'ayrioddiy harakat erta aniqlanadi. Loglarda parol saqlamang.|Ko'p marta noto'g'ri login\n→ ogohlantirish + bloklash",
+"27|Kiberxavfsizlik kasbi|Yo'nalishlar: SOC analitik, xavfsizlik muhandisi, pentester (faqat ruxsat bilan!), DevSecOps. Mashq uchun qonuniy platformalar bor.|TryHackMe · Hack The Box\nOWASP Juice Shop\nSertifikat: Security+, CEH"
+].forEach(function(s){var a=s.split("|");D.push({l:+a[0],t:a[1],d:a[2],c:a.slice(3).join("|")})});
+[
+"28|Data Science nima|Ma'lumotlardan foydali xulosa va bashorat chiqarish sohasi: statistika, dasturlash va soha bilimi birlashadi.|Ma'lumot → Tahlil → Xulosa → Qaror",
+"28|Ish jarayoni|Odatiy bosqichlar: savol qo'yish, ma'lumot yig'ish, tozalash, tahlil, model qurish, natijani taqdim etish.|1) Savol\n2) Yig'ish\n3) Tozalash\n4) Tahlil\n5) Model\n6) Taqdimot",
+"28|Asboblar|Eng mashhur til — Python. Kutubxonalar: NumPy, Pandas, Matplotlib, scikit-learn. Muhit: Jupyter Notebook.|pip install numpy pandas matplotlib scikit-learn\njupyter notebook",
+"29|Python asoslari|O'zgaruvchi, ro'yxat (list) va lug'at (dict) — ma'lumot bilan ishlashning asosi.|yosh = 20\nnarx = [10, 20, 30]\nuser = {\"ism\": \"Ali\", \"yosh\": 20}",
+"29|Sikl va funksiya|for sikli elementlarni aylanib chiqadi, funksiya kodni qayta ishlatish imkonini beradi.|def o_rtacha(a):\n    return sum(a) / len(a)\n\nprint(o_rtacha([1, 2, 3]))",
+"29|List comprehension|Ro'yxatni bir qatorda yaratish yoki filtrlash usuli.|kvadrat = [x**2 for x in range(5)]\njuft = [x for x in range(10) if x % 2 == 0]",
+"30|NumPy massiv|Tez sonli hisob-kitoblar uchun massiv (array). Amallar butun massivga birdan qo'llanadi.|import numpy as np\na = np.array([1, 2, 3])\nprint(a * 2)      # [2 4 6]\nprint(a.mean())   # 2.0",
+"30|Indekslash va filtr|Massivdan kerakli qismni indeks yoki shart bo'yicha olish.|a = np.array([5, 8, 2, 9])\nprint(a[1:3])\nprint(a[a > 4])",
+"30|Statistik funksiyalar|O'rtacha, mediana va standart og'ish ma'lumotning umumiy ko'rinishini beradi.|np.mean(a)\nnp.median(a)\nnp.std(a)",
+"31|DataFrame va o'qish|Pandas da jadval — DataFrame. CSV fayldan o'qib, birinchi qatorlarni ko'ramiz.|import pandas as pd\ndf = pd.read_csv(\"data.csv\")\ndf.head()\ndf.info()",
+"31|Tanlash va filtrlash|Ustunni nomi bilan, qatorlarni shart bo'yicha tanlash.|df[\"yosh\"]\ndf[df[\"yosh\"] > 18]\ndf[[\"ism\", \"shahar\"]]",
+"31|groupby va saralash|Guruhlab hisoblash (masalan, shahar bo'yicha o'rtacha narx) va tartiblash.|df.groupby(\"shahar\")[\"narx\"].mean()\ndf.sort_values(\"narx\", ascending=False)",
+"32|Yo'qolgan qiymatlar|Ma'lumotda bo'sh (NaN) joylar bo'ladi: ularni topib, o'chirish yoki to'ldirish kerak.|df.isna().sum()\ndf.dropna()\ndf[\"yosh\"].fillna(df[\"yosh\"].median())",
+"32|Dublikat va tur|Takroriy qatorlarni olib tashlash va ustun turini to'g'rilash.|df = df.drop_duplicates()\ndf[\"sana\"] = pd.to_datetime(df[\"sana\"])\ndf[\"narx\"] = df[\"narx\"].astype(float)",
+"32|Outlier (chetlanish)|Boshqalardan keskin farq qiladigan qiymat xato yoki muhim holat bo'lishi mumkin. Avval sababini aniqlang.|q1 = df[\"narx\"].quantile(0.25)\nq3 = df[\"narx\"].quantile(0.75)\niqr = q3 - q1",
+"33|Matplotlib grafik|Asosiy grafiklar: chiziqli, ustunli, gistogramma. Har doim sarlavha va o'q nomlarini yozing.|import matplotlib.pyplot as plt\nplt.plot([1, 2, 3], [4, 6, 5])\nplt.title(\"Savdo\")\nplt.show()",
+"33|Grafik turini tanlash|Vaqt bo'yicha — chiziq, taqqoslash — ustun, taqsimot — gistogramma, bog'liqlik — scatter.|plt.bar(nomlar, qiymatlar)\nplt.hist(yosh, bins=10)\nplt.scatter(x, y)",
+"33|Seaborn va korrelyatsiya|Seaborn chiroyli grafiklar beradi. Korrelyatsiya — ikki o'zgaruvchi bog'liqligi (-1 dan 1 gacha). Bog'liqlik sabab degani emas!|import seaborn as sns\nsns.heatmap(df.corr(numeric_only=True), annot=True)",
+"34|Machine Learning nima|Model ma'lumotdan qonuniyatni o'zi o'rganadi. Turlari: nazoratli (javob berilgan), nazoratsiz (javobsiz) o'rganish.|Nazoratli: narxni bashorat qilish\nNazoratsiz: mijozlarni guruhlash",
+"34|Train/Test bo'lish|Modelni ko'rmagan ma'lumotda tekshirish uchun ma'lumotni ikkiga ajratamiz. Aks holda natija aldamchi bo'ladi.|from sklearn.model_selection import train_test_split\nXtr, Xte, ytr, yte = train_test_split(\n    X, y, test_size=0.2, random_state=42)",
+"34|Birinchi model|Chiziqli regressiya: model o'qitiladi (fit), keyin bashorat qiladi (predict) va baholanadi.|from sklearn.linear_model import LinearRegression\nm = LinearRegression().fit(Xtr, ytr)\nprint(m.score(Xte, yte))",
+"35|Model baholash|Klassifikatsiyada aniqlik (accuracy), precision va recall. Regressiyada MAE, RMSE. Faqat accuracy ga tayanmang.|from sklearn.metrics import accuracy_score\naccuracy_score(yte, m.predict(Xte))",
+"35|Overfitting|Model o'quv ma'lumotni yod olib, yangi ma'lumotda yomon ishlashi. Yechim: ko'proq ma'lumot, oddiyroq model, cross-validation.|Train: 99%\nTest: 60%   ← overfitting",
+"35|Loyiha va portfolio|Kaggle dan ochiq ma'lumot oling, tahlil qiling, Jupyter yoki GitHub da natijani tushuntirib joylang. Etika: shaxsiy ma'lumotni himoya qiling.|Kaggle · UCI · data.gov\nGitHub portfolio\nHikoya: savol → tahlil → xulosa"
 ].forEach(function(s){var a=s.split("|");D.push({l:+a[0],t:a[1],d:a[2],c:a.slice(3).join("|")})});
 var EX=[
 {k:["boxmodel","boxsizing"],t:"Box Model (quti modeli)",d:"Brauzer har bir HTML elementni to'rtburchak quti deb hisoblaydi. Quti 4 qatlamdan iborat:\n\n1) Content — haqiqiy mazmun (matn, rasm); o'lchami width va height bilan beriladi.\n2) Padding — mazmun va ramka orasidagi ichki bo'shliq; fon rangi shu joyni ham bo'yaydi.\n3) Border — padding atrofidagi ramka.\n4) Margin — ramkadan tashqaridagi shaffof bo'shliq, qo'shni elementlarni itaradi.\n\nMuhim tuzoq: standart holatda width faqat mazmun enini bildiradi, padding va border unga qo'shiladi. Masalan 300px + 40px padding + 4px border = 344px. Shuning uchun deyarli har bir loyihada box-sizing: border-box yoziladi, shunda width ichiga padding va border ham kiradi.\n\nKo'p uchraydigan xatolar: margin va padding ni adashtirish; margin: 0 auto faqat block elementda va aniq width bo'lganda o'rtaga qo'yadi; vertikal margin lar ba'zan qo'shilmaydi, kattasi olinadi (margin collapse).\n\nTekshirish: sahifada o'ng tugma → Inspect → Computed bo'limida rangli quti chizmasi ko'rinadi.",c:"* { box-sizing: border-box; }\n.card {\n width: 300px;\n padding: 20px;\n border: 2px solid #6c5ce7;\n margin: 16px auto;\n}"},
@@ -399,17 +497,20 @@ R.about=function(){$("c-about").innerHTML='<div class="c"><p>'+esc(T.abt)+'</p><
 
 /* ===== Full Stack: папка → уроки → темы ===== */
 var CW={uz:["mavzu","Tez orada"],ru:["тем","Скоро"],en:["topics","Soon"],zh:["个主题","即将推出"],es:["temas","Pronto"],de:["Themen","Bald"]};
-var CR={fs:{n:"FULL STACK",ls:[1,2,3,4,5,6,7,8,9,10,11]},fe:{n:"FRONTEND",ls:[2,3,4,5,6,7,11]}},cc="fs";
+var CR={fs:{n:"FULL STACK",ls:[1,2,3,4,5,6,7,8,9,10,11]},fe:{n:"FRONTEND",ls:[2,3,4,5,6,7,11]},be:{n:"BACKEND",ls:[12,13,14,15,16,17,18,19]},cy:{n:"CYBERSECURITY",ls:[20,21,22,23,24,25,26,27]},ds:{n:"DATA SCIENCE",ls:[28,29,30,31,32,33,34,35]}},cc="fs";
 function pos(l){var i=CR[cc].ls.indexOf(l);return i<0?l:i+1}
 function cnt(c){return D.filter(function(x){return CR[c].ls.indexOf(x.l)>-1}).length}
 function lessonTitle(n){return T.dars.replace("{n}",pos(n))+" · "+LL[n-1]}
 function openLesson(n){cur=n;q.value="";chips();$("lt").textContent=lessonTitle(n);show("lessons");r()}
-R.home=function(){var w=CW[lang]||CW.en;$("fcnt").textContent="📚 "+CR.fs.ls.length;$("fcap").textContent=cnt("fs")+" "+w[0];$("fcnt2").textContent="📚 "+CR.fe.ls.length;$("fcap2").textContent=cnt("fe")+" "+w[0]};
+R.home=function(){var w=CW[lang]||CW.en;$("fcnt").textContent="📚 "+CR.fs.ls.length;$("fcap").textContent=cnt("fs")+" "+w[0];$("fcnt2").textContent="📚 "+CR.fe.ls.length;$("fcap2").textContent=cnt("fe")+" "+w[0];$("fcnt3").textContent="📚 "+CR.be.ls.length;$("fcap3").textContent=cnt("be")+" "+w[0];$("fcnt4").textContent="📚 "+CR.cy.ls.length;$("fcap4").textContent=cnt("cy")+" "+w[0];$("fcnt5").textContent="📚 "+CR.ds.ls.length;$("fcap5").textContent=cnt("ds")+" "+w[0]};
 R.course=function(){var w=CW[lang]||CW.en;$("ct").textContent="📁 "+CR[cc].n;$("cl").innerHTML=CR[cc].ls.map(function(l,i){var n=i+1,nm=LL[l-1],a=D.filter(function(x){return x.l==l}),d=a.filter(function(x){return st.dn.indexOf(D.indexOf(x))>-1}).length,off=!a.length;
  return '<button class="ls'+(off?' off':'')+'" data-l="'+l+'"'+(off?' disabled':'')+'><span class="n">'+n+'</span><span class="tx"><small>'+esc(T.dars.replace("{n}",n))+'</small><b>'+esc(nm)+'</b><span>'+(off?w[1]:a.length+' '+w[0]+' · '+d+'/'+a.length+' ✓')+'</span>'+(off?'':bar(d/a.length))+'</span><i class="ar">›</i></button>'}).join("")};
 R.lessons=function(){if(cur)$("lt").textContent=lessonTitle(cur)};
 $("fold").onclick=function(){cc="fs";show("course")};
 $("fold2").onclick=function(){cc="fe";show("course")};
+$("fold3").onclick=function(){cc="be";show("course")};
+$("fold4").onclick=function(){cc="cy";show("course")};
+$("fold5").onclick=function(){cc="ds";show("course")};
 $("cb").onclick=function(){show("home")};
 $("lb").onclick=function(){show("course")};
 $("cl").onclick=function(e){var b=e.target.closest("button[data-l]");if(b&&!b.disabled)openLesson(+b.dataset.l)};
