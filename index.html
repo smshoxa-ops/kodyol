@@ -128,6 +128,8 @@ body{padding-bottom:112px}body.nonav{padding-bottom:0}body.nonav #bn{display:non
 .fold b{font-size:clamp(17px,4.6vw,22px);letter-spacing:2px;font-weight:800}
 .fold small{position:absolute;top:12px;right:14px;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}
 .fcap{margin-top:16px;color:var(--mu);font-size:14px}
+.fg{display:flex;flex-direction:column;align-items:center;margin-bottom:30px}
+.fold.fe{background:linear-gradient(145deg,#00b894,#0984e3);box-shadow:0 18px 44px rgba(9,132,227,.35),inset 0 1px 0 rgba(255,255,255,.35);animation-delay:-1.8s}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .cl{display:flex;flex-direction:column;gap:12px;margin-top:8px}
 .ls{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px 16px;color:var(--tx);font:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
@@ -155,13 +157,17 @@ body{padding-bottom:112px}body.nonav{padding-bottom:0}body.nonav #bn{display:non
 <main id="v-home">
 <div class="hero"><h1>💻 KodYol</h1><p data-t="sub"></p></div>
 <div class="wrap"><div class="fw">
-<button class="fold" id="fold" aria-label="Full Stack"><small id="fcnt"></small>
+<div class="fg"><button class="fold" id="fold" aria-label="Full Stack"><small id="fcnt"></small>
 <svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#6c5ce7" stroke-opacity=".25" stroke-width="2"/><path d="M27 36l-6 5 6 5M37 36l6 5-6 5" stroke="#6c5ce7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <b>FULL STACK</b></button>
-<div class="fcap" id="fcap"></div>
+<div class="fcap" id="fcap"></div></div>
+<div class="fg"><button class="fold fe" id="fold2" aria-label="Frontend"><small id="fcnt2"></small>
+<svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#0984e3" stroke-opacity=".25" stroke-width="2"/><path d="M27 36l-6 5 6 5M37 36l6 5-6 5" stroke="#0984e3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<b>FRONTEND</b></button>
+<div class="fcap" id="fcap2"></div></div>
 </div></div></main>
 <main id="v-course" hidden><div class="wrap lw">
-<div class="hd"><button id="cb" aria-label="back">←</button><span>📁 FULL STACK</span></div>
+<div class="hd"><button id="cb" aria-label="back">←</button><span id="ct">📁 FULL STACK</span></div>
 <div class="cl" id="cl"></div></div></main>
 <main id="v-lessons" hidden><div class="wrap lw">
 <div class="hd"><button id="lb" aria-label="back">←</button><span id="lt"></span></div>
@@ -291,7 +297,7 @@ function r(){var k=q.value.trim().toLowerCase().replace(/\s+/g,""),o=D.filter(fu
  if(cur&&x.l!=cur)return false;if(!k)return true;
  return (x.t+x.d+x.c).toLowerCase().replace(/\s+/g,"").indexOf(k)>-1});
  o.sort(function(a,b){return (b.t.toLowerCase().indexOf(k)>-1)-(a.t.toLowerCase().indexOf(k)>-1)});
- inf.textContent=(cur?T.dars.replace("{n}",cur)+": "+LL[cur-1]+" · ":"")+T.found+": "+o.length;
+ inf.textContent=(cur?T.dars.replace("{n}",pos(cur))+": "+LL[cur-1]+" · ":"")+T.found+": "+o.length;
  g.innerHTML=o.length?o.map(function(x){return '<div class="c"><span class="b">'+T.dars.replace("{n}",x.l)+'</span><h3>'+esc(x.t)+'</h3><p>'+esc(x.d)+'</p><pre>'+esc(x.c)+'</pre></div>'}).join(""):'<div class="empty" style="grid-column:1/-1">'+T.empty+'</div>'}
 q.oninput=r;
 function setLang(l){lang=l;var a=TT[l].split("|");K.forEach(function(k,i){T[k]=a[i]});LL=LLt[l].split("|");document.documentElement.lang=l;
@@ -334,12 +340,12 @@ function RV(){if(R[curV])R[curV]()}
 [["chat","💬"],["quiz","📝"],["flash","🃏"],["play","⌨️"],["task","🎯"],["prog","📊"],["fav","⭐"],["gloss","📖"],["about","ℹ️"]].forEach(function(a){var m=document.createElement("main");m.id="v-"+a[0];m.hidden=true;m.innerHTML='<div class="wrap pg"><h2>'+a[1]+' <span data-t="'+a[0]+'"></span></h2><div id="c-'+a[0]+'"></div></div>';document.body.insertBefore(m,document.querySelector("script"))});
 dr.innerHTML='<div class="dh">💻 KodYol</div>'+[["home","🏠"],["chat","💬"],["quiz","📝"],["flash","🃏"],["play","⌨️"],["task","🎯"],["prog","📊"],["fav","⭐"],["gloss","📖"],["set","⚙️"],["about","ℹ️"]].map(function(a){return '<a data-v="'+a[0]+'">'+a[1]+' <span data-t="'+a[0]+'"></span></a>'}).join("")+'<a data-v="ai" class="aiL">🤖 <span data-t="ai"></span></a>';
 function show(v){curV=v;VS.forEach(function(x){$("v-"+x).hidden=x!=v});menu(false);window.scrollTo(0,0);if(v=="ai"&&!greeted){greeted=true;hello()}RV()}
-function card(x){var i=D.indexOf(x),f=st.fv.indexOf(i)>-1,d=st.dn.indexOf(i)>-1;return '<div class="c"><span class="b">'+T.dars.replace("{n}",x.l)+'</span><h3>'+esc(x.t)+'</h3><p>'+esc(x.d)+'</p><pre>'+esc(x.c)+'</pre><div class="ac"><button data-f="'+i+'">'+(f?"⭐":"☆")+'</button><button data-d="'+i+'" class="'+(d?"on":"")+'">'+(d?"✅ ":"")+T.done+'</button><button data-c="'+i+'">'+T.copy+'</button></div></div>'}
+function card(x){var i=D.indexOf(x),f=st.fv.indexOf(i)>-1,d=st.dn.indexOf(i)>-1;return '<div class="c"><span class="b">'+T.dars.replace("{n}",cur&&curV=="lessons"?pos(x.l):x.l)+'</span><h3>'+esc(x.t)+'</h3><p>'+esc(x.d)+'</p><pre>'+esc(x.c)+'</pre><div class="ac"><button data-f="'+i+'">'+(f?"⭐":"☆")+'</button><button data-d="'+i+'" class="'+(d?"on":"")+'">'+(d?"✅ ":"")+T.done+'</button><button data-c="'+i+'">'+T.copy+'</button></div></div>'}
 function r(){var k=q.value.trim().toLowerCase().replace(/\s+/g,""),o=D.filter(function(x){
  if(cur&&x.l!=cur)return false;if(!k)return true;
  return (x.t+x.d+x.c).toLowerCase().replace(/\s+/g,"").indexOf(k)>-1});
  o.sort(function(a,b){return (b.t.toLowerCase().indexOf(k)>-1)-(a.t.toLowerCase().indexOf(k)>-1)});
- inf.textContent=(cur?T.dars.replace("{n}",cur)+": "+LL[cur-1]+" · ":"")+T.found+": "+o.length;
+ inf.textContent=(cur?T.dars.replace("{n}",pos(cur))+": "+LL[cur-1]+" · ":"")+T.found+": "+o.length;
  g.innerHTML=o.length?o.map(card).join(""):'<div class="empty" style="grid-column:1/-1">'+T.empty+'</div>'}
 function tg(k,i){var a=st[k],j=a.indexOf(i);if(j>-1)a.splice(j,1);else a.push(i);save();r();RV()}
 document.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var d=b.dataset;
@@ -393,13 +399,17 @@ R.about=function(){$("c-about").innerHTML='<div class="c"><p>'+esc(T.abt)+'</p><
 
 /* ===== Full Stack: папка → уроки → темы ===== */
 var CW={uz:["mavzu","Tez orada"],ru:["тем","Скоро"],en:["topics","Soon"],zh:["个主题","即将推出"],es:["temas","Pronto"],de:["Themen","Bald"]};
-function lessonTitle(n){return T.dars.replace("{n}",n)+" · "+LL[n-1]}
+var CR={fs:{n:"FULL STACK",ls:[1,2,3,4,5,6,7,8,9,10,11]},fe:{n:"FRONTEND",ls:[2,3,4,5,6,7,11]}},cc="fs";
+function pos(l){var i=CR[cc].ls.indexOf(l);return i<0?l:i+1}
+function cnt(c){return D.filter(function(x){return CR[c].ls.indexOf(x.l)>-1}).length}
+function lessonTitle(n){return T.dars.replace("{n}",pos(n))+" · "+LL[n-1]}
 function openLesson(n){cur=n;q.value="";chips();$("lt").textContent=lessonTitle(n);show("lessons");r()}
-R.home=function(){var w=CW[lang]||CW.en;$("fcnt").textContent="📚 "+LL.length;$("fcap").textContent=D.length+" "+w[0]};
-R.course=function(){var w=CW[lang]||CW.en;$("cl").innerHTML=LL.map(function(nm,i){var n=i+1,a=D.filter(function(x){return x.l==n}),d=a.filter(function(x){return st.dn.indexOf(D.indexOf(x))>-1}).length,off=!a.length;
- return '<button class="ls'+(off?' off':'')+'" data-l="'+n+'"'+(off?' disabled':'')+'><span class="n">'+n+'</span><span class="tx"><small>'+esc(T.dars.replace("{n}",n))+'</small><b>'+esc(nm)+'</b><span>'+(off?w[1]:a.length+' '+w[0]+' · '+d+'/'+a.length+' ✓')+'</span>'+(off?'':bar(d/a.length))+'</span><i class="ar">›</i></button>'}).join("")};
+R.home=function(){var w=CW[lang]||CW.en;$("fcnt").textContent="📚 "+CR.fs.ls.length;$("fcap").textContent=cnt("fs")+" "+w[0];$("fcnt2").textContent="📚 "+CR.fe.ls.length;$("fcap2").textContent=cnt("fe")+" "+w[0]};
+R.course=function(){var w=CW[lang]||CW.en;$("ct").textContent="📁 "+CR[cc].n;$("cl").innerHTML=CR[cc].ls.map(function(l,i){var n=i+1,nm=LL[l-1],a=D.filter(function(x){return x.l==l}),d=a.filter(function(x){return st.dn.indexOf(D.indexOf(x))>-1}).length,off=!a.length;
+ return '<button class="ls'+(off?' off':'')+'" data-l="'+l+'"'+(off?' disabled':'')+'><span class="n">'+n+'</span><span class="tx"><small>'+esc(T.dars.replace("{n}",n))+'</small><b>'+esc(nm)+'</b><span>'+(off?w[1]:a.length+' '+w[0]+' · '+d+'/'+a.length+' ✓')+'</span>'+(off?'':bar(d/a.length))+'</span><i class="ar">›</i></button>'}).join("")};
 R.lessons=function(){if(cur)$("lt").textContent=lessonTitle(cur)};
-$("fold").onclick=function(){show("course")};
+$("fold").onclick=function(){cc="fs";show("course")};
+$("fold2").onclick=function(){cc="fe";show("course")};
 $("cb").onclick=function(){show("home")};
 $("lb").onclick=function(){show("course")};
 $("cl").onclick=function(e){var b=e.target.closest("button[data-l]");if(b&&!b.disabled)openLesson(+b.dataset.l)};
