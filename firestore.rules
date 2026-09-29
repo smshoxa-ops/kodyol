@@ -14,7 +14,7 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if signedIn();
       allow create, update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['name','username','bio','photo','learned','ts'])
+        && request.resource.data.keys().hasOnly(['name','nl','username','bio','photo','learned','ts'])
         && request.resource.data.name is string && request.resource.data.name.size() <= 30
         && request.resource.data.username is string
         && request.resource.data.username.matches('^[a-z0-9._]{3,20}$')
@@ -22,6 +22,16 @@ service cloud.firestore {
         && request.resource.data.photo is string && request.resource.data.photo.size() <= 30000
         && request.resource.data.learned is number;
       allow delete: if false;
+    }
+
+    // Реестр уникальных username
+    match /usernames/{n} {
+      allow read: if signedIn();
+      allow create: if signedIn() && n.matches('^[a-z0-9._]{3,20}$')
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && (resource == null || resource.data.uid == request.auth.uid);
+      allow update: if false;
     }
 
     // Подписки
