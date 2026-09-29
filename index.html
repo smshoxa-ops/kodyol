@@ -99,6 +99,22 @@ body{padding-bottom:112px}body.nonav{padding-bottom:0}body.nonav #bn{display:non
 #c-chat .bar input{border:0;background:none;padding:8px 4px}#c-chat .bar input:focus{outline:0}
 #c-chat .bar button{border-radius:20px;padding:0 18px}
 @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* чат: панель внизу, пузыри, статус прочтения */
+#c-chat .bar{position:fixed;left:0;right:0;bottom:0;max-width:none;margin:0;border:0;border-top:1px solid var(--bd);border-radius:0;background:var(--bg);z-index:22;align-items:center;gap:10px;padding:10px max(12px,calc((100vw - 980px)/2 + 16px)) calc(env(safe-area-inset-bottom,0px) + 10px)}
+#c-chat .bar input{flex:1;border:1px solid var(--bd);background:var(--card);border-radius:24px;padding:12px 18px;font-size:16px}
+#c-chat .bar input:focus{outline:2px solid var(--ac)}
+#c-chat .bar button{width:64px;height:46px;padding:0;border-radius:999px;background:#6c4dff;display:grid;place-items:center;flex:none}
+#c-chat .bar button:active{transform:scale(.94)}
+#c-chat #cm{padding-bottom:96px}
+#c-chat .m{width:fit-content;font-size:17px;padding:10px 18px;border-radius:24px;margin:4px 0}
+#c-chat .m.u{background:#5b4dff;color:#fff}
+#c-chat .m.bt{background:var(--bd)}
+#c-chat .m .lb{display:none}
+#c-chat .m .chip{display:none;margin:0 0 0 8px;padding:0 4px;font-size:14px;opacity:.85}
+#c-chat .m.sel .chip{display:inline-block}
+.tsp{text-align:center;color:var(--mu);font-size:13px;margin:16px 0 6px}
+.seen{text-align:right;color:var(--mu);font-size:13px;margin:2px 8px 0}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu">☰</button><b>💻 KodYol</b></header>
 <div id="ov"></div>
@@ -354,6 +370,10 @@ const LT={uz:{em:"Email",pw:"Parol (kamida 6 belgi)",li:"Kirish",su:"Ro'yxatdan 
 Object.assign(LT.uz,{sv:"Ism saqlandi ✓",tk:"Bu foydalanuvchi nomi band",nf:"Hech kim topilmadi",iu:"Nom: a-z 0-9 . _ (3–20)",pd:"Nom band yoki Firestore rules yangilanmagan"});
 Object.assign(LT.ru,{sv:"Имя сохранено ✓",tk:"Это имя пользователя занято",nf:"Никого не найдено",iu:"Имя: a-z 0-9 . _ (3–20)",pd:"Имя занято или не обновлены правила Firestore"});
 Object.assign(LT.en,{sv:"Saved ✓",tk:"This username is taken",nf:"No users found",iu:"Username: a-z 0-9 . _ (3–20)",pd:"Username taken or Firestore rules not updated"});
+Object.assign(LT.uz,{s0:"Ko'rildi hozirgina",s1:"Ko'rildi {n} daqiqa oldin",s2:"Ko'rildi {n} soat oldin"});
+Object.assign(LT.ru,{s0:"Просмотрено только что",s1:"Просмотрено {n} мин. назад",s2:"Просмотрено {n} ч. назад"});
+Object.assign(LT.en,{s0:"Seen just now",s1:"Seen {n} min ago",s2:"Seen {n} h ago"});
+const SEND='<svg viewBox="0 0 24 24" width="26" height="26"><path d="M3.3 10.6 20.2 3.4c.9-.4 1.8.5 1.4 1.4L14.4 21.7c-.4 1-1.8.9-2.1-.1l-1.8-6-6-1.8c-1-.3-1.1-1.7-.2-2.1z" fill="#fff"/><path d="M10.6 15 21 3.7" stroke="#6c4dff" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>';
 function toast(t,ok){const d=mk("div",null,t);d.style.cssText="position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translateX(-50%);z-index:99;padding:12px 18px;border-radius:14px;color:#fff;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:90%;text-align:center;background:"+(ok?"#1db954":"#e5484d");document.body.append(d);setTimeout(()=>d.remove(),2800)}
 const X=k=>(LT[window.lang]||LT.en)[k];
 function login(b){b.innerHTML="";b.append(mk("p","info",T.cnote));
@@ -406,7 +426,9 @@ window.R.edit=()=>{const b=E("c-edit");if(!me){login(b);return}b.innerHTML="";
    else await setDoc(doc(db,"users",me.uid),nn,{merge:true});
    toast(X("sv"),1);window.show("home")}catch(e){sv.disabled=false;toast(e.code=="permission-denied"?X("pd"):(e.code||e.message),0)}};
  b.append(sv,er)};
-let ft=0,fs=0;
+let ft=0,fs=0,seenEl=null,lastMine=null;
+function paintSeen(){if(!seenEl)return;seenEl.textContent="";const c=inbox.find(z=>z.id==room);if(!c||room=="general"||!lastMine)return;const o=c.members.find(x=>x!=me.uid),t=c.rd&&c.rd[o]&&c.rd[o].toMillis?c.rd[o].toMillis():0;if(t&&t>=lastMine.t){const m=Math.floor((Date.now()-t)/60000);seenEl.textContent=m<1?X("s0"):m<60?X("s1").replace("{n}",m):X("s2").replace("{n}",Math.floor(m/60))}}
+setInterval(paintSeen,30000);
 function fl2(){const q=E("fq").value.trim().toLowerCase().replace(/^@/,""),l=E("fl"),id=++fs;
  const paint=(a,msg)=>{if(id!=fs)return;l.innerHTML="";const seen={};let n=0;a.forEach(u=>{if(u.id==me.uid||seen[u.id])return;seen[u.id]=1;UM[u.id]=u;n++;l.append(row(u,u.name||"",()=>openU(u.id)))});if(!n)l.append(mk("div","empty",msg||X("nf")))};
  if(!q){paint(US);return}
@@ -421,24 +443,24 @@ function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const 
  const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
  const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
- un=onSnapshot(query(collection(db,"chats",room,"msgs"),orderBy("ts","desc"),limit(100)),s=>{m.innerHTML="";
-  s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid;if((d.hid||[]).includes(me.uid)||tms(d)<=dl())return;const b=mk("div","m "+(mine?"u":"bt"));
+ un=onSnapshot(query(collection(db,"chats",room,"msgs"),orderBy("ts","desc"),limit(100)),s=>{m.innerHTML="";let pv=0,lastD=null;
+  s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid;if((d.hid||[]).includes(me.uid)||tms(d)<=dl())return;const b=mk("div","m "+(mine?"u":"bt"));const tt=tms(d);if(!pv||tt-pv>900000)m.append(mk("div","tsp",tf(d)));pv=tt;lastD=d;b.onclick=()=>b.classList.toggle("sel");
    if(!mine&&room=="general"){const nb=mk("b",null,d.name+"\n");nb.style.cursor="pointer";nb.onclick=()=>openU(d.uid);b.append(nb)};b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
-   if(!mine){const f=mk("button","chip","⚑ "+T.crep);f.style.cssText="font-size:11px;padding:2px 8px";f.onclick=()=>{addDoc(collection(db,"reports"),{chat:room,msg:x.id,by:me.uid,ts:serverTimestamp()});f.textContent="✓";f.disabled=true};b.append(f)}
-   if(room!="general"){const z=mk("button","chip","🗑 "+X("del"));z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
-   m.append(b)});window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
+   if(!mine){const f=mk("button","chip","⚑");f.style.cssText="font-size:11px;padding:2px 8px";f.onclick=()=>{addDoc(collection(db,"reports"),{chat:room,msg:x.id,by:me.uid,ts:serverTimestamp()});f.textContent="✓";f.disabled=true};b.append(f)}
+   if(room!="general"){const z=mk("button","chip","🗑");z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
+   m.append(b)});seenEl=null;if(lastD&&lastD.uid==me.uid&&room!="general"){seenEl=mk("div","seen");m.append(seenEl);lastMine={t:tms(lastD)};paintSeen()}window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
 async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt<1000)return;lt=Date.now();i.value="";const id=room;
  try{await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:t.slice(0,500),ts:serverTimestamp()});
   if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:t.slice(0,80),lu:me.uid,ts:serverTimestamp()},{merge:true})}catch(e){alert(e.message)}}
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
- E("ci").placeholder=T.cph;E("cs").textContent=T.ask;const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
+ E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
 onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
  if(u){const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists())await setDoc(r,{name:(u.displayName||(u.email||"").split("@")[0]).slice(0,30),username:((u.displayName||(u.email||"").split("@")[0]||"user").toLowerCase().replace(/[^a-z0-9]/g,"")||"user").slice(0,15)+(100+Math.floor(Math.random()*900)),bio:"",photo:u.photoURL||"",nl:(u.displayName||(u.email||"").split("@")[0]).slice(0,30).toLowerCase(),learned:0,ts:serverTimestamp()}).catch(()=>{});
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
-  im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb()},()=>{});
+  im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
  }else{MY={};US=[];UM={};inbox=[];room=null;navAv()}
  window.RV();const q=new URLSearchParams(location.search).get("u");if(u&&q&&!deep){deep=true;openU(q)}});
 navAv();window.show("home");
