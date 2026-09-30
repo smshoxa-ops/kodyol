@@ -882,35 +882,56 @@ function aiRender(el,t){
   if(i%2){const pre=document.createElement("pre");pre.textContent=part.replace(/\n$/,"");el.appendChild(pre)}
   else{const s=part.replace(/\*\*/g,"").replace(/^\n+|\n+$/g,"");if(s)el.appendChild(document.createTextNode(s))}})}
 /* ===== Платный доступ к ИИ ===== */
-/* Вставь ссылку на оплату (Payme, Click, Lemon Squeezy, Paddle и т.п.). К ней добавится ?client_reference_id=UID пользователя. */
-const PAY_URL="";
+/* НАСТРОЙКА: 1) TG_USER - твой Telegram-ник без @; 2) ADMIN_UID - твой код (виден на экране ИИ после входа) */
+const TG_USER="whxxxk";
+const ADMIN_UID="";
 const AI_PRICE="$7";
-/* Доступ = документ subs/{uid} с полем until (Timestamp). Писать в него можно только с сервера или из консоли Firebase (см. firestore.rules). */
+/* Доступ = документ subs/{uid} с полем until (дата). Включаешь сам в панели на экране ИИ (только для ADMIN_UID). */
 const PW={
- ru:{t:"ИИ-помощник KodYol Pro",d:"Нейросеть отвечает на вопросы по HTML, CSS, JavaScript и коду. Доступ — "+AI_PRICE+".",b:"Купить за "+AI_PRICE,l:"Войти, чтобы купить доступ",s:"Уже оплатили? Доступ включится автоматически после подтверждения оплаты.",n:"Оплата ещё не подключена."},
- uz:{t:"KodYol AI yordamchi Pro",d:"Neyrotarmoq HTML, CSS, JavaScript va kod bo'yicha savollarga javob beradi. Narxi — "+AI_PRICE+".",b:AI_PRICE+" evaziga sotib olish",l:"Kirish va sotib olish",s:"To'lov qildingizmi? To'lov tasdiqlangach, kirish avtomatik ochiladi.",n:"To'lov hali ulanmagan."},
- en:{t:"KodYol AI Assistant Pro",d:"The AI answers questions about HTML, CSS, JavaScript and code. Access — "+AI_PRICE+".",b:"Buy for "+AI_PRICE,l:"Sign in to buy access",s:"Already paid? Access turns on automatically once the payment is confirmed.",n:"Payments are not connected yet."}};
+ ru:{t:"ИИ-помощник KodYol Pro",d:"Нейросеть отвечает на вопросы по HTML, CSS, JavaScript и коду. "+AI_PRICE+" в месяц. Оплата через Telegram.",b:"Оплатить через Telegram",l:"Войти, чтобы купить доступ",s:"Напишите свой код в Telegram и оплатите. Доступ включится на 30 дней.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать"},
+ uz:{t:"KodYol AI yordamchi Pro",d:"Neyrotarmoq HTML, CSS, JavaScript va kod bo'yicha savollarga javob beradi. Oyiga "+AI_PRICE+". To'lov Telegram orqali.",b:"Telegram orqali to'lash",l:"Kirish va sotib olish",s:"Kodingizni Telegramga yozing va to'lang. Kirish 30 kunga ochiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish"},
+ en:{t:"KodYol AI Assistant Pro",d:"The AI answers questions about HTML, CSS, JavaScript and code. "+AI_PRICE+" per month. Pay via Telegram.",b:"Pay via Telegram",l:"Sign in to buy access",s:"Send your code in Telegram and pay. Access turns on for 30 days.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy"}};
 let PRO=false,proUn=null;
 function proWatch(u){proUn&&proUn();proUn=null;PRO=false;
  if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{const t=d.exists()?d.data().until:null;PRO=!!t&&(t.toMillis?t.toMillis():+t)>Date.now();aiGate()},()=>{PRO=false;aiGate()});
  else aiGate()}
+function isAdm(){return !!(me&&ADMIN_UID&&me.uid===ADMIN_UID)}
 function aiGate(){
  if(window.curV!="ai")return;
+ const adm=isAdm(),ok=PRO||adm;
  const p=E("ai-pw"),bar=document.querySelector("#v-ai .bar"),c=E("chat"),x=PW[window.lang]||PW.en;
- c.style.display=PRO?"":"none";bar.style.display=PRO?"":"none";p.style.display=PRO?"none":"";
- if(PRO)return;
+ c.style.display=ok?"":"none";bar.style.display=ok?"":"none";p.style.display=(ok&&!adm)?"none":"";
  p.textContent="";
+ if(adm){
+  const h=document.createElement("h3");h.textContent="Панель владельца";
+  const i=document.createElement("input");i.placeholder="Код покупателя";i.style.cssText="width:100%;padding:12px;border-radius:12px;border:1px solid #8886;margin:8px 0;box-sizing:border-box;background:transparent;color:inherit";
+  const bt=document.createElement("button");bt.className="pw-b";bt.textContent="Включить на 30 дней";
+  const m=document.createElement("p");
+  bt.onclick=async()=>{const id=i.value.trim();if(!id)return;m.textContent="...";
+   try{const r=doc(db,"subs",id),d=await getDoc(r);let t=Date.now();
+    if(d.exists()){const u=d.data().until,v=u&&(u.toMillis?u.toMillis():+u);if(v>t)t=v}
+    const e=new Date(t+30*864e5);await setDoc(r,{until:e});m.textContent="Готово. Доступ до "+e.toLocaleDateString()}
+   catch(err){m.textContent="Ошибка: "+err.message}};
+  p.append(h,i,bt,m);return}
+ if(ok)return;
  const h=document.createElement("h3");h.textContent=x.t;
  const d=document.createElement("p");d.textContent=x.d;
  const b=document.createElement("button");b.className="pw-b";
- if(me){b.textContent=x.b;b.onclick=()=>{if(!PAY_URL){alert(x.n);return}window.open(PAY_URL+(PAY_URL.includes("?")?"&":"?")+"client_reference_id="+encodeURIComponent(me.uid),"_blank","noopener")}}
- else{b.textContent=x.l;b.onclick=()=>window.show("me")}
- const n=document.createElement("p");n.className="au-note";n.textContent=x.s;
- const lk=document.createElement("a");lk.href="pricing.html";lk.textContent="Pricing · Terms · Refunds";lk.className="au-note";lk.style.display="block";p.append(h,d,b);if(me)p.append(n);p.append(lk)}
+ if(me){
+  b.textContent=x.b;
+  b.onclick=()=>{if(!TG_USER){alert(x.n);return}window.open("https://t.me/"+TG_USER+"?text="+encodeURIComponent("KodYol AI Pro 7$/мес. Мой код: "+me.uid),"_blank","noopener")};
+  const cd=document.createElement("p");cd.textContent=x.c+" ";
+  const co=document.createElement("code");co.textContent=me.uid;co.style.cssText="word-break:break-all;user-select:all";cd.append(co);
+  const cb=document.createElement("button");cb.textContent=x.cp;cb.style.cssText="margin-left:8px;padding:4px 10px;border-radius:8px;border:1px solid #8886;background:transparent;color:inherit;cursor:pointer";
+  cb.onclick=()=>{try{navigator.clipboard.writeText(me.uid);cb.textContent="✓"}catch(e){}};cd.append(cb);
+  const n=document.createElement("p");n.className="au-note";n.textContent=x.s;
+  p.append(h,d,b,cd,n)}
+ else{b.textContent=x.l;b.onclick=()=>window.show("me");p.append(h,d,b)}
+ const lk=document.createElement("a");lk.href="pricing.html";lk.textContent="Pricing · Terms · Refunds";lk.className="au-note";lk.style.display="block";p.append(lk)}
 const _shAI=window.show;window.show=function(v){_shAI(v);if(v=="ai")aiGate()};
 window.ask=async function(t){
  t=(t||"").trim();if(!t||aiBusy)return;
- if(!PRO){aiGate();return}
+ if(!PRO&&!isAdm()){aiGate();return}
  const lg=window.lang,now=Date.now();
  aiTimes=aiTimes.filter(x=>now-x<6e5);
  const u=add("u");u.textContent=t;aq.value="";

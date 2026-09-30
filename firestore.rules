@@ -79,10 +79,11 @@ service cloud.firestore {
       }
     }
 
-    // Платный доступ к ИИ: читать может только владелец, писать нельзя (только сервер / консоль Firebase)
+    // Платный доступ к ИИ: покупатель читает свой документ, писать может только владелец (впиши свой код вместо ADMIN_UID)
     match /subs/{uid} {
-      allow read: if signedIn() && request.auth.uid == uid;
-      allow write: if false;
+      allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "ADMIN_UID");
+      allow write: if signedIn() && request.auth.uid == "ADMIN_UID"
+        && request.resource.data.keys().hasOnly(["until"]) && request.resource.data.until is timestamp;
     }
 
     // Жалобы: только создавать
