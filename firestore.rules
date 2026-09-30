@@ -1,4 +1,103 @@
-{
-  "firestore": { "rules": "firestore.rules" },
-  "functions": [{ "source": "functions", "codebase": "default" }]
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isMember(chatId) {
+      return signedIn() && (chatId == 'general' || request.auth.uid in chatId.split('_'));
+    }
+    function onlyOwnKey(after, before, field) {
+      return after.get(field, {}).diff(before.get(field, {})).affectedKeys().hasOnly([request.auth.uid]);
+    }
+
+    // Профили: читать могут вошедшие, писать только владелец
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name','nl','username','bio','photo','learned','ts'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 30
+        && request.resource.data.username is string
+        && request.resource.data.username.matches('^[a-z0-9._]{3,20}$')
+        && request.resource.data.bio is string && request.resource.data.bio.size() <= 150
+        && request.resource.data.photo is string && request.resource.data.photo.size() <= 30000
+        && request.resource.data.learned is number;
+      allow delete: if false;
+    }
+
+    // Реестр уникальных username
+    match /usernames/{n} {
+      allow read: if signedIn();
+      allow create: if signedIn() && n.matches('^[a-z0-9._]{3,20}$')
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && (resource == null || resource.data.uid == request.auth.uid);
+      allow update: if false;
+    }
+
+    // Подписки
+    match /follows/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['a','b','ts'])
+        && request.resource.data.a == request.auth.uid
+        && id == request.auth.uid + '_' + request.resource.data.b;
+      allow delete: if signedIn() && resource.data.a == request.auth.uid;
+      allow update: if false;
+    }
+
+    // Личные чаты: id = "uidA_uidB" (отсортированные), доступ только участникам
+    match /chats/{chatId} {
+      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow create: if signedIn() && chatId != 'general'
+        && chatId.split('_').size() == 2
+        && request.auth.uid in chatId.split('_')
+        && request.resource.data.members == chatId.split('_')
+        && request.resource.data.keys().hasOnly(['members','last','lu','ts','rd','del'])
+        && request.resource.data.get('lu', request.auth.uid) == request.auth.uid;
+      allow update: if signedIn() && request.auth.uid in resource.data.members
+        && request.resource.data.members == resource.data.members
+        && request.resource.data.keys().hasOnly(['members','last','lu','ts','rd','del'])
+        && (request.resource.data.get('lu', null) == resource.data.get('lu', null)
+            || request.resource.data.get('lu', null) == request.auth.uid)
+        && onlyOwnKey(request.resource.data, resource.data, 'rd')
+        && onlyOwnKey(request.resource.data, resource.data, 'del');
+      allow delete: if false;
+
+      match /msgs/{msgId} {
+        allow read: if isMember(chatId);
+        allow create: if isMember(chatId)
+          && request.resource.data.keys().hasOnly(['uid','name','photo','text','ts'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 500
+          && request.resource.data.ts == request.time;
+        // «удалить у себя»: можно только добавить свой uid в hid
+        allow update: if isMember(chatId) && chatId != 'general'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['hid'])
+          && request.resource.data.hid.toSet().difference(resource.data.get('hid', []).toSet()).hasOnly([request.auth.uid]);
+        allow delete: if false;
+      }
+    }
+
+    // Платный доступ к ИИ: покупатель читает свой документ, писать может только владелец (впиши свой код вместо ADMIN_UID)
+    match /subs/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
+      allow write: if signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"
+        && request.resource.data.keys().hasOnly(["until"]) && request.resource.data.until is timestamp;
+    }
+
+    // Токены push-уведомлений: только владелец (сервер читает через Admin SDK)
+    match /fcm/{uid} {
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['tokens','ts'])
+        && request.resource.data.tokens is list && request.resource.data.tokens.size() <= 20;
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Жалобы: только создавать
+    match /reports/{id} {
+      allow create: if signedIn() && request.resource.data.by == request.auth.uid;
+      allow read, update, delete: if false;
+    }
+  }
 }
