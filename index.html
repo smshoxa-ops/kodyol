@@ -268,6 +268,12 @@ h2 .gi.sm{margin-right:8px}
 .tp small{font-size:12px;opacity:0;animation:tpf .6s forwards,tps 2.2s linear infinite;background:linear-gradient(90deg,var(--mu) 30%,var(--tx) 50%,var(--mu) 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 @keyframes tpf{to{opacity:1}}@keyframes tps{from{background-position:120% 0}to{background-position:-100% 0}}
 @media(prefers-reduced-motion:reduce){.tp .dt i,.tp small{animation:none;opacity:.8}}
+#un-ov{position:fixed;inset:0;background:rgba(0,0,0,.62);display:grid;place-items:center;z-index:9999;padding:18px}
+#un-bx{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:22px;padding:24px 20px;max-width:380px;width:100%;text-align:center}
+#un-bx h3{margin:0 0 8px;font-size:20px}#un-bx p{margin:0 0 14px;color:var(--mu);font-size:14px;line-height:1.5}
+#un-bx input{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:14px;border:1px solid var(--bd);background:transparent;color:var(--tx);font-size:16px;text-align:center}
+#un-m{min-height:20px;margin:8px 0 12px;font-size:13px;color:#e5484d}
+#un-bx .pw-b{width:100%}#un-c{margin-top:10px;background:none;border:0;color:var(--mu);font-size:14px;cursor:pointer;padding:8px}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b></header>
 <div id="ov"></div>
@@ -745,9 +751,9 @@ const nm=u=>(u&&(u.username||u.name))||"?",tms=c=>c.ts&&c.ts.toMillis?c.ts.toMil
 function av(u,s){u=u||{};let e;if(u.photo){e=mk("img","av");e.src=u.photo;e.referrerPolicy="no-referrer";e.alt=""}else e=mk("div","av",(u.name||u.username||"?")[0].toUpperCase());e.style.width=e.style.height=s+"px";e.style.fontSize=(s*.42)+"px";return e}
 function row(u,sub,fn){const r=mk("div","rw");r.append(av(u,54));const d=mk("div");d.append(mk("b",null,nm(u)),mk("small",null,sub||""));r.append(d);r.onclick=fn;return r}
 const LT={uz:{em:"Email",pw:"Parol (kamida 6 belgi)",li:"Kirish",su:"Ro'yxatdan o'tish",out:"Chiqish",del:"O'chirish",cf:"Chat faqat sizda o'chiriladi. Davom etasizmi?",e1:"Email yoki parol noto'g'ri",e2:"Bu email band",e3:"Parol kamida 6 belgi"},ru:{em:"Email",pw:"Пароль (минимум 6 символов)",li:"Войти",su:"Регистрация",out:"Выйти",del:"Удалить у себя",cf:"Чат будет удалён только у вас. Продолжить?",e1:"Неверный email или пароль",e2:"Этот email уже занят",e3:"Пароль минимум 6 символов"},en:{em:"Email",pw:"Password (min 6 chars)",li:"Sign in",su:"Sign up",out:"Sign out",del:"Delete for me",cf:"The chat will be deleted only for you. Continue?",e1:"Wrong email or password",e2:"This email is already used",e3:"Password must be 6+ characters"}};
-Object.assign(LT.uz,{sv:"Ism saqlandi ✓",tk:"Bu foydalanuvchi nomi band",nf:"Hech kim topilmadi",iu:"Nom: a-z 0-9 . _ (3–20)",pd:"Nom band yoki Firestore rules yangilanmagan"});
-Object.assign(LT.ru,{sv:"Имя сохранено ✓",tk:"Это имя пользователя занято",nf:"Никого не найдено",iu:"Имя: a-z 0-9 . _ (3–20)",pd:"Имя занято или не обновлены правила Firestore"});
-Object.assign(LT.en,{sv:"Saved ✓",tk:"This username is taken",nf:"No users found",iu:"Username: a-z 0-9 . _ (3–20)",pd:"Username taken or Firestore rules not updated"});
+Object.assign(LT.uz,{sv:"Ism saqlandi ✓",tk:"Bu foydalanuvchi nomi band",nf:"Hech kim topilmadi",iu:"Nom: a-z 0-9 . _ (6–20)",pd:"Nom band yoki Firestore rules yangilanmagan"});
+Object.assign(LT.ru,{sv:"Имя сохранено ✓",tk:"Это имя пользователя занято",nf:"Никого не найдено",iu:"Имя: a-z 0-9 . _ (6–20)",pd:"Имя занято или не обновлены правила Firestore"});
+Object.assign(LT.en,{sv:"Saved ✓",tk:"This username is taken",nf:"No users found",iu:"Username: a-z 0-9 . _ (6–20)",pd:"Username taken or Firestore rules not updated"});
 Object.assign(LT.uz,{s0:"Ko'rildi hozirgina",s1:"Ko'rildi {n} daqiqa oldin",s2:"Ko'rildi {n} soat oldin"});
 Object.assign(LT.ru,{s0:"Просмотрено только что",s1:"Просмотрено {n} мин. назад",s2:"Просмотрено {n} ч. назад"});
 Object.assign(LT.en,{s0:"Seen just now",s1:"Seen {n} min ago",s2:"Seen {n} h ago"});
@@ -812,7 +818,7 @@ window.R.edit=()=>{const b=E("c-edit");if(!me){login(b);return}b.innerHTML="";
  ph.append(mk("br"),ch,fi);b.append(ph);
  const fl=(l,v,ta)=>{const d=mk("div","fld"),i=mk(ta?"textarea":"input");i.value=v||"";if(ta){i.rows=3;i.maxLength=150}else i.maxLength=30;d.append(mk("label",null,l),i);b.append(d);return i};
  const n=fl(T.nm,MY.name),u=fl(T.un,MY.username),bi=fl(T.bio,MY.bio,1),sv=mk("button","chip on",T.sav),er=mk("p","info");sv.style.cssText="margin-top:18px;width:100%;padding:14px";
- sv.onclick=async()=>{const x=u.value.trim().toLowerCase();er.textContent="";if(!/^[a-z0-9._]{3,20}$/.test(x)){toast(X("iu"),0);return}
+ sv.onclick=async()=>{const x=u.value.trim().toLowerCase();er.textContent="";if(!/^[a-z0-9._]{3,20}$/.test(x)||(x!=MY.username&&x.length<6)){toast(X("iu"),0);return}
   sv.disabled=true;
   try{const nm2=n.value.trim().slice(0,30),nn={name:nm2,nl:nm2.toLowerCase(),username:x,bio:bi.value.trim().slice(0,150),photo:pv};
    if(x!=MY.username){const q=await getDocs(query(collection(db,"users"),where("username","==",x),limit(1)));if(q.docs.some(d=>d.id!=me.uid)){toast(X("tk"),0);sv.disabled=false;return}
@@ -849,12 +855,36 @@ async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
  E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
+const UNT={
+ ru:{t:"Придумайте имя пользователя",h:"Минимум 6 символов: маленькие латинские буквы, цифры, точка или _. По нему вас будут находить другие.",ph:"например: dilshod2026",b:"Продолжить",c:"Выйти",k:"Это имя уже занято, выберите другое",s:"Минимум 6 символов",x:"Только латинские буквы, цифры, . и _"},
+ uz:{t:"Foydalanuvchi nomini tanlang",h:"Kamida 6 belgi: kichik lotin harflari, raqamlar, nuqta yoki _. Boshqalar sizni shu nom bilan topadi.",ph:"masalan: dilshod2026",b:"Davom etish",c:"Chiqish",k:"Bu nom band, boshqasini tanlang",s:"Kamida 6 belgi",x:"Faqat lotin harflari, raqamlar, . va _"},
+ en:{t:"Choose your username",h:"At least 6 characters: lowercase Latin letters, digits, dot or _. Others will find you by it.",ph:"e.g. dilshod2026",b:"Continue",c:"Sign out",k:"This name is taken, choose another",s:"At least 6 characters",x:"Only Latin letters, digits, . and _"}};
+function askUsername(u,r,dn){return new Promise(res=>{
+ const L=UNT[window.lang]||UNT.en;
+ const ov=document.createElement("div");ov.id="un-ov";const bx=document.createElement("div");bx.id="un-bx";
+ const h=document.createElement("h3");h.textContent=L.t;const p=document.createElement("p");p.textContent=L.h;
+ const i=document.createElement("input");i.placeholder=L.ph;i.maxLength=20;i.autocomplete="off";i.autocapitalize="none";i.spellcheck=false;
+ const m=document.createElement("div");m.id="un-m";
+ const b=document.createElement("button");b.className="pw-b";b.textContent=L.b;
+ const c=document.createElement("button");c.id="un-c";c.textContent=L.c;
+ bx.append(h,p,i,m,b,c);ov.append(bx);document.body.append(ov);
+ const done=v=>{ov.remove();res(v)};
+ i.oninput=()=>{i.value=i.value.toLowerCase().replace(/\s/g,"");m.textContent=""};
+ c.onclick=()=>{signOut(auth).catch(()=>{});done(false)};
+ b.onclick=async()=>{const x=i.value.trim().toLowerCase();
+  if(x.length<6){m.textContent=L.s;return}
+  if(!/^[a-z0-9._]{6,20}$/.test(x)){m.textContent=L.x;return}
+  b.disabled=true;m.textContent="…";
+  try{const tk=await getDoc(doc(db,"usernames",x));if(tk.exists()){m.textContent=L.k;b.disabled=false;return}
+   const w=writeBatch(db),nm=dn||x;w.set(doc(db,"usernames",x),{uid:u.uid});
+   w.set(r,{name:nm,username:x,bio:"",photo:u.photoURL||"",nl:nm.toLowerCase(),learned:0,ts:serverTimestamp()});
+   await w.commit();done(true)}
+  catch(e){b.disabled=false;m.textContent=e.code=="permission-denied"?L.k:(e.code||e.message)}};
+ setTimeout(()=>i.focus(),60)})}
 onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
  if(u){proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
-  if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30),base=(dn.toLowerCase().replace(/[^a-z0-9]/g,"")||"user").slice(0,15);
-   for(let t=0;t<5;t++){const un0=base+(100+Math.floor(Math.random()*900));
-    try{const tk=await getDoc(doc(db,"usernames",un0));if(tk.exists())continue;
-     const w=writeBatch(db);w.set(doc(db,"usernames",un0),{uid:u.uid});w.set(r,{name:dn,username:un0,bio:"",photo:u.photoURL||"",nl:dn.toLowerCase(),learned:0,ts:serverTimestamp()});await w.commit();break}catch(e){}}}
+  if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
+   const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
   im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
