@@ -866,12 +866,12 @@ navAv();window.show("home");
 /* Вставь сюда ключ reCAPTCHA (site key) из шага App Check. Пока пусто, ИИ может не отвечать. */
 const APPCHECK_KEY="6LfpE9YtAAAAAH3qEwkefSsgrdLp7JizkRjKuRZD";
 /* Модели по порядку: если первая не отвечает, пробуем следующую */
-const AI_MODELS=["gemini-3.8-flash","gemini-2.5-flash"];
+const AI_MODELS=["gemini-3.8-flash","gemini-3.7-flash","gemini-3.1-flash-lite"];
 const AI_SYS="Ты ИИ-помощник учебного приложения KodYol. Помогаешь новичкам с HTML, CSS, JavaScript и основами программирования. Отвечай коротко (до 150 слов), простым языком, дружелюбно и на том языке, на котором задан вопрос. Примеры кода давай короткими, в блоках ```. Если вопрос не про учёбу или программирование, вежливо верни разговор к теме.";
 const AI_LIM={ru:"Слишком много вопросов подряд. Подожди пару минут и спроси снова.",uz:"Juda ko'p savol. Bir necha daqiqa kuting.",en:"Too many questions in a row. Please wait a couple of minutes."};
 const AI_THINK={ru:"ИИ думает, чтобы дать лучший ответ…",uz:"AI eng yaxshi javob berish uchun o'ylayapti…",en:"AI is thinking to give the best answer…"};
 const AI_OFF={ru:"ИИ сейчас недоступен, отвечаю из встроенной базы.",uz:"AI hozir mavjud emas, ichki bazadan javob beraman.",en:"AI is unavailable right now, answering from the built-in base."};
-let aiP=null,aiChat=null,aiIdx=0,aiBusy=false,aiTimes=[];
+let aiP=null,aiChat=null,aiIdx=0,aiBusy=false,aiTimes=[],aiErr="";
 const oldAsk=window.ask;
 function aiLoad(){
  if(aiP)return aiP;
@@ -946,7 +946,7 @@ window.ask=async function(t){
  aiTimes=aiTimes.filter(x=>now-x<6e5);
  const u=add("u");u.textContent=t;aq.value="";
  if(aiTimes.length>=15){const n=add("bt");n.textContent=AI_LIM[lg]||AI_LIM.en;return}
- aiTimes.push(now);aiBusy=true;
+ aiTimes.push(now);aiBusy=true;aiErr="";
  const b=add("bt");
  const tp=document.createElement("div");tp.className="tp";const dt=document.createElement("div");dt.className="dt";
  for(let k=0;k<3;k++)dt.append(document.createElement("i"));tp.append(dt);b.append(tp);
@@ -961,10 +961,10 @@ window.ask=async function(t){
     for await(const c of r.stream){full+=c.text();aiRender(b,full);window.scrollTo(0,document.body.scrollHeight)}
     if(!full.trim())throw new Error("empty answer");
     ok=true;aiIdx--;
-   }catch(e){console.warn("KodYol AI:",AI_MODELS[aiIdx],e);aiChat=null}}
- }catch(e){console.warn("KodYol AI load:",e)}
+   }catch(e){console.warn("KodYol AI:",AI_MODELS[aiIdx],e);aiErr=AI_MODELS[aiIdx]+": "+String(e&&e.message||e);aiChat=null}}
+ }catch(e){console.warn("KodYol AI load:",e);aiErr="load: "+String(e&&e.message||e)}
  aiBusy=false;clearTimeout(tm);
- if(!ok){aiIdx=0;u.remove();b.remove();const n=add("bt");n.textContent=AI_OFF[lg]||AI_OFF.en;oldAsk(t)}
+ if(!ok){aiIdx=0;u.remove();b.remove();const n=add("bt");n.textContent=(AI_OFF[lg]||AI_OFF.en)+(isAdm()&&aiErr?"\n["+aiErr.slice(0,400)+"]":"");n.style.whiteSpace="pre-wrap";oldAsk(t)}
  else window.scrollTo(0,document.body.scrollHeight)};
 </script>
 
