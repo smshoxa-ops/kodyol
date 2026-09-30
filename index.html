@@ -261,6 +261,13 @@ h2 .gi.sm{margin-right:8px}
 .au-er{margin:-4px 2px 0;color:#ff6b70;font-size:14px;text-align:center;min-height:0}.au-er:empty{display:none}
 .au-note{max-width:440px;margin:14px auto 0;text-align:center;color:var(--mu);font-size:13px}
 #ai-pw{text-align:center;padding:48px 8px;max-width:440px;margin:0 auto}#ai-pw h3{margin:0 0 8px;font-size:22px}#ai-pw p{color:var(--mu);margin:0 0 20px}#ai-pw .pw-b{padding:13px 26px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;font-size:16px;cursor:pointer}
+.tp{display:flex;flex-direction:column;gap:8px;min-width:54px}.tp .dt{display:flex;gap:6px;align-items:center;height:20px}
+.tp .dt i{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));animation:tpb 1.3s infinite ease-in-out}
+.tp .dt i:nth-child(2){animation-delay:.16s}.tp .dt i:nth-child(3){animation-delay:.32s}
+@keyframes tpb{0%,60%,100%{transform:translateY(0) scale(.75);opacity:.45}30%{transform:translateY(-7px) scale(1.15);opacity:1}}
+.tp small{font-size:12px;opacity:0;animation:tpf .6s forwards,tps 2.2s linear infinite;background:linear-gradient(90deg,var(--mu) 30%,var(--tx) 50%,var(--mu) 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@keyframes tpf{to{opacity:1}}@keyframes tps{from{background-position:120% 0}to{background-position:-100% 0}}
+@media(prefers-reduced-motion:reduce){.tp .dt i,.tp small{animation:none;opacity:.8}}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b></header>
 <div id="ov"></div>
@@ -862,6 +869,7 @@ const APPCHECK_KEY="6LfpE9YtAAAAAH3qEwkefSsgrdLp7JizkRjKuRZD";
 const AI_MODELS=["gemini-3.8-flash","gemini-2.5-flash"];
 const AI_SYS="Ты ИИ-помощник учебного приложения KodYol. Помогаешь новичкам с HTML, CSS, JavaScript и основами программирования. Отвечай коротко (до 150 слов), простым языком, дружелюбно и на том языке, на котором задан вопрос. Примеры кода давай короткими, в блоках ```. Если вопрос не про учёбу или программирование, вежливо верни разговор к теме.";
 const AI_LIM={ru:"Слишком много вопросов подряд. Подожди пару минут и спроси снова.",uz:"Juda ko'p savol. Bir necha daqiqa kuting.",en:"Too many questions in a row. Please wait a couple of minutes."};
+const AI_THINK={ru:"ИИ думает, чтобы дать лучший ответ…",uz:"AI eng yaxshi javob berish uchun o'ylayapti…",en:"AI is thinking to give the best answer…"};
 const AI_OFF={ru:"ИИ сейчас недоступен, отвечаю из встроенной базы.",uz:"AI hozir mavjud emas, ichki bazadan javob beraman.",en:"AI is unavailable right now, answering from the built-in base."};
 let aiP=null,aiChat=null,aiIdx=0,aiBusy=false,aiTimes=[];
 const oldAsk=window.ask;
@@ -939,7 +947,10 @@ window.ask=async function(t){
  const u=add("u");u.textContent=t;aq.value="";
  if(aiTimes.length>=15){const n=add("bt");n.textContent=AI_LIM[lg]||AI_LIM.en;return}
  aiTimes.push(now);aiBusy=true;
- const b=add("bt");b.textContent="…";
+ const b=add("bt");
+ const tp=document.createElement("div");tp.className="tp";const dt=document.createElement("div");dt.className="dt";
+ for(let k=0;k<3;k++)dt.append(document.createElement("i"));tp.append(dt);b.append(tp);
+ const tm=setTimeout(()=>{const sm=document.createElement("small");sm.textContent=AI_THINK[lg]||AI_THINK.en;tp.append(sm);window.scrollTo(0,document.body.scrollHeight)},5000);
  let ok=false;
  try{
   const{I,ai}=await aiLoad();
@@ -952,7 +963,7 @@ window.ask=async function(t){
     ok=true;aiIdx--;
    }catch(e){console.warn("KodYol AI:",AI_MODELS[aiIdx],e);aiChat=null}}
  }catch(e){console.warn("KodYol AI load:",e)}
- aiBusy=false;
+ aiBusy=false;clearTimeout(tm);
  if(!ok){aiIdx=0;u.remove();b.remove();const n=add("bt");n.textContent=AI_OFF[lg]||AI_OFF.en;oldAsk(t)}
  else window.scrollTo(0,document.body.scrollHeight)};
 </script>
