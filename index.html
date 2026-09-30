@@ -306,7 +306,7 @@ h2 .gi.sm{margin-right:8px}
 <main id="v-set" hidden><div class="wrap pg"><h2><span data-gi="set sm"></span><span data-t="set"></span></h2>
 <h3 data-t="lang"></h3><div class="lg" id="lg"></div>
 <h3 data-t="theme"></h3><div class="lg"><button class="chip" data-m="light"><span data-ic="sun"></span> <span data-t="light"></span></button><button class="chip" data-m="dark"><span data-ic="moon"></span> <span data-t="dark"></span></button></div></div></main>
-<main id="v-ai" hidden><div class="wrap pg"><h2><span data-gi="bot sm"></span><span data-t="aiT"></span></h2><div id="chat"></div><div id="ai-pw" style="display:none"></div></div>
+<main id="v-ai" hidden><div class="wrap pg"><div class="hd"><button id="ab" aria-label="back" data-ic="back"></button></div><h2><span data-gi="bot sm"></span><span data-t="aiT"></span></h2><div id="chat"></div><div id="ai-pw" style="display:none"></div></div>
 <div class="bar"><input id="ai-q" data-p="aiPh" autocomplete="off"><button id="sd" data-t="ask"></button></div></main>
 <script>
 var L=["Kirish va muhit sozlash","HTML asoslari I","HTML asoslari II","CSS asoslari I","CSS asoslari II — Box Model","CSS Flexbox va Responsive"];
@@ -929,6 +929,7 @@ function aiGate(){
   p.append(h,d,b,cd,n)}
  else{b.textContent=x.l;b.onclick=()=>window.show("me");p.append(h,d,b)}
  const lk=document.createElement("a");lk.href="pricing.html";lk.textContent="Pricing · Terms · Refunds";lk.className="au-note";lk.style.display="block";p.append(lk)}
+E("ab").onclick=function(){window.show("home")};
 const _shAI=window.show;window.show=function(v){_shAI(v);if(v=="ai")aiGate()};
 window.ask=async function(t){
  t=(t||"").trim();if(!t||aiBusy)return;
