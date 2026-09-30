@@ -1,43 +1,7 @@
-# KodYol
-
-Обучающий PWA по HTML/CSS/JS. Пять папок на главной: **DATA SCIENCE** (8 уроков: основы, Python, NumPy, Pandas, очистка данных, визуализация, ML, оценка и проект), **FULL STACK** (11 уроков), **CYBERSECURITY** (8 уроков: основы, пароли и 2FA, фишинг, сеть, криптография, веб-безопасность, практика защиты, инциденты), **BACKEND** (8 уроков: Backend основы, HTTP/REST, Express, БД и JOIN, JWT, безопасность, ошибки и тесты, деплой и Docker) и **FRONTEND** (7 уроков: HTML I–II, CSS I–II, Flexbox+Responsive, JavaScript, React). Аккаунты, профили и чат работают на Firebase (Auth + Firestore realtime).
-
-## Что настроить в Firebase (один раз)
-1. https://console.firebase.google.com → проект `kodyol-cc1e7`.
-2. **Authentication → Sign-in method**: включить **Email/Password** и **Google**.
-3. **Authentication → Settings → Authorized domains**: добавить `smshoxa-ops.github.io` (и `localhost` для тестов).
-4. **Firestore Database** → создать базу (если нет) → вкладка **Rules** → вставить содержимое `firestore.rules` → **Publish**.
-   Либо: `npm i -g firebase-tools && firebase login && firebase deploy --only firestore:rules`.
-
-## Google OAuth (Client ID)
-При включении Google в Firebase он сам создаёт Web Client ID; вставлять его в код не нужно.
-Если хотите проверить вручную: Google Cloud Console → APIs & Services → Credentials → **Web client (auto created by Google Service)**:
-- Authorized JavaScript origins: `https://smshoxa-ops.github.io`
-- Authorized redirect URIs: `https://kodyol-cc1e7.firebaseapp.com/__/auth/handler`
-Client Secret в код и в GitHub попадать не должен (он нужен только Firebase).
-
-## Рекомендуется
-Google Cloud Console → Credentials → API key проекта → **HTTP referrers**: `https://smshoxa-ops.github.io/*`, `https://kodyol-cc1e7.firebaseapp.com/*`.
-
-## Как устроены данные
-`users/{uid}` профиль · `follows/{a_b}` подписки · `chats/{uidA_uidB}` (members, last, lu, rd, del) · `chats/{id}/msgs/{id}` сообщения (hid = «удалено у себя») · `reports`.
-Пароли хранит и хэширует Firebase Auth; email виден только владельцу (в `users` не сохраняется).
-
-## ИИ-помощник (Gemini через Firebase AI Logic)
-1. Firebase Console → проект `kodyol-cc1e7` → тариф **Spark** (без привязанной карты, иначе бесплатный уровень Gemini не работает).
-2. **AI Services → AI Logic → Get started** → провайдер **Gemini Developer API** → пройти мастер до конца.
-3. Ключ reCAPTCHA Enterprise: Google Cloud Console (тот же проект `kodyol-cc1e7`) → **Fraud Defense / reCAPTCHA Enterprise** → включить API → **Create key** → тип **Website**, без проверки «я не робот» (score-based) → домены `smshoxa-ops.github.io` и `localhost` → скопировать **site key**. Платёжный аккаунт не нужен.
-   Затем Firebase Console → **App Check → Apps → Web** → вставить site key → **Save**.
-4. В `index.html` найти `const APPCHECK_KEY=""` и вставить site key между кавычками.
-5. Firebase Console → Authentication → Settings → Authorized domains: твой домен (`smshoxa-ops.github.io`) уже должен быть.
-6. Залить `index.html` и `sw.js` на хостинг, открыть сайт, кнопка «ИИ» в нижнем меню.
-Модели меняются в списке `AI_MODELS`. Если ИИ недоступен, сайт отвечает по старой встроенной базе.
-
-## Платный ИИ ($7 в месяц, оплата через Telegram)
-Как это работает: пользователь входит, на экране ИИ видит свой код и кнопку «Оплатить через Telegram». Пишет тебе, переводит деньги на твою карту, а ты включаешь ему доступ в «Панели владельца» на экране ИИ (вставить код, нажать «Включить на 30 дней»).
-Настройка (один раз):
-1. В `index.html` найти `const TG_USER=""` и вписать свой Telegram-ник без @.
-2. Войти на сайт под своим аккаунтом, открыть экран ИИ, скопировать свой код и вписать его в `const ADMIN_UID=""` в `index.html` и вместо `ADMIN_UID` (2 места) в `firestore.rules`.
-3. Опубликовать `firestore.rules` в Firebase (Firestore Database → Rules → Publish).
-4. В `pricing.html`, `terms.html`, `privacy.html`, `refunds.html` заменить `YOUR_TG` на свой Telegram-ник.
-Доступ хранится в документе `subs/{uid}` с полем `until`. Это защита в браузере: чтобы её нельзя было обойти через DevTools, вызовы Gemini нужно пускать через свой сервер.
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy Policy - KodYol</title><style>:root{--bg:#fff;--tx:#1a1a2e;--mu:#667;--ac:#2a9d0a}@media(prefers-color-scheme:dark){:root{--bg:#12121c;--tx:#eee;--mu:#aab}}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,sans-serif}main{max-width:720px;margin:0 auto;padding:24px 18px 60px}h1{font-size:26px}h2{font-size:18px;margin-top:26px}a{color:var(--ac)}.mu{color:var(--mu)}nav a{margin-right:14px}.card{border:1px solid #8884;border-radius:14px;padding:18px;margin:14px 0}.pr{font-size:32px;font-weight:800}</style></head><body><main><nav><a href="./">KodYol</a><a href="pricing.html">Pricing</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="refunds.html">Refunds</a></nav><h1>Privacy Policy</h1><p class="mu">Last updated: 30 September 2026</p>
+<h2>What we collect</h2><p>When you register: your email, display name, username, optional bio and profile photo, and sign-in data (via email/password or Google). We also store your learning progress, follows and chat messages, and your subscription status. If you use the AI assistant, your questions are sent to an AI model to generate answers.</p>
+<h2>What we do not collect</h2><p>We do not collect or store card details on this site. Payments are made by bank transfer arranged directly with us.</p>
+<h2>Who processes data</h2><p>Google Firebase (authentication, database, hosting of app data), Google Gemini (AI answers).. Your device also stores settings and progress locally in your browser.</p>
+<h2>How we use it</h2><p>To run your account, show your profile to other users, deliver chat, provide the AI assistant, manage your subscription and keep the service secure. We do not sell your personal data.</p>
+<h2>Your rights</h2><p>You can edit your profile in the app. To request access to or deletion of your data, contact us in Telegram (link below) and we will respond within a reasonable time.</p>
+<p class="mu">Кратко: мы храним данные аккаунта, прогресс и сообщения; вопросы к ИИ отправляются в модель Gemini; данные карты сайт не хранит, оплата переводом напрямую; данные не продаём.</p><p class="mu">Contact: <a href="https://t.me/whxxxk">Telegram @whxxxk</a></p></main></body></html>
