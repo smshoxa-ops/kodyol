@@ -884,8 +884,9 @@ function aiRender(el,t){
 /* ===== Платный доступ к ИИ ===== */
 /* НАСТРОЙКА: 1) TG_USER - твой Telegram-ник без @; 2) ADMIN_UID - твой код (виден на экране ИИ после входа) */
 const TG_USER="whxxxk";
-const ADMIN_UID="";
+const ADMIN_UID="bzZme2xA34ciRWWo7xxwsY98IF63";
 const AI_PRICE="$7";
+const AI_FREE=true;/* true = ИИ бесплатен для всех (тест). Поставь false, чтобы включить платный доступ */
 /* Доступ = документ subs/{uid} с полем until (дата). Включаешь сам в панели на экране ИИ (только для ADMIN_UID). */
 const PW={
  ru:{t:"ИИ-помощник KodYol Pro",d:"Нейросеть отвечает на вопросы по HTML, CSS, JavaScript и коду. "+AI_PRICE+" в месяц. Оплата через Telegram.",b:"Оплатить через Telegram",l:"Войти, чтобы купить доступ",s:"Напишите свой код в Telegram и оплатите. Доступ включится на 30 дней.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать"},
@@ -898,7 +899,7 @@ function proWatch(u){proUn&&proUn();proUn=null;PRO=false;
 function isAdm(){return !!(me&&ADMIN_UID&&me.uid===ADMIN_UID)}
 function aiGate(){
  if(window.curV!="ai")return;
- const adm=isAdm(),ok=PRO||adm;
+ const adm=isAdm(),ok=PRO||adm||AI_FREE;
  const p=E("ai-pw"),bar=document.querySelector("#v-ai .bar"),c=E("chat"),x=PW[window.lang]||PW.en;
  c.style.display=ok?"":"none";bar.style.display=ok?"":"none";p.style.display=(ok&&!adm)?"none":"";
  p.textContent="";
@@ -931,7 +932,7 @@ function aiGate(){
 const _shAI=window.show;window.show=function(v){_shAI(v);if(v=="ai")aiGate()};
 window.ask=async function(t){
  t=(t||"").trim();if(!t||aiBusy)return;
- if(!PRO&&!isAdm()){aiGate();return}
+ if(!PRO&&!isAdm()&&!AI_FREE){aiGate();return}
  const lg=window.lang,now=Date.now();
  aiTimes=aiTimes.filter(x=>now-x<6e5);
  const u=add("u");u.textContent=t;aq.value="";

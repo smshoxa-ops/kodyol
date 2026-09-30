@@ -81,8 +81,8 @@ service cloud.firestore {
 
     // Платный доступ к ИИ: покупатель читает свой документ, писать может только владелец (впиши свой код вместо ADMIN_UID)
     match /subs/{uid} {
-      allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "ADMIN_UID");
-      allow write: if signedIn() && request.auth.uid == "ADMIN_UID"
+      allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
+      allow write: if signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"
         && request.resource.data.keys().hasOnly(["until"]) && request.resource.data.until is timestamp;
     }
 
