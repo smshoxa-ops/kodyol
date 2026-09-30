@@ -849,6 +849,55 @@ const FBCFG={apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol
 const auth=getAuth(app),db=getFirestore(app);
 import{getMessaging,getToken,isSupported}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 const VAPID="BIQhuu-ZvQ-PLDKd7xX7XmAdw8HpduYTeLDHQnW47xI4ckMrSsL61ZqL9ER0SCbzueqHO-DiHx6hmOuZ127PPC0";
+/* ===== Уведомления о новых сообщениях: звук как в Telegram + всплывашка + системное уведомление ===== */
+let ntSeen={},ntFirst=true,ntUnread=0,ntCtx=null;
+const ntAC=window.AudioContext||window.webkitAudioContext;
+/* разбудить звук при первом касании (правила браузера) */
+document.addEventListener("pointerdown",()=>{try{if(ntAC){ntCtx=ntCtx||new ntAC();if(ntCtx.state!="running")ntCtx.resume()}}catch(e){}},{capture:true,once:true});
+/* мягкий двухнотный «динь», синтезируется сам, файл не нужен; v = громкость 0..1 */
+function ntChime(v){
+ try{
+  if(!ntAC)return;ntCtx=ntCtx||new ntAC();const c=ntCtx;if(c.state!="running")c.resume();
+  const t=c.currentTime,out=c.createGain();out.gain.value=.55*v;out.connect(c.destination);
+  [[1174.7,0,.5],[1568,.12,.7]].forEach(([f,o,d])=>{
+   const os=c.createOscillator(),e=c.createGain(),h=c.createOscillator(),he=c.createGain();
+   os.type="sine";os.frequency.value=f;h.type="sine";h.frequency.value=f*2;he.gain.value=.15;
+   e.gain.setValueAtTime(.0001,t+o);e.gain.exponentialRampToValueAtTime(1,t+o+.012);e.gain.exponentialRampToValueAtTime(.0001,t+o+d);
+   os.connect(e);h.connect(he);he.connect(e);e.connect(out);os.start(t+o);h.start(t+o);os.stop(t+o+d+.05);h.stop(t+o+d+.05)})
+ }catch(e){}}
+/* всплывающая плашка сверху; нажатие открывает чат */
+function ntBanner(id,name,txt){
+ document.querySelectorAll(".ntb").forEach(x=>x.remove());
+ const d=mk("div","ntb"),b=mk("b",null,name),p=mk("div",null,txt);
+ p.style.cssText="font-weight:500;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;margin-top:2px";
+ d.append(b,p);
+ d.style.cssText="position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);z-index:120;padding:10px 16px;border-radius:16px;color:#fff;background:rgba(28,38,28,.96);border:1px solid rgba(123,230,28,.35);box-shadow:0 8px 28px rgba(0,0,0,.45);width:min(92%,420px);cursor:pointer;animation:ntin .25s ease-out";
+ d.onclick=()=>{d.remove();room=id;window.show("chat")};
+ document.body.append(d);setTimeout(()=>d.remove(),4500)}
+(function(){const st=document.createElement("style");st.textContent="@keyframes ntin{from{opacity:0;transform:translate(-50%,-14px)}to{opacity:1;transform:translate(-50%,0)}}";document.head.append(st)})();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){ntUnread=0;document.title=ntTitle}});
+const ntTitle=document.title;
+function ntSys(id,name,txt){
+ try{
+  if(!("Notification" in window)||Notification.permission!=="granted"||!("serviceWorker" in navigator))return;
+  navigator.serviceWorker.ready.then(r=>r.showNotification(name,{body:txt,icon:"icon-192.png",badge:"favicon.png",tag:"chat-"+id,renotify:true,vibrate:[80,40,80],data:{url:"./"}})).catch(()=>{})
+ }catch(e){}}
+/* вызывается при каждом обновлении списка чатов */
+function ntIn(s,u){
+ const first=ntFirst;ntFirst=false;
+ s.docs.forEach(d=>{
+  const c=d.data({serverTimestamps:"estimate"}),t=tms(c),prev=ntSeen[d.id]||0;
+  if(t>prev)ntSeen[d.id]=t;
+  if(first||t<=prev||!c.lu||c.lu==u.uid||d.metadata.hasPendingWrites)return;
+  if(c.del&&c.del[u.uid]&&c.del[u.uid].toMillis&&c.del[u.uid].toMillis()>=t)return;
+  const o=(c.members||[]).find(x=>x!=u.uid),name=UM[o]?nm(UM[o]):"KodYol",txt=c.last||"";
+  const here=window.curV=="chat"&&room==d.id&&!document.hidden;
+  if(!window.KS||KS.on)ntChime(here?.4:1);
+  if(here)return;
+  try{if(navigator.vibrate)navigator.vibrate([80,40,80])}catch(e){}
+  if(document.hidden){ntUnread++;document.title="("+ntUnread+") "+ntTitle;ntSys(d.id,name,txt)}
+  else ntBanner(d.id,name,txt)
+ })}
 /* Push-уведомления: разрешение спрашиваем при первом нажатии после входа, токен сохраняем в fcm/{uid} */
 async function pushInit(u){
  try{
@@ -1006,7 +1055,7 @@ onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
    const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
-  im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
+  ntFirst=true;ntSeen={};im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{ntIn(s,u);inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
  }else{proWatch(null);MY={};US=[];UM={};inbox=[];room=null;navAv()}
  window.RV();const q=new URLSearchParams(location.search).get("u");if(u&&q&&!deep){deep=true;openU(q)}});
 navAv();window.show("home");
