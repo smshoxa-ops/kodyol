@@ -848,6 +848,8 @@ import{getFirestore,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,
 const FBCFG={apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol-cc1e7.firebaseapp.com",projectId:"kodyol-cc1e7",storageBucket:"kodyol-cc1e7.firebasestorage.app",messagingSenderId:"127627076102",appId:"1:127627076102:web:bab284f58ba48955fc5987"};const app=initializeApp(FBCFG);
 const auth=getAuth(app),db=getFirestore(app);
 import{getMessaging,getToken,isSupported}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+/* Ссылка на бесплатный push-сервер (Cloudflare Worker). Пусто = push при закрытом приложении выключен */
+const PUSH_URL="https://late-cell-a0b6kodyol-push.gggggg33333yccy.workers.dev/";
 const VAPID="BIQhuu-ZvQ-PLDKd7xX7XmAdw8HpduYTeLDHQnW47xI4ckMrSsL61ZqL9ER0SCbzueqHO-DiHx6hmOuZ127PPC0";
 /* ===== Уведомления о новых сообщениях: звук как в Telegram + всплывашка + системное уведомление ===== */
 let ntSeen={},ntFirst=true,ntUnread=0,ntCtx=null;
@@ -1018,7 +1020,8 @@ function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const 
    if(room!="general"){const z=mk("button","chip");z.innerHTML=ico("trash");z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
    if(mine){m.append(b);pi=null}else{const w=mk("div","mr"),a=av(UM[d.uid]||{name:d.name,photo:d.photo},36);a.style.cursor="pointer";a.onclick=()=>openU(d.uid);if(pi&&pi.uid==d.uid)pi.a.style.visibility="hidden";pi={uid:d.uid,a};w.append(a,b);m.append(w)}});seenEl=null;if(lastD&&lastD.uid==me.uid&&room!="general"){seenEl=mk("div","seen");m.append(seenEl);lastMine={t:tms(lastD)};paintSeen()}window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
 async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt<1000)return;lt=Date.now();i.value="";const id=room;
- try{await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:t.slice(0,500),ts:serverTimestamp()});
+ try{const mref=await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:t.slice(0,500),ts:serverTimestamp()});
+  if(id!="general"&&PUSH_URL)fetch(PUSH_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({chatId:id,msgId:mref.id}),keepalive:true}).catch(()=>{});
   if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:t.slice(0,80),lu:me.uid,ts:serverTimestamp()},{merge:true})}catch(e){alert(e.message)}}
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
