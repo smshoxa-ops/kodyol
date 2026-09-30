@@ -1,5 +1,5 @@
 // KodYol service worker: офлайн-режим для статических файлов сайта
-const CACHE = "kodyol-v60";
+const CACHE = "kodyol-v61";
 const ASSETS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "logo.png", "favicon.png"];
 
 self.addEventListener("install", (e) => {
@@ -49,5 +49,32 @@ self.addEventListener("fetch", (e) => {
         return res;
       })
     )
+  );
+});
+
+// Push-уведомления (FCM): показываем уведомление, когда приложение закрыто
+self.addEventListener("push", (e) => {
+  let j = {};
+  try { j = e.data ? e.data.json() : {}; } catch (_) {}
+  const d = j.data || j.notification || j;
+  e.waitUntil(
+    self.registration.showNotification(d.title || "KodYol", {
+      body: d.body || "",
+      icon: "icon-192.png",
+      badge: "favicon.png",
+      tag: d.tag || "kodyol-msg",
+      data: { url: d.url || "./" }
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || "./";
+  e.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const c of list) { if ("focus" in c) return c.focus(); }
+      return clients.openWindow(url);
+    })
   );
 });
