@@ -847,22 +847,6 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,createUserW
 import{getFirestore,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,where,orderBy,limit,onSnapshot,serverTimestamp,updateDoc,arrayUnion,writeBatch}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const FBCFG={apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol-cc1e7.firebaseapp.com",projectId:"kodyol-cc1e7",storageBucket:"kodyol-cc1e7.firebasestorage.app",messagingSenderId:"127627076102",appId:"1:127627076102:web:bab284f58ba48955fc5987"};const app=initializeApp(FBCFG);
 const auth=getAuth(app),db=getFirestore(app);
-import{getMessaging,getToken,isSupported}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
-const VAPID="BIQhuu-ZvQ-PLDKd7xX7XmAdw8HpduYTeLDHQnW47xI4ckMrSsL61ZqL9ER0SCbzueqHO-DiHx6hmOuZ127PPC0";
-/* Push-уведомления: разрешение спрашиваем при первом нажатии после входа, токен сохраняем в fcm/{uid} */
-async function pushInit(u){
- try{
-  if(!("Notification" in window)||!("serviceWorker" in navigator)||!(await isSupported()))return;
-  const go=async()=>{
-   if(Notification.permission!=="granted"){const p=await Notification.requestPermission();if(p!=="granted")return}
-   const reg=await navigator.serviceWorker.ready;
-   const tk=await getToken(getMessaging(app),{vapidKey:VAPID,serviceWorkerRegistration:reg});
-   if(tk)await setDoc(doc(db,"fcm",u.uid),{tokens:arrayUnion(tk),ts:serverTimestamp()},{merge:true});
-  };
-  if(Notification.permission==="granted")go().catch(()=>{});
-  else if(Notification.permission==="default"){const h=()=>{document.removeEventListener("click",h,true);go().catch(()=>{})};document.addEventListener("click",h,true)}
- }catch(e){}
-}
 const E=i=>document.getElementById(i),mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 let me=null,MY={},US=[],UM={},room=null,un=null,uu=null,um=null,im=null,lt=0,vu=null,prev="home",inbox=[],cs=[],deep=false;
 const nm=u=>(u&&(u.username||u.name))||"?",tms=c=>c.ts&&c.ts.toMillis?c.ts.toMillis():0,tf=c=>c.ts&&c.ts.toDate?c.ts.toDate().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"";
@@ -1001,7 +985,7 @@ function askUsername(u,r,dn){return new Promise(res=>{
   catch(e){b.disabled=false;m.textContent=e.code=="permission-denied"?L.k:(e.code||e.message)}};
  setTimeout(()=>i.focus(),60)})}
 onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
- if(u){pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
+ if(u){proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
    const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});

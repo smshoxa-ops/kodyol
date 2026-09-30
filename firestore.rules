@@ -86,14 +86,6 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(["until"]) && request.resource.data.until is timestamp;
     }
 
-    // Токены push-уведомлений: только владелец (сервер читает через Admin SDK)
-    match /fcm/{uid} {
-      allow create, update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['tokens','ts'])
-        && request.resource.data.tokens is list && request.resource.data.tokens.size() <= 20;
-      allow read, delete: if signedIn() && request.auth.uid == uid;
-    }
-
     // Жалобы: только создавать
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.by == request.auth.uid;
