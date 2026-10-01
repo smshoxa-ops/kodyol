@@ -1100,14 +1100,18 @@ window.IC.vcam='<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height
 window.IC.vflip='<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/>';
 window.IC.spk='<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>';
 const K_CL={
-ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон",sp:"Динамик",ce:"Аудиозвонок завершён",cm:"Пропущенный звонок",cn:"Нет ответа",cd:"Звонок отклонён",v:"Видеозвонок",vi:"Входящий видеозвонок",vce:"Видеозвонок завершён",cam:"Камера",fl:"Сменить",mc:"Нет доступа к камере или микрофону. Разреши их в настройках."},
-uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon",sp:"Karnay",ce:"Audio qo'ng'iroq tugadi",cm:"O'tkazib yuborilgan qo'ng'iroq",cn:"Javob bermadi",cd:"Qo'ng'iroq rad etildi",v:"Video qo'ng'iroq",vi:"Kiruvchi video qo'ng'iroq",vce:"Video qo'ng'iroq tugadi",cam:"Kamera",fl:"Almashtirish",mc:"Kamera yoki mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering."},
-en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone",sp:"Speaker",ce:"Audio call ended",cm:"Missed call",cn:"No answer",cd:"Call declined",v:"Video call",vi:"Incoming video call",vce:"Video call ended",cam:"Camera",fl:"Flip",mc:"No camera or microphone access. Allow them in settings."},
-zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风",sp:"扬声器",ce:"语音通话已结束",cm:"未接来电",cn:"无人接听",cd:"通话已拒绝",v:"视频通话",vi:"视频来电",vce:"视频通话已结束",cam:"摄像头",fl:"翻转",mc:"无法使用摄像头或麦克风，请在设置中允许。"},
-es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono",sp:"Altavoz",ce:"Llamada de audio finalizada",cm:"Llamada perdida",cn:"Sin respuesta",cd:"Llamada rechazada",v:"Videollamada",vi:"Videollamada entrante",vce:"Videollamada finalizada",cam:"Cámara",fl:"Girar",mc:"Sin acceso a la cámara o al micrófono. Permítelo en ajustes."},
-de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon",sp:"Lautsprecher",ce:"Audioanruf beendet",cm:"Verpasster Anruf",cn:"Keine Antwort",cd:"Anruf abgelehnt",v:"Videoanruf",vi:"Eingehender Videoanruf",vce:"Videoanruf beendet",cam:"Kamera",fl:"Wechseln",mc:"Kein Zugriff auf Kamera oder Mikrofon. Erlaube ihn in den Einstellungen."}};
+ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон",sp:"Динамик",ce:"Аудиозвонок завершён",cm:"Пропущенный звонок",cn:"Нет ответа",cd:"Звонок отклонён",v:"Видеозвонок",vi:"Входящий видеозвонок",vce:"Видеозвонок завершён",cam:"Камера",fl:"Сменить",mc:"Нет доступа к камере или микрофону. Разреши их в настройках.",x:"Не удалось соединиться"},
+uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon",sp:"Karnay",ce:"Audio qo'ng'iroq tugadi",cm:"O'tkazib yuborilgan qo'ng'iroq",cn:"Javob bermadi",cd:"Qo'ng'iroq rad etildi",v:"Video qo'ng'iroq",vi:"Kiruvchi video qo'ng'iroq",vce:"Video qo'ng'iroq tugadi",cam:"Kamera",fl:"Almashtirish",mc:"Kamera yoki mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",x:"Ulanib bo'lmadi"},
+en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone",sp:"Speaker",ce:"Audio call ended",cm:"Missed call",cn:"No answer",cd:"Call declined",v:"Video call",vi:"Incoming video call",vce:"Video call ended",cam:"Camera",fl:"Flip",mc:"No camera or microphone access. Allow them in settings.",x:"Couldn't connect"},
+zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风",sp:"扬声器",ce:"语音通话已结束",cm:"未接来电",cn:"无人接听",cd:"通话已拒绝",v:"视频通话",vi:"视频来电",vce:"视频通话已结束",cam:"摄像头",fl:"翻转",mc:"无法使用摄像头或麦克风，请在设置中允许。",x:"无法连接"},
+es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono",sp:"Altavoz",ce:"Llamada de audio finalizada",cm:"Llamada perdida",cn:"Sin respuesta",cd:"Llamada rechazada",v:"Videollamada",vi:"Videollamada entrante",vce:"Videollamada finalizada",cam:"Cámara",fl:"Girar",mc:"Sin acceso a la cámara o al micrófono. Permítelo en ajustes.",x:"No se pudo conectar"},
+de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon",sp:"Lautsprecher",ce:"Audioanruf beendet",cm:"Verpasster Anruf",cn:"Keine Antwort",cd:"Anruf abgelehnt",v:"Videoanruf",vi:"Eingehender Videoanruf",vce:"Videoanruf beendet",cam:"Kamera",fl:"Wechseln",mc:"Kein Zugriff auf Kamera oder Mikrofon. Erlaube ihn in den Einstellungen.",x:"Verbindung fehlgeschlagen"}};
 const K_Cx=k=>(K_CL[window.lang]||K_CL.en)[k];
-const K_ICE_CFG={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]};
+/* TURN-серверы для звонков между разными странами и сетями.
+   Вставь сюда массив iceServers из metered.ca: Dashboard → TURN Server → Instructions.
+   Пример: const K_TURN=[{urls:"turn:...",username:"...",credential:"..."}]; Пока пусто, звонки работают только в простых сетях. */
+const K_TURN=[];
+const K_ICE_CFG={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]},...K_TURN],iceCandidatePoolSize:2};
 let K_cs=null,K_callUn=null,K_rg=null;
 const K_media=v=>({audio:K_MEDIA.audio,video:v?{facingMode:"user",width:{ideal:640},height:{ideal:480}}:false});
 const K_MEDIA={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false};
@@ -1157,13 +1161,14 @@ function K_sendIce(c,cand){const x=JSON.stringify(cand);if(!c.ready){c.q.push(x)
 function K_addC(c,x){const p=c.pc;if(p&&p.remoteDescription)p.addIceCandidate(JSON.parse(x)).catch(()=>{});else c.pend.push(x)}
 function K_flushC(c){const a=c.pend;c.pend=[];a.forEach(x=>K_addC(c,x))}
 function K_listenIce(c){c.un.push(onSnapshot(collection(db,"calls",c.id,"ice"),s=>s.docChanges().forEach(ch=>{if(ch.type=="added"){const x=ch.doc.data();if(x.uid!=me.uid)K_addC(c,x.c)}}),()=>{}))}
+function K_watch(c){clearTimeout(c.ct);c.ct=setTimeout(()=>{const p=c.pc;if(K_cs==c&&p&&p.connectionState!="connected"&&p.iceConnectionState!="connected"&&p.iceConnectionState!="completed")K_endCall(true,K_Cx("x"))},25000)}
 function K_newPC(c){const pc=new RTCPeerConnection(K_ICE_CFG);c.pc=pc;c.stream.getTracks().forEach(t=>pc.addTrack(t,c.stream));
  const au=document.createElement("audio");au.autoplay=true;au.setAttribute("playsinline","");document.body.append(au);c.au=au;
  pc.ontrack=e=>{au.srcObject=e.streams[0];au.play&&au.play().catch(()=>{});c.remote=e.streams[0];if(c.video){const rv=E("callRV");if(rv){rv.srcObject=c.remote;rv.style.display="block";rv.play&&rv.play().catch(()=>{})}const ca=E("callAv");if(ca)ca.style.display="none"}};
- pc.onicecandidate=e=>{if(e.candidate)K_sendIce(c,e.candidate)};
- pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
+ pc.onicecandidate=e=>{if(e.candidate)K_sendIce(c,e.candidate)};pc.oniceconnectionstatechange=()=>{if(pc.iceConnectionState=="failed"&&K_cs==c)K_endCall(true,K_Cx("x"))};
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected")clearTimeout(c.ct);if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
  return pc}
-function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);K_ring(false);clearInterval(c.tm);clearTimeout(c.to);
+function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);K_ring(false);clearInterval(c.tm);clearTimeout(c.to);clearTimeout(c.ct);
  c.un.forEach(f=>{try{f()}catch(e){}});
  if(notify)updateDoc(doc(db,"calls",c.id),{status:c.inc?"declined":"ended"}).catch(()=>{});
  try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
@@ -1184,7 +1189,7 @@ async function K_startCall(o,video){
  c.ready=true;c.q.splice(0).forEach(x=>addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{}));
  K_listenIce(c);
  c.un.push(onSnapshot(ref,d=>{const x=d.data();if(!x||K_cs!=c)return;
-  if(x.status=="active"&&x.answer&&!pc.remoteDescription){K_setSt(K_Cx("n"));pc.setRemoteDescription(x.answer).then(()=>K_flushC(c)).catch(()=>{})}
+  if(x.status=="active"&&x.answer&&!pc.remoteDescription){K_setSt(K_Cx("n"));K_watch(c);pc.setRemoteDescription(x.answer).then(()=>K_flushC(c)).catch(()=>{})}
   else if(x.status=="declined"){c.dec=1;K_endCall(false,K_Cx("r"))}
   else if(x.status=="ended")K_endCall(false,K_Cx("f"))},()=>{}));
  c.to=setTimeout(()=>{if(K_cs==c&&!pc.remoteDescription){updateDoc(ref,{status:"ended"}).catch(()=>{});K_endCall(false,K_Cx("o"))}},45000)}
@@ -1200,7 +1205,7 @@ async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  try{c.stream=await navigator.mediaDevices.getUserMedia(K_media(c.video))}catch(e){toast(K_Cx(c.video?"mc":"m"),0);K_endCall(true);return}
  if(K_cs!=c){try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}return}
  c.inc=false;K_ring(false);clearTimeout(c.to);K_callUI(UM[c.peer]||{});K_setSt(K_Cx("n"));
- const pc=K_newPC(c);
+ const pc=K_newPC(c);K_watch(c);
  try{await pc.setRemoteDescription(c.offer);const an=await pc.createAnswer();await pc.setLocalDescription(an);
   await updateDoc(doc(db,"calls",c.id),{status:"active",answer:{type:an.type,sdp:an.sdp}});K_listenIce(c)}
  catch(e){toast(e.code||e.message,0);K_endCall(true,K_Cx("f"))}}
