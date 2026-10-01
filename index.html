@@ -381,6 +381,47 @@ body.nothome .apk{display:none}
 #banScr h1{margin:14px 0 8px;font:900 clamp(34px,11vw,56px)/1.05 Poppins,system-ui,sans-serif;color:#ff4d4d;letter-spacing:1px;text-shadow:0 0 30px rgba(255,60,60,.6)}
 #banScr p{margin:0 0 26px;color:#d8b8b8;font-size:17px}
 #banScr button{padding:13px 34px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font:600 16px Poppins,system-ui,sans-serif;cursor:pointer}
+
+/* v82: обрезка фото профиля */
+#crp{position:fixed;inset:0;z-index:3000;display:flex;flex-direction:column;background:#000;color:#fff;touch-action:none}
+#crp .crh{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px}
+#crp .crh button{background:none;border:0;color:#fff;font:600 17px Poppins,system-ui,sans-serif;padding:8px;cursor:pointer}
+#crp .crh .i{width:26px;height:26px}
+#crp .crst{position:relative;flex:1;overflow:hidden;touch-action:none;cursor:grab}
+#crp .crf{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:2px solid rgba(255,255,255,.85);box-shadow:0 0 0 9999px rgba(0,0,0,.62);pointer-events:none;box-sizing:border-box}
+#crp .crf::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(255,255,255,.55)}
+#crp .crz{margin:14px 28px calc(env(safe-area-inset-bottom,0px) + 22px);accent-color:#6fd915}
+
+/* v83: истории */
+.stw{position:relative;display:inline-block;border-radius:50%;padding:7px;margin:-7px;flex:none}
+.stw.has{background:linear-gradient(135deg,#a6ff3c,#27a400);cursor:pointer}
+.stw.has .av{box-shadow:0 0 0 3px var(--bg)}
+.stpl{position:absolute;right:3px;bottom:3px;width:28px;height:28px;border-radius:50%;border:3px solid var(--bg);background:#fff;color:#111;display:grid;place-items:center;padding:0;cursor:pointer}
+.stpl .i{width:16px;height:16px;stroke-width:3}
+.hd .stpb{background:none;color:var(--tx);width:36px;height:36px;margin-right:-4px}.hd .stpb .i{width:28px;height:28px}
+#scam,#spv,#sview{position:fixed;inset:0;z-index:2500;background:#000;color:#fff;display:flex;flex-direction:column;overflow:hidden}
+#scam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sct{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent)}
+.sct button{background:none;border:0;color:#fff;padding:6px;cursor:pointer;font:600 16px Poppins,system-ui,sans-serif}.sct .i{width:28px;height:28px}
+.sct .scp{background:linear-gradient(135deg,#24980a,#6fd915);padding:9px 18px;border-radius:999px;font-weight:700}
+.scb{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:14px 20px calc(env(safe-area-inset-bottom,0px) + 14px);background:linear-gradient(0deg,rgba(0,0,0,.6),transparent)}
+.scr{display:flex;align-items:center;justify-content:space-between}
+.scl{text-align:center;margin-top:10px;font-size:14px;font-weight:700;letter-spacing:1.5px}
+.scg,.scf{width:46px;height:46px;border-radius:14px;border:2px solid #fff;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center;padding:0;cursor:pointer}.scf{border:0;border-radius:50%;background:rgba(255,255,255,.2)}.scg .i,.scf .i{width:24px;height:24px}
+.scs{--p:0;position:relative;width:84px;height:84px;border-radius:50%;border:0;padding:0;cursor:pointer;display:grid;place-items:center;background:conic-gradient(#ff3b3b calc(var(--p)*360deg),rgba(255,255,255,.9) 0);-webkit-mask:radial-gradient(circle,transparent 0 0,#000 0);touch-action:none;user-select:none;-webkit-user-select:none}
+.scs::before{content:"";position:absolute;inset:4px;border-radius:50%;background:#000}
+.scs i{position:relative;width:62px;height:62px;border-radius:50%;background:#e6e6e6;transition:.15s}.scs.rec i{width:40px;height:40px;border-radius:12px;background:#ff3b3b}
+#spv .spm{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+#sview .svb{position:relative;flex:1;margin:calc(env(safe-area-inset-top,0px) + 6px) 8px 0;border-radius:22px;overflow:hidden;background:#111}
+#sview .svm{position:absolute;inset:0}#sview .svm img,#sview .svm video{width:100%;height:100%;object-fit:contain;background:#000}
+#sview .svbars{position:absolute;left:10px;right:10px;top:10px;z-index:4;display:flex;gap:4px}
+#sview .svbars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35);overflow:hidden}#sview .svbars b{display:block;height:100%;width:0;background:#fff}
+#sview .svh{position:absolute;left:0;right:0;top:20px;z-index:4;display:flex;align-items:center;gap:10px;padding:8px 14px;background:linear-gradient(180deg,rgba(0,0,0,.5),transparent)}
+#sview .svh .sp{flex:1}#sview .svw{display:flex;align-items:baseline;gap:8px}#sview .svw span{opacity:.7;font-size:14px}
+#sview .svh button{background:none;border:0;color:#fff;padding:4px;cursor:pointer}#sview .svh .i{width:26px;height:26px}
+#sview .svl,#sview .svr{position:absolute;top:70px;bottom:0;z-index:3}#sview .svl{left:0;width:35%}#sview .svr{right:0;width:65%}
+#sview .svf{padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 12px);min-height:20px}
+#sview .svmsg{width:100%;text-align:left;padding:14px 20px;border-radius:999px;border:1.5px solid rgba(255,255,255,.75);background:none;color:#fff;font:500 16px Poppins,system-ui,sans-serif;cursor:pointer}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -1047,8 +1088,8 @@ function counts(uid,cb){cs.forEach(f=>f());cs=[];let a=[],b=[];const g=()=>cb(b.
 function share(){const u=location.origin+location.pathname+"?u="+me.uid;if(navigator.share)navigator.share({title:"KodYol",url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}alert(T.cpy)}}
 function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  if(!own){const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>window.show(prev||"find");top.append(bk)}
- top.append(mk("span",null,nm(u)));box.append(top);
- const p=mk("div","pf");p.append(av(u,84));const st=mk("div","st");
+ if(own){const pb=mk("button","stpb");pb.innerHTML=ico("stplus");pb.onclick=storyCam;top.append(pb)}top.append(mk("span",null,nm(u)));box.append(top);
+ const p=mk("div","pf");const aw=mk("div","stw");aw.append(av(u,84));p.append(aw);stBind(aw,uid,own);const st=mk("div","st");
  st.innerHTML='<div><b>'+(u.learned||0)+'</b><span>'+T.done+'</span></div><div><b class="s1">0</b><span>'+T.fol+'</span></div><div><b class="s2">0</b><span>'+T.fng+'</span></div>';p.append(st);box.append(p);
  box.append(mk("b",null,u.name||""));const bi=mk("div",null,u.bio||"");bi.style.cssText="color:var(--mu);margin-top:2px";box.append(bi);
  const pr=mk("div","pr");box.append(pr);
@@ -1063,7 +1104,7 @@ window.R.edit=()=>{const b=E("c-edit");if(!me){login(b);return}b.innerHTML="";
  const h=mk("div","hd"),bk=mk("button",null,"←");bk.onclick=()=>window.show("me");h.append(bk,mk("span",null,T.edt));b.append(h);
  const ph=mk("div");ph.style.cssText="text-align:center;margin:18px 0";let pv=MY.photo||"";ph.append(av(MY,96));
  const ch=mk("button","chip",T.chp),fi=mk("input");fi.type="file";fi.accept="image/*";fi.hidden=true;ch.onclick=()=>fi.click();
- fi.onchange=()=>{const f=fi.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=96;const x=c.getContext("2d"),z=Math.min(im.width,im.height);x.drawImage(im,(im.width-z)/2,(im.height-z)/2,z,z,0,0,96,96);pv=c.toDataURL("image/jpeg",.7);ph.replaceChild(av({photo:pv},96),ph.firstChild)};im.src=URL.createObjectURL(f)};
+ fi.onchange=()=>{const f=fi.files[0];if(!f)return;fi.value="";cropPhoto(f,u=>{pv=u;ph.replaceChild(av({photo:pv},96),ph.firstChild)})};
  ph.append(mk("br"),ch,fi);b.append(ph);
  const fl=(l,v,ta)=>{const d=mk("div","fld"),i=mk(ta?"textarea":"input");i.value=v||"";if(ta){i.rows=3;i.maxLength=150}else i.maxLength=30;d.append(mk("label",null,l),i);b.append(d);return i};
  const n=fl(T.nm,MY.name),u=fl(T.un,MY.username),bi=fl(T.bio,MY.bio,1),sv=mk("button","chip on",T.sav),er=mk("p","info");sv.style.cssText="margin-top:18px;width:100%;padding:14px";
@@ -1096,7 +1137,7 @@ function shRender(l){l.innerHTML="";const a=shGet();
  a.forEach(x=>{const u=UM[x.id]||x;l.append(row(u,u.name||"",()=>{shAdd({id:x.id,username:u.username,name:u.name});openU(x.id)}));
   if(!UM[x.id]||!UM[x.id].photo){getDoc(doc(db,"users",x.id)).then(d=>{if(d.exists()){UM[x.id]=Object.assign({id:x.id},d.data());if(window.curV=="find"&&E("fq")&&!E("fq").value.trim()&&E("fl")===l)shRender(l)}}).catch(()=>{})}})}
 
-IC.crown='<path d="M3 18h18l-1.5-9-4.5 4-3-7-3 7-4.5-4z"/><path d="M4 21h16"/>';
+window.IC.crown='<path d="M3 18h18l-1.5-9-4.5 4-3-7-3 7-4.5-4z"/><path d="M4 21h16"/>';
 const fdt=t=>t&&t.toDate?t.toDate().toLocaleString([],{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"";
 async function owBan(id,on){try{if(on)await setDoc(doc(db,"bans",id),{by:me.uid,ts:serverTimestamp()});else await deleteDoc(doc(db,"bans",id));toast(on?"Заблокирован":"Разблокирован",1);window.R.owner()}catch(e){toast(e.code||e.message,0)}}
 const ow={tab:"users"};
@@ -1120,6 +1161,96 @@ window.R.owner=async()=>{const b=E("c-owner");b.innerHTML="";window.owUn&&window
  window.owUn=onSnapshot(query(collection(db,"chats","general","msgs"),orderBy("ts","desc"),limit(60)),s=>{body.innerHTML="";if(!s.size)body.append(mk("div","empty","Пусто"));
   s.docs.forEach(d=>{const m=d.data();if(String(m.text).startsWith("§call|"))return;const c=mk("div","owr"),a=mk("div","owa");c.append(mk("div","owh",(m.name||"?")+" · "+fdt(m.ts)),mk("div","owt",m.text));
    act(a,"Профиль",()=>openU(m.uid));act(a,"Удалить",()=>deleteDoc(d.ref).catch(er));if(m.uid!=me.uid)act(a,"Бан",()=>owBan(m.uid,true));c.append(a);body.append(c)})},e=>body.append(mk("div","empty",e.code||e.message)))};
+
+function cropPhoto(file,done){
+ const url=URL.createObjectURL(file),im=new Image();
+ im.onerror=()=>{URL.revokeObjectURL(url);toast("Не удалось открыть фото",0)};
+ im.onload=()=>{const w=im.naturalWidth,h=im.naturalHeight;
+  const o=mk("div");o.id="crp";const hd=mk("div","crh"),bk=mk("button");bk.innerHTML=ico("back");const sv=mk("button","crs",T.sav);hd.append(bk,sv);
+  const st=mk("div","crst"),pic=mk("img"),fr=mk("div","crf"),zr=mk("input","crz");pic.src=url;pic.draggable=false;zr.type="range";zr.min=1;zr.max=4;zr.step=.01;zr.value=1;
+  st.append(pic,fr);o.append(hd,st,zr);document.body.append(o);
+  let V=0,s0=1,z=1,x=0,y=0;const P=new Map();let pd=0;
+  const clamp=()=>{z=Math.min(4,Math.max(1,z));const sc=s0*z,mx=Math.max(0,(w*sc-V)/2),my=Math.max(0,(h*sc-V)/2);x=Math.min(mx,Math.max(-mx,x));y=Math.min(my,Math.max(-my,y))};
+  const draw=()=>{clamp();pic.style.cssText="position:absolute;left:50%;top:50%;max-width:none;width:"+w+"px;height:"+h+"px;transform:translate(calc(-50% + "+x+"px),calc(-50% + "+y+"px)) scale("+(s0*z)+");transform-origin:center;user-select:none;-webkit-user-drag:none;pointer-events:none";zr.value=z};
+  const lay=()=>{V=Math.min(st.clientWidth-32,st.clientHeight-32,460);fr.style.width=fr.style.height=V+"px";s0=V/Math.min(w,h);draw()};
+  requestAnimationFrame(lay);window.addEventListener("resize",lay);
+  const close=()=>{window.removeEventListener("resize",lay);URL.revokeObjectURL(url);o.remove()};
+  bk.onclick=close;
+  st.onpointerdown=e=>{st.setPointerCapture(e.pointerId);P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size==2){const [a,b]=[...P.values()];pd=Math.hypot(a[0]-b[0],a[1]-b[1])}};
+  st.onpointermove=e=>{if(!P.has(e.pointerId))return;const q=P.get(e.pointerId);
+   if(P.size==1){x+=e.clientX-q[0];y+=e.clientY-q[1]}
+   P.set(e.pointerId,[e.clientX,e.clientY]);
+   if(P.size==2){const [a,b]=[...P.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd)z*=d/pd;pd=d}
+   draw()};
+  st.onpointerup=st.onpointercancel=e=>{P.delete(e.pointerId);pd=0};
+  st.onwheel=e=>{e.preventDefault();z*=Math.exp(-e.deltaY*.0025);draw()};
+  zr.oninput=()=>{z=+zr.value;draw()};
+  sv.onclick=()=>{const sc=s0*z,side=V/sc,sx=w/2-x/sc-side/2,sy=h/2-y/sc-side/2;let out="";
+   const step=(src,sw,n)=>{const c=document.createElement("canvas");c.width=c.height=n;const g=c.getContext("2d");g.imageSmoothingEnabled=true;g.imageSmoothingQuality="high";g.fillStyle="#fff";g.fillRect(0,0,n,n);g.drawImage(src,src===im?sx:0,src===im?sy:0,sw,sw,0,0,n,n);return c};
+   find:for(const n of [384,320,256,192,128]){let src=im,sw=side;while(sw>n*2){const m=Math.max(n,Math.round(sw/2));src=step(src,sw,m);sw=m}
+    const c=step(src,sw,n);for(const q of [.88,.8,.72,.64,.56,.48]){const u=c.toDataURL("image/jpeg",q);if(u.length<=28000){out=u;break find}}}
+   if(!out){toast("Фото слишком сложное, выбери другое",0);return}
+   close();done(out)}}
+ ;im.src=url}
+
+Object.assign(window.IC,{stplus:'<path d="M12 5v14M5 12h14"/>',stflip:'<path d="M20 7h-9a5 5 0 0 0-5 5v1"/><path d="M17 4l3 3-3 3"/><path d="M4 17h9a5 5 0 0 0 5-5v-1"/><path d="M7 20l-3-3 3-3"/>',stgal:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',stfl:'<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>',stfo:'<path d="M13 2L5 14h6l-1 8 8-12h-6z"/><path d="M3 3l18 18"/>',stx:'<path d="M5 5l14 14M19 5L5 19"/>',stdt:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'});
+Object.assign(LT.ru,{sto:"ИСТОРИЯ",pub:"Опубликовать",wm:"Написать сообщение",nc:"Нет доступа к камере. Выбери из галереи",mx:"Максимум 25 секунд",big:"Файл слишком большой",ok:"История опубликована ✓",dq:"Удалить историю?",dl:"Удалить"});
+Object.assign(LT.en,{sto:"STORY",pub:"Share",wm:"Send message",nc:"No camera access. Pick from gallery",mx:"Max 25 seconds",big:"File is too large",ok:"Story published ✓",dq:"Delete this story?",dl:"Delete"});
+Object.assign(LT.uz,{sto:"HIKOYA",pub:"Joylash",wm:"Xabar yuborish",nc:"Kameraga ruxsat yo'q. Galereyadan tanlang",mx:"Eng ko'pi 25 soniya",big:"Fayl juda katta",ok:"Hikoya joylandi ✓",dq:"Hikoya o'chirilsinmi?",dl:"O'chirish"});
+async function stGet(uid){const s=await getDocs(query(collection(db,"stories"),where("uid","==",uid),limit(30))),now=Date.now(),a=[];
+ s.docs.forEach(d=>{const x={id:d.id,...d.data()};if(x.exp>now)a.push(x);else if(uid==me.uid){deleteDoc(d.ref).catch(()=>{})}});
+ return a.sort((p,q)=>p.exp-q.exp)}
+function stBind(aw,uid,own){
+ if(own){const pl=mk("button","stpl");pl.innerHTML=ico("stplus");pl.onclick=e=>{e.stopPropagation();storyCam()};aw.append(pl)}
+ stGet(uid).then(l=>{if(!l.length)return;aw.classList.add("has");aw.onclick=()=>storyView(uid,l)}).catch(()=>{})}
+function photoData(u){return new Promise((res,rej)=>{const im=new Image();im.onerror=()=>rej(new Error("img"));im.onload=()=>{let k=Math.min(1,1280/Math.max(im.naturalWidth,im.naturalHeight));
+ for(let n=0;n<4;n++){const c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);const g=c.getContext("2d");g.imageSmoothingQuality="high";g.drawImage(im,0,0,c.width,c.height);
+  for(const q of [.82,.7,.58]){const d=c.toDataURL("image/jpeg",q);if(d.length<=700000)return res(d)}k*=.75}rej(new Error(XF("big")))};im.src=u})}
+function storyPrev(it,done){
+ const url=URL.createObjectURL(it.blob),o=mk("div");o.id="spv";const hd=mk("div","sct"),bk=mk("button"),pb=mk("button","scp",XF("pub"));bk.innerHTML=ico("back");hd.append(bk,pb);
+ const m=mk("img");m.src=url;m.className="spm";o.append(m,hd);document.body.append(o);const close=()=>{URL.revokeObjectURL(url);o.remove()};bk.onclick=close;
+ pb.onclick=async()=>{pb.disabled=true;pb.textContent="…";
+  try{const d={uid:me.uid,type:it.type,ts:serverTimestamp(),exp:Date.now()+864e5};
+   d.img=await photoData(url);
+   await addDoc(collection(db,"stories"),d);toast(XF("ok"),1);close();done();if(window.curV=="me")window.R.me()}
+  catch(e){pb.disabled=false;pb.textContent=XF("pub");toast(e.code||e.message,0)}}}
+async function storyCam(){
+ if(!me||document.getElementById("scam"))return;
+ const o=mk("div"),vd=mk("video"),top=mk("div","sct"),xb=mk("button"),fb=mk("button"),bot=mk("div","scb"),row=mk("div","scr"),gal=mk("button","scg"),sh=mk("button","scs"),fp=mk("button","scf"),fi=mk("input");
+ o.id="scam";vd.muted=true;vd.autoplay=true;vd.setAttribute("playsinline","");xb.innerHTML=ico("stx");fb.innerHTML=ico("stfo");top.append(xb,fb,mk("span"));
+ gal.innerHTML=ico("stgal");sh.append(mk("i"));fp.innerHTML=ico("stflip");row.append(gal,sh,fp);bot.append(row,mk("div","scl",XF("sto")));fi.type="file";fi.accept="image/*";fi.hidden=true;
+ o.append(vd,top,bot,fi);document.body.append(o);
+ let stream=null,face="environment",torch=false;
+ const stop=()=>{stream&&stream.getTracks().forEach(t=>t.stop());stream=null};
+ const close=()=>{stop();o.remove()};
+ const start=async()=>{stop();torch=false;fb.innerHTML=ico("stfo");const vc={facingMode:{ideal:face},width:{ideal:1080},height:{ideal:1920}};
+  try{stream=await navigator.mediaDevices.getUserMedia({video:vc,audio:true})}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:vc})}catch(e2){toast(XF("nc"),0);fb.style.visibility="hidden";return}}
+  vd.srcObject=stream;vd.style.transform=face=="user"?"scaleX(-1)":"";const t=stream.getVideoTracks()[0],c=t.getCapabilities?t.getCapabilities():{};fb.style.visibility=c.torch?"visible":"hidden"};
+ const snap=()=>{if(!vd.videoWidth)return;const c=document.createElement("canvas");c.width=vd.videoWidth;c.height=vd.videoHeight;c.getContext("2d").drawImage(vd,0,0);c.toBlob(b=>b&&storyPrev({type:"photo",blob:b},close),"image/jpeg",.92)};
+ sh.onclick=snap;
+ fp.onclick=()=>{face=face=="user"?"environment":"user";start()};
+ fb.onclick=async()=>{try{torch=!torch;await stream.getVideoTracks()[0].applyConstraints({advanced:[{torch}]});fb.innerHTML=ico(torch?"stfl":"stfo")}catch(e){torch=false}};
+ xb.onclick=close;gal.onclick=()=>fi.click();
+ fi.onchange=()=>{const f=fi.files[0];fi.value="";if(!f)return;
+  storyPrev({type:"photo",blob:f},close)};
+ start()}
+function storyView(uid,list){
+ if(document.getElementById("sview"))return;const u=uid==me.uid?MY:(UM[uid]||{}),own=uid==me.uid,o=mk("div");o.id="sview";
+ const bx=mk("div","svb"),bars=mk("div","svbars"),hd=mk("div","svh"),md=mk("div","svm"),ft=mk("div","svf");
+ let i=0,raf=0,tok=0,segs=list.map(()=>{const g=mk("i"),f=mk("b");g.append(f);bars.append(g);return f});
+ const av1=av(u,38),nmx=mk("b",null,nm(u)),tm=mk("span"),xb=mk("button"),dt=mk("button");xb.innerHTML=ico("stx");dt.innerHTML=ico("stdt");
+ const who=mk("div","svw");who.append(nmx,tm);hd.append(av1,who,mk("span","sp"));if(own)hd.append(dt);hd.append(xb);
+ bx.append(bars,hd,md,ft);o.append(bx);document.body.append(o);
+ const close=()=>{cancelAnimationFrame(raf);tok++;o.remove()};xb.onclick=close;
+ const go=n=>{if(n<0)n=0;if(n>=list.length){close();return}i=n;paint()};
+ const run=dur=>{const my=++tok,t0=performance.now();cancelAnimationFrame(raf);const f=t=>{if(my!=tok)return;const p=Math.min(1,(t-t0)/dur);segs[i].style.width=p*100+"%";if(p>=1)go(i+1);else raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)};
+ const paint=()=>{cancelAnimationFrame(raf);tok++;md.innerHTML="";const s=list[i];segs.forEach((g,k)=>g.style.width=k<i?"100%":"0%");
+  const ms=s.ts&&s.ts.toMillis?s.ts.toMillis():s.exp-864e5,m=Math.max(0,Math.floor((Date.now()-ms)/60000));tm.textContent=m<1?"•":(m<60?m+"m":Math.floor(m/60)+"h");
+  {const im=mk("img");im.src=s.img;md.append(im);run(5000)}};
+ const l=mk("div","svl"),r=mk("div","svr");l.onclick=()=>go(i-1);r.onclick=()=>go(i+1);md.parentNode.insertBefore(l,md.nextSibling);l.after(r);
+ if(!own){const b=mk("button","svmsg",XF("wm"));b.onclick=()=>{close();room=[me.uid,uid].sort().join("_");window.show("chat")};ft.append(b)}
+ dt.onclick=()=>{cancelAnimationFrame(raf);tok++;if(!confirm(XF("dq"))){paint();return}const s=list[i];deleteDoc(doc(db,"stories",s.id)).then(()=>{list.splice(i,1);if(!list.length){close();if(window.curV=="me")window.R.me();return}segs.pop().parentNode.remove();if(i>=list.length)i=list.length-1;paint();if(window.curV=="me")window.R.me()}).catch(e=>{toast(e.code||e.message,0);paint()})};
+ paint()}
 window.R.find=()=>{const b=E("c-find");if(!me){login(b);return}if(!E("fq")){b.innerHTML='<div class="sb" style="margin:0 0 16px"><span>'+ico("search")+'</span><input id="fq" autocomplete="off"></div><div id="fl"></div>';E("fq").oninput=fl2}E("fq").placeholder=T.sch;fl2()};
 function inb(){const b=E("ib");if(!b)return;b.innerHTML="";b.append(mk("div","hd",T.inb));
  const g=mk("div","rw"),gi=mk("div","av");gi.innerHTML=ico("globe");gi.style.cssText="width:54px;height:54px;font-size:24px;background:var(--bd);color:var(--ac)";g.append(gi);const d=mk("div");d.append(mk("b",null,T.cgen),mk("small",null,T.cnote));g.append(d);g.onclick=()=>{room="general";window.R.chat()};b.append(g);
