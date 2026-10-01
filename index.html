@@ -1110,8 +1110,12 @@ const K_Cx=k=>(K_CL[window.lang]||K_CL.en)[k];
 /* TURN-серверы для звонков между разными странами и сетями.
    Вставь сюда массив iceServers из metered.ca: Dashboard → TURN Server → Instructions.
    Пример: const K_TURN=[{urls:"turn:...",username:"...",credential:"..."}]; Пока пусто, звонки работают только в простых сетях. */
-const K_TURN=[];
-const K_ICE_CFG={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]},...K_TURN],iceCandidatePoolSize:2};
+const K_TURN=[
+{urls:"turn:global.relay.metered.ca:80",username:"7e347d0ae249222da792f3bf",credential:"W9FZKgJjlAI0onTz"},
+{urls:"turn:global.relay.metered.ca:80?transport=tcp",username:"7e347d0ae249222da792f3bf",credential:"W9FZKgJjlAI0onTz"},
+{urls:"turn:global.relay.metered.ca:443",username:"7e347d0ae249222da792f3bf",credential:"W9FZKgJjlAI0onTz"},
+{urls:"turns:global.relay.metered.ca:443?transport=tcp",username:"7e347d0ae249222da792f3bf",credential:"W9FZKgJjlAI0onTz"}];
+const K_ICE_CFG={iceServers:[{urls:["stun:stun.relay.metered.ca:80","stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]},...K_TURN],iceCandidatePoolSize:2};
 let K_cs=null,K_callUn=null,K_rg=null;
 const K_media=v=>({audio:K_MEDIA.audio,video:v?{facingMode:"user",width:{ideal:640},height:{ideal:480}}:false});
 const K_MEDIA={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false};
