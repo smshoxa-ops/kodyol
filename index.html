@@ -1050,13 +1050,13 @@ function inb(){const b=E("ib");if(!b)return;b.innerHTML="";b.append(mk("div","hd
  const g=mk("div","rw"),gi=mk("div","av");gi.innerHTML=ico("globe");gi.style.cssText="width:54px;height:54px;font-size:24px;background:var(--bd);color:var(--ac)";g.append(gi);const d=mk("div");d.append(mk("b",null,T.cgen),mk("small",null,T.cnote));g.append(d);g.onclick=()=>{room="general";window.R.chat()};b.append(g);
  inbox.filter(c=>!(c.del&&c.del[me.uid]&&c.del[me.uid].toMillis&&c.del[me.uid].toMillis()>=tms(c))).sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid),rt=c.rd&&c.rd[me.uid]&&c.rd[me.uid].toMillis?c.rd[me.uid].toMillis():0,unr=c.lu&&c.lu!=me.uid&&tms(c)>rt,r=row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()});if(unr){r.querySelector("b").style.fontWeight="900";const dt=mk("i");dt.style.cssText="margin-left:auto;width:11px;height:11px;border-radius:50%;background:var(--ac);flex:none";r.append(dt)}b.append(r)})}
 function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>{un&&un();room=null;window.R.chat()};h.append(bk);
- if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};h.append(cl);h.append(dc)}
+ if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};const vb=mk("button");vb.innerHTML=ico("vcam");vb.style.marginLeft="6px";vb.setAttribute("aria-label",K_Cx("v"));vb.onclick=e=>{e.stopPropagation();K_startCall(o,true)};h.append(cl,vb,dc)}
  const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
  const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
  un=onSnapshot(query(collection(db,"chats",room,"msgs"),orderBy("ts","desc"),limit(100)),s=>{m.innerHTML="";let pv=0,lastD=null,pi=null;
   s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid;if((d.hid||[]).includes(me.uid)||tms(d)<=dl())return;const b=mk("div","m "+(mine?"u":"bt"));const tt=tms(d);if(!pv||tt-pv>900000){m.append(mk("div","tsp",tf(d)));pi=null}pv=tt;lastD=d;b.onclick=()=>b.classList.toggle("sel");
-   if(!mine&&room=="general"){const nb=mk("b",null,d.name+"\n");nb.style.cursor="pointer";nb.onclick=()=>openU(d.uid);b.append(nb)};if(d.text.startsWith("§call|")){const q=d.text.split("|");b.append(K_callCard(q[1],+q[2]||0,mine,tf(d)))}else b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
+   if(!mine&&room=="general"){const nb=mk("b",null,d.name+"\n");nb.style.cursor="pointer";nb.onclick=()=>openU(d.uid);b.append(nb)};if(d.text.startsWith("§call|")){const q=d.text.split("|");b.append(K_callCard(q[1],+q[2]||0,mine,tf(d),q[3]=="1"))}else b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
    if(!mine){const f=mk("button","chip");f.innerHTML=ico("flag");f.style.cssText="font-size:11px;padding:2px 8px";f.onclick=()=>{addDoc(collection(db,"reports"),{chat:room,msg:x.id,by:me.uid,ts:serverTimestamp()});f.textContent="✓";f.disabled=true};b.append(f)}
    if(room!="general"){const z=mk("button","chip");z.innerHTML=ico("trash");z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
    if(mine){m.append(b);pi=null}else{const w=mk("div","mr"),a=av(UM[d.uid]||{name:d.name,photo:d.photo},36);a.style.cursor="pointer";a.onclick=()=>openU(d.uid);if(pi&&pi.uid==d.uid)pi.a.style.visibility="hidden";pi={uid:d.uid,a};w.append(a,b);m.append(w)}});seenEl=null;if(lastD&&lastD.uid==me.uid&&room!="general"){seenEl=mk("div","seen");m.append(seenEl);lastMine={t:tms(lastD)};paintSeen()}window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
@@ -1096,17 +1096,20 @@ function askUsername(u,r,dn){return new Promise(res=>{
 /* ===== Голосовые звонки 1 на 1: WebRTC + Firestore (сигналинг) ===== */
 window.IC.phone='<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>';
 window.IC.mic='<path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/>';
+window.IC.vcam='<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>';
+window.IC.vflip='<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/>';
 window.IC.spk='<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>';
 const K_CL={
-ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон",sp:"Динамик",ce:"Аудиозвонок завершён",cm:"Пропущенный звонок",cn:"Нет ответа",cd:"Звонок отклонён"},
-uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon",sp:"Karnay",ce:"Audio qo'ng'iroq tugadi",cm:"O'tkazib yuborilgan qo'ng'iroq",cn:"Javob bermadi",cd:"Qo'ng'iroq rad etildi"},
-en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone",sp:"Speaker",ce:"Audio call ended",cm:"Missed call",cn:"No answer",cd:"Call declined"},
-zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风",sp:"扬声器",ce:"语音通话已结束",cm:"未接来电",cn:"无人接听",cd:"通话已拒绝"},
-es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono",sp:"Altavoz",ce:"Llamada de audio finalizada",cm:"Llamada perdida",cn:"Sin respuesta",cd:"Llamada rechazada"},
-de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon",sp:"Lautsprecher",ce:"Audioanruf beendet",cm:"Verpasster Anruf",cn:"Keine Antwort",cd:"Anruf abgelehnt"}};
+ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон",sp:"Динамик",ce:"Аудиозвонок завершён",cm:"Пропущенный звонок",cn:"Нет ответа",cd:"Звонок отклонён",v:"Видеозвонок",vi:"Входящий видеозвонок",vce:"Видеозвонок завершён",cam:"Камера",fl:"Сменить",mc:"Нет доступа к камере или микрофону. Разреши их в настройках."},
+uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon",sp:"Karnay",ce:"Audio qo'ng'iroq tugadi",cm:"O'tkazib yuborilgan qo'ng'iroq",cn:"Javob bermadi",cd:"Qo'ng'iroq rad etildi",v:"Video qo'ng'iroq",vi:"Kiruvchi video qo'ng'iroq",vce:"Video qo'ng'iroq tugadi",cam:"Kamera",fl:"Almashtirish",mc:"Kamera yoki mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering."},
+en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone",sp:"Speaker",ce:"Audio call ended",cm:"Missed call",cn:"No answer",cd:"Call declined",v:"Video call",vi:"Incoming video call",vce:"Video call ended",cam:"Camera",fl:"Flip",mc:"No camera or microphone access. Allow them in settings."},
+zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风",sp:"扬声器",ce:"语音通话已结束",cm:"未接来电",cn:"无人接听",cd:"通话已拒绝",v:"视频通话",vi:"视频来电",vce:"视频通话已结束",cam:"摄像头",fl:"翻转",mc:"无法使用摄像头或麦克风，请在设置中允许。"},
+es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono",sp:"Altavoz",ce:"Llamada de audio finalizada",cm:"Llamada perdida",cn:"Sin respuesta",cd:"Llamada rechazada",v:"Videollamada",vi:"Videollamada entrante",vce:"Videollamada finalizada",cam:"Cámara",fl:"Girar",mc:"Sin acceso a la cámara o al micrófono. Permítelo en ajustes."},
+de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon",sp:"Lautsprecher",ce:"Audioanruf beendet",cm:"Verpasster Anruf",cn:"Keine Antwort",cd:"Anruf abgelehnt",v:"Videoanruf",vi:"Eingehender Videoanruf",vce:"Videoanruf beendet",cam:"Kamera",fl:"Wechseln",mc:"Kein Zugriff auf Kamera oder Mikrofon. Erlaube ihn in den Einstellungen."}};
 const K_Cx=k=>(K_CL[window.lang]||K_CL.en)[k];
 const K_ICE_CFG={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]};
 let K_cs=null,K_callUn=null,K_rg=null;
+const K_media=v=>({audio:K_MEDIA.audio,video:v?{facingMode:"user",width:{ideal:640},height:{ideal:480}}:false});
 const K_MEDIA={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false};
 function K_setSt(t){const e=E("callSt");if(e)e.textContent=t}
 function K_ring(on){if(K_rg){clearInterval(K_rg.t);try{K_rg.c.close()}catch(e){}K_rg=null}if(!on)return;
@@ -1116,29 +1119,39 @@ async function K_spk(c,on){const au=c.au;if(!au)return;
   const pick=ds.find(d=>on?/speaker|динамик/i.test(d.label)&&!/ear|receiver/i.test(d.label):/earpiece|receiver|разговор/i.test(d.label));
   if(pick){await au.setSinkId(pick.deviceId);au.volume=1;return}}}catch(e){}
  au.volume=on?1:.3}
+async function K_flip(c){if(!c||!c.stream)return;const t=c.stream.getVideoTracks()[0];if(!t)return;
+ c.face=c.face=="environment"?"user":"environment";t.stop();c.stream.removeTrack(t);
+ try{const ns=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:c.face}}});const nt=ns.getVideoTracks()[0];
+  const sd=c.pc&&c.pc.getSenders().find(x=>x.track&&x.track.kind=="video"||x.track==null);
+  if(sd)await sd.replaceTrack(nt);c.stream.addTrack(nt);
+  const lv=E("callLV");if(lv){lv.srcObject=c.stream;lv.style.transform=c.face=="user"?"scaleX(-1)":"none"}}
+ catch(e){toast(K_Cx("mc"),0)}}
 function K_dur(t){return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")}
-function K_callCard(k,sec,mine,tm){const w=mk("div");w.style.cssText="display:flex;align-items:center;gap:12px;min-width:220px;padding:2px 0";
- const ic=mk("div");ic.style.cssText="width:46px;height:46px;border-radius:50%;background:rgba(128,128,128,.3);display:grid;place-items:center;flex:none";ic.innerHTML=ico("phone");
- ic.firstChild.style.cssText="width:24px;height:24px;stroke:currentColor;fill:none"+(k=="end"?"":";transform:rotate(135deg)");
- const tx=mk("div"),a=mk("b",null,K_Cx(k=="end"?"ce":k=="dec"?"cd":mine?"cn":"cm"));a.style.cssText="display:block;font-size:16px";
+function K_callCard(k,sec,mine,tm,v){const w=mk("div");w.style.cssText="display:flex;align-items:center;gap:12px;min-width:220px;padding:2px 0";
+ const ic=mk("div");ic.style.cssText="width:46px;height:46px;border-radius:50%;background:rgba(128,128,128,.3);display:grid;place-items:center;flex:none";ic.innerHTML=ico(v?"vcam":"phone");
+ ic.firstChild.style.cssText="width:24px;height:24px;stroke:currentColor;fill:none"+(k=="end"||v?"":";transform:rotate(135deg)");
+ const tx=mk("div"),a=mk("b",null,K_Cx(k=="end"?(v?"vce":"ce"):k=="dec"?"cd":mine?"cn":"cm"));a.style.cssText="display:block;font-size:16px";
  const b=mk("span",null,k=="end"?K_dur(sec):tm);b.style.cssText="font-size:14px;opacity:.75";tx.append(a,b);w.append(ic,tx);return w}
 function K_logCall(c){if(c.role!="a"||!c.ready||!me||me.uid!=c.uid)return;
- const k=c.t0?"end":(c.dec?"dec":"miss"),sec=c.t0?Math.round((Date.now()-c.t0)/1000):0,id=[c.uid,c.peer].sort().join("_"),lbl="📞 "+K_Cx(k=="end"?"ce":k=="dec"?"cd":"cn");
- addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:"§call|"+k+"|"+sec,ts:serverTimestamp()})
+ const k=c.t0?"end":(c.dec?"dec":"miss"),sec=c.t0?Math.round((Date.now()-c.t0)/1000):0,id=[c.uid,c.peer].sort().join("_"),lbl=(c.video?"🎥 ":"📞 ")+K_Cx(k=="end"?(c.video?"vce":"ce"):k=="dec"?"cd":"cn");
+ addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:"§call|"+k+"|"+sec+(c.video?"|1":""),ts:serverTimestamp()})
  .then(()=>setDoc(doc(db,"chats",id),{members:id.split("_"),last:lbl,lu:me.uid,ts:serverTimestamp()},{merge:true})).catch(()=>{})}
 function K_callUI(u){
  let o=E("K_callUI");if(o)o.remove();
  o=mk("div");o.id="K_callUI";
  o.style.cssText="position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 80px) 24px calc(env(safe-area-inset-bottom,0px) + 60px);color:#fff;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#1f6a0c,#071a04 70%,#000)";
  const top=mk("div");top.style.cssText="display:flex;flex-direction:column;align-items:center;gap:14px";
- const a=av(u,120);a.style.borderRadius="50%";a.style.boxShadow="0 0 0 10px rgba(150,255,60,.12),0 0 40px rgba(120,255,60,.35)";
- const n=mk("div",null,nm(u));n.style.cssText="font-size:26px;font-weight:800";
- const st=mk("div",null,"");st.id="callSt";st.style.cssText="font-size:16px;opacity:.8";
+ const a=av(u,120);a.id="callAv";a.style.borderRadius="50%";a.style.boxShadow="0 0 0 10px rgba(150,255,60,.12),0 0 40px rgba(120,255,60,.35)";
+ const n=mk("div",null,nm(u));n.style.cssText="font-size:26px;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,.6)";
+ const st=mk("div",null,"");st.id="callSt";st.style.cssText="font-size:16px;opacity:.85;text-shadow:0 1px 6px rgba(0,0,0,.6)";
  top.append(a,n,st);
- const row=mk("div");row.style.cssText="display:flex;gap:26px;align-items:flex-start;justify-content:center";
- const rb=(bg,ic,lbl,fn,rot)=>{const w=mk("div");w.style.cssText="display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px";const b=mk("button");b.style.cssText="width:70px;height:70px;border-radius:50%;border:0;display:grid;place-items:center;color:#fff;cursor:pointer;background:"+bg;b.innerHTML=ico(ic);const v=b.querySelector("svg");v.style.cssText="width:30px;height:30px;fill:none;stroke:"+(bg=="#fff"?"#000":"#fff")+(rot?";transform:rotate(135deg)":"");b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);w.append(b,mk("span",null,lbl));return w};
+ const row=mk("div");const vid=!!(K_cs&&K_cs.video&&!K_cs.inc),sz=vid?58:70;row.style.cssText="display:flex;gap:"+(vid?12:26)+"px;align-items:flex-start;justify-content:center";
+ const rb=(bg,ic,lbl,fn,rot)=>{const w=mk("div");w.style.cssText="display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px";const b=mk("button");b.style.cssText="width:"+sz+"px;height:"+sz+"px;border-radius:50%;border:0;display:grid;place-items:center;color:#fff;cursor:pointer;background:"+bg;b.innerHTML=ico(ic);const v=b.querySelector("svg");v.style.cssText="width:"+(sz>60?30:26)+"px;height:"+(sz>60?30:26)+"px;fill:none;stroke:"+(bg=="#fff"?"#000":"#fff")+(rot?";transform:rotate(135deg)":"");b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);const sp=mk("span",null,lbl);sp.style.cssText="max-width:"+(sz+14)+"px;font-size:"+(sz>60?13:11)+"px;line-height:1.1;text-shadow:0 1px 4px rgba(0,0,0,.6)";w.append(b,sp);return w};
  if(K_cs&&K_cs.inc){row.append(rb("#e5484d","phone",K_Cx("d"),()=>K_endCall(true,K_Cx("r")),1),rb("#2faa08","phone",K_Cx("a"),K_acceptCall))}
- else{row.append(rb("rgba(255,255,255,.2)","mic",K_Cx("mu"),b=>{const t=K_cs&&K_cs.stream&&K_cs.stream.getAudioTracks()[0];if(t){t.enabled=!t.enabled;b.style.background=t.enabled?"rgba(255,255,255,.2)":"#fff";b.querySelector("svg").style.stroke=t.enabled?"#fff":"#000"}}),rb(K_cs&&K_cs.spk?"#fff":"rgba(255,255,255,.2)","spk",K_Cx("sp"),b=>{const c=K_cs;if(!c)return;c.spk=!c.spk;b.style.background=c.spk?"#fff":"rgba(255,255,255,.2)";b.querySelector("svg").style.stroke=c.spk?"#000":"#fff";K_spk(c,c.spk)}),rb("#e5484d","phone",K_Cx("e"),()=>K_endCall(true,K_Cx("f")),1))}
+ else{row.append(rb("rgba(255,255,255,.2)","mic",K_Cx("mu"),b=>{const t=K_cs&&K_cs.stream&&K_cs.stream.getAudioTracks()[0];if(t){t.enabled=!t.enabled;b.style.background=t.enabled?"rgba(255,255,255,.2)":"#fff";b.querySelector("svg").style.stroke=t.enabled?"#fff":"#000"}}),...(vid?[rb("rgba(255,255,255,.2)","vcam",K_Cx("cam"),b=>{const t=K_cs&&K_cs.stream&&K_cs.stream.getVideoTracks()[0];if(t){t.enabled=!t.enabled;b.style.background=t.enabled?"rgba(255,255,255,.2)":"#fff";b.querySelector("svg").style.stroke=t.enabled?"#fff":"#000"}}),rb("rgba(255,255,255,.2)","vflip",K_Cx("fl"),()=>K_flip(K_cs))]:[]),rb(K_cs&&K_cs.spk?"#fff":"rgba(255,255,255,.2)","spk",K_Cx("sp"),b=>{const c=K_cs;if(!c)return;c.spk=!c.spk;b.style.background=c.spk?"#fff":"rgba(255,255,255,.2)";b.querySelector("svg").style.stroke=c.spk?"#000":"#fff";K_spk(c,c.spk)}),rb("#e5484d","phone",K_Cx("e"),()=>K_endCall(true,K_Cx("f")),1))}
+ if(vid){const rv=document.createElement("video");rv.id="callRV";rv.autoplay=true;rv.muted=true;rv.setAttribute("playsinline","");rv.style.cssText="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;display:none";
+  const lv=document.createElement("video");lv.id="callLV";lv.autoplay=true;lv.muted=true;lv.setAttribute("playsinline","");lv.style.cssText="position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 16px);width:104px;height:150px;object-fit:cover;border-radius:16px;border:2px solid rgba(255,255,255,.35);background:#000;transform:scaleX(-1)";
+  o.append(rv,lv);if(K_cs.stream)lv.srcObject=K_cs.stream;if(K_cs.remote){rv.srcObject=K_cs.remote;rv.style.display="block";a.style.display="none"}}
  o.append(top,row);document.body.append(o);return o}
 function K_sendIce(c,cand){const x=JSON.stringify(cand);if(!c.ready){c.q.push(x);return}addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{})}
 function K_addC(c,x){const p=c.pc;if(p&&p.remoteDescription)p.addIceCandidate(JSON.parse(x)).catch(()=>{});else c.pend.push(x)}
@@ -1146,7 +1159,7 @@ function K_flushC(c){const a=c.pend;c.pend=[];a.forEach(x=>K_addC(c,x))}
 function K_listenIce(c){c.un.push(onSnapshot(collection(db,"calls",c.id,"ice"),s=>s.docChanges().forEach(ch=>{if(ch.type=="added"){const x=ch.doc.data();if(x.uid!=me.uid)K_addC(c,x.c)}}),()=>{}))}
 function K_newPC(c){const pc=new RTCPeerConnection(K_ICE_CFG);c.pc=pc;c.stream.getTracks().forEach(t=>pc.addTrack(t,c.stream));
  const au=document.createElement("audio");au.autoplay=true;au.setAttribute("playsinline","");document.body.append(au);c.au=au;
- pc.ontrack=e=>{au.srcObject=e.streams[0];au.play&&au.play().catch(()=>{})};
+ pc.ontrack=e=>{au.srcObject=e.streams[0];au.play&&au.play().catch(()=>{});c.remote=e.streams[0];if(c.video){const rv=E("callRV");if(rv){rv.srcObject=c.remote;rv.style.display="block";rv.play&&rv.play().catch(()=>{})}const ca=E("callAv");if(ca)ca.style.display="none"}};
  pc.onicecandidate=e=>{if(e.candidate)K_sendIce(c,e.candidate)};
  pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
  return pc}
@@ -1156,16 +1169,16 @@ function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);
  try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
  if(c.au)c.au.remove();
  const u=E("K_callUI");if(u){if(msg){const e=E("callSt");if(e)e.textContent=msg;setTimeout(()=>u.remove(),1200)}else u.remove()}}
-async function K_startCall(o){
+async function K_startCall(o,video){
  if(K_cs||!o)return;
  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);return}
- let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_MEDIA)}catch(e){toast(K_Cx("m"),0);return}
+ let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_media(video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}
  const ref=doc(collection(db,"calls"));
- const c=K_cs={id:ref.id,role:"a",peer:o,un:[],stream,q:[],pend:[],ready:false,inc:false,spk:true,uid:me.uid};
+ const c=K_cs={id:ref.id,role:"a",peer:o,un:[],stream,q:[],pend:[],ready:false,inc:false,spk:true,uid:me.uid,video:!!video,face:"user"};
  K_callUI(UM[o]||{});K_setSt(K_Cx("c"));
  const pc=K_newPC(c);
  try{const off=await pc.createOffer();await pc.setLocalDescription(off);
-  await setDoc(ref,{from:me.uid,to:o,fromName:MY.username||me.displayName||"User",status:"ringing",offer:{type:off.type,sdp:off.sdp},ts:serverTimestamp()})}
+  await setDoc(ref,{from:me.uid,to:o,fromName:MY.username||me.displayName||"User",status:"ringing",video:!!video,offer:{type:off.type,sdp:off.sdp},ts:serverTimestamp()})}
  catch(e){toast(e.code||e.message,0);K_endCall(false);return}
  if(K_cs!=c)return;
  c.ready=true;c.q.splice(0).forEach(x=>addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{}));
@@ -1178,13 +1191,13 @@ async function K_startCall(o){
 async function K_incoming(id,x){
  if(!UM[x.from]){try{const d=await getDoc(doc(db,"users",x.from));if(d.exists())UM[x.from]={id:x.from,...d.data()}}catch(e){}}
  if(K_cs){updateDoc(doc(db,"calls",id),{status:"declined"}).catch(()=>{});return}
- const c=K_cs={id,role:"b",peer:x.from,un:[],offer:x.offer,inc:true,q:[],pend:[],ready:true,spk:true,uid:me.uid};
- K_callUI(UM[x.from]||{name:x.fromName,username:x.fromName});K_setSt(K_Cx("i"));K_ring(true);
+ const c=K_cs={id,role:"b",peer:x.from,un:[],offer:x.offer,inc:true,q:[],pend:[],ready:true,spk:true,uid:me.uid,video:!!x.video,face:"user"};
+ K_callUI(UM[x.from]||{name:x.fromName,username:x.fromName});K_setSt(K_Cx(x.video?"vi":"i"));K_ring(true);
  c.un.push(onSnapshot(doc(db,"calls",id),d=>{const s=d.data()&&d.data().status;if(K_cs==c&&(s=="ended"||s=="declined"))K_endCall(false,K_Cx("f"))},()=>{}));
  c.to=setTimeout(()=>{if(K_cs==c&&c.inc)K_endCall(true)},45000)}
 async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);K_endCall(true);return}
- try{c.stream=await navigator.mediaDevices.getUserMedia(K_MEDIA)}catch(e){toast(K_Cx("m"),0);K_endCall(true);return}
+ try{c.stream=await navigator.mediaDevices.getUserMedia(K_media(c.video))}catch(e){toast(K_Cx(c.video?"mc":"m"),0);K_endCall(true);return}
  if(K_cs!=c){try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}return}
  c.inc=false;K_ring(false);clearTimeout(c.to);K_callUI(UM[c.peer]||{});K_setSt(K_Cx("n"));
  const pc=K_newPC(c);
