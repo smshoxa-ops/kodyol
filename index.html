@@ -334,6 +334,14 @@ body::before{content:none;display:none}
 .lgi.lg{width:64px;height:64px}
 .hero .lgi{filter:drop-shadow(0 0 10px rgba(120,255,60,.45))}
 .tb .lgi,.dh .lgi{margin-right:0}
+.wb{display:flex;align-items:center;gap:14px;width:100%;max-width:560px;min-height:92px;margin:26px auto 10px;padding:14px 20px;border-radius:30px;cursor:pointer;color:#fff;font-family:inherit;background:linear-gradient(145deg,rgba(150,255,60,.34),rgba(20,90,0,.42));border:1px solid rgba(190,255,130,.32);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 18px 44px rgba(90,220,0,.25),inset 0 1px 0 rgba(255,255,255,.4)}
+.wb b{flex:1;text-align:center;font-size:clamp(17px,5.2vw,24px);font-weight:800;letter-spacing:2px}
+.wb .gi{width:44px;height:44px}.wb .i{width:26px;height:26px}
+.hg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:560px;margin:16px auto 0}
+.hb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;aspect-ratio:1;padding:8px;border-radius:26px;cursor:pointer;color:#fff;font-family:inherit;font-weight:700;font-size:15px;background:linear-gradient(145deg,rgba(150,255,60,.3),rgba(20,90,0,.38));border:1px solid rgba(190,255,130,.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 10px 26px rgba(90,220,0,.2),inset 0 1px 0 rgba(255,255,255,.35)}
+.wb:active,.hb:active{transform:scale(.96)}.hb .gi{width:58px;height:58px;border-radius:19px}.hb .gi svg{width:32px;height:32px}.hb span{font-size:13px;line-height:1.15;font-weight:700;opacity:.92;text-align:center;max-width:100%;overflow-wrap:anywhere}
+.fx{display:flex;gap:12px;align-items:center;margin-bottom:10px}.fx p{margin:0}
+#v-fold .fw{margin:16px auto 0}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -343,7 +351,8 @@ body::before{content:none;display:none}
 <a data-v="ai" class="aiL"><span data-t="ai"></span></a></nav>
 <main id="v-home">
 <div class="hero"><h1><span data-gi="logo lg"></span>KodYol</h1><p data-t="sub"></p></div>
-<div class="wrap"><div class="fw">
+<div class="wrap"><button class="wb" id="whatBtn"><span id="whatI"></span><b id="whatT"></b><span class="wa" data-ic="next"></span></button><div class="hg" id="hg"></div></div></main>
+<main id="v-fold" hidden><div class="wrap"><div class="hd"><button id="fb" aria-label="back" data-ic="back"></button><span id="ft"></span></div><div class="fw">
 <div class="fg"><button class="fold" id="fold" aria-label="Full Stack"><small id="fcnt"></small>
 <svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#2a9d0a" stroke-opacity=".25" stroke-width="2"/><path d="M27 36l-6 5 6 5M37 36l6 5-6 5" stroke="#2a9d0a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <b>FULL STACK</b></button>
@@ -365,6 +374,7 @@ body::before{content:none;display:none}
 <b>DATA SCIENCE</b></button>
 <div class="fcap" id="fcap5"></div></div>
 </div></div></main>
+<main id="v-what" hidden></main>
 <main id="v-course" hidden><div class="wrap lw">
 <div class="hd"><button id="cb" aria-label="back" data-ic="back"></button><span id="ct">FULL STACK</span></div>
 <div class="cl" id="cl"></div></div></main>
@@ -779,6 +789,36 @@ var TR={"ru":{"0":["Браузер","Программа, которая загр
 D.forEach(function(x){x.u=[x.t,x.d]});
 var _sl=setLang;setLang=function(l){D.forEach(function(x,i){var v=(TR[l]&&TR[l][i])||(TR.en&&TR.en[i]);x.t=l=="uz"||!v?x.u[0]:v[0];x.d=l=="uz"||!v?x.u[1]:v[1]});_sl(l)};
 setLang(ld("kl")&&TT[ld("kl")]?ld("kl"):"uz");
+
+/* ===== Новая главная: кнопка «Что такое KodYol?» → инфо + Уроки/Тесты/Карточки/Задания ===== */
+var HW={"ru": {"b": "ЧТО ТАКОЕ KodYol?", "i": "KodYol — сайт, где программирование изучают шаг за шагом: от первых строк кода до профессии. Работает на телефоне и компьютере.", "f": ["Уроки: Full Stack, Frontend, Backend, Cybersecurity и Data Science", "Тесты после каждого урока, звёзды за результат", "Карточки для быстрого повторения", "Задания с готовыми решениями", "Практика кода: пиши и запускай код прямо на сайте", "AI-учитель отвечает на вопросы по темам", "Чат с другими учениками и уведомления", "Прогресс, серия дней и избранное; 6 языков, светлая и тёмная тема"], "l": "Уроки", "t": "Тесты", "c": "Карточки", "k": "Задания", "z": "заданий"}, "uz": {"b": "KodYol NIMA?", "i": "KodYol — dasturlashni bosqichma-bosqich o'rganish uchun sayt: birinchi kod qatoridan kasbgacha. Telefon va kompyuterda ishlaydi.", "f": ["Darslar: Full Stack, Frontend, Backend, Cybersecurity va Data Science", "Har bir darsdan keyin testlar, natijaga yulduzcha", "Tez takrorlash uchun kartochkalar", "Tayyor yechimli topshiriqlar", "Kod maydoni: kodni saytning o'zida yozing va ishga tushiring", "AI ustoz mavzular bo'yicha savollarga javob beradi", "Boshqa o'quvchilar bilan chat va bildirishnomalar", "Progress, kunlik seriya va sevimlilar; 6 til, och va to'q mavzu"], "l": "Darslar", "t": "Testlar", "c": "Kartochkalar", "k": "Topshiriqlar", "z": "topshiriq"}, "en": {"b": "WHAT IS KodYol?", "i": "KodYol is a site for learning programming step by step, from your first lines of code to a career. It works on phone and computer.", "f": ["Lessons: Full Stack, Frontend, Backend, Cybersecurity and Data Science", "Quizzes after every lesson, with stars for your score", "Flashcards for quick review", "Tasks with ready solutions", "Code playground: write and run code right on the site", "AI tutor that answers questions about the topics", "Chat with other learners and notifications", "Progress, day streak and favorites; 6 languages, light or dark theme"], "l": "Lessons", "t": "Quizzes", "c": "Flashcards", "k": "Tasks", "z": "tasks"}, "zh": {"b": "KodYol 是什么？", "i": "KodYol 是一个循序渐进学习编程的网站，从第一行代码到职业发展。手机和电脑都能使用。", "f": ["课程：Full Stack、Frontend、Backend、Cybersecurity 和 Data Science", "每节课后有测验，按成绩获得星星", "用于快速复习的记忆卡片", "附带参考答案的练习任务", "代码练习：直接在网站上编写并运行代码", "AI 老师解答各个主题的问题", "与其他学习者聊天并接收通知", "学习进度、连续天数和收藏；6 种语言，浅色或深色主题"], "l": "课程", "t": "测验", "c": "卡片", "k": "任务", "z": "个任务"}, "es": {"b": "¿QUÉ ES KodYol?", "i": "KodYol es un sitio para aprender programación paso a paso, desde las primeras líneas de código hasta una profesión. Funciona en móvil y ordenador.", "f": ["Lecciones: Full Stack, Frontend, Backend, Cybersecurity y Data Science", "Pruebas tras cada lección, con estrellas según tu resultado", "Tarjetas para repasar rápido", "Tareas con soluciones listas", "Práctica de código: escribe y ejecuta código en el propio sitio", "Tutor IA que responde preguntas sobre los temas", "Chat con otros estudiantes y notificaciones", "Progreso, racha de días y favoritos; 6 idiomas, tema claro u oscuro"], "l": "Lecciones", "t": "Pruebas", "c": "Tarjetas", "k": "Tareas", "z": "tareas"}, "de": {"b": "WAS IST KodYol?", "i": "KodYol ist eine Seite zum schrittweisen Programmierenlernen, von den ersten Codezeilen bis zum Beruf. Sie läuft auf Handy und Computer.", "f": ["Lektionen: Full Stack, Frontend, Backend, Cybersecurity und Data Science", "Tests nach jeder Lektion, mit Sternen für dein Ergebnis", "Lernkarten zum schnellen Wiederholen", "Aufgaben mit fertigen Lösungen", "Code-Labor: Code direkt auf der Seite schreiben und ausführen", "KI-Tutor, der Fragen zu den Themen beantwortet", "Chat mit anderen Lernenden und Benachrichtigungen", "Fortschritt, Tage-Serie und Favoriten; 6 Sprachen, helles oder dunkles Design"], "l": "Lektionen", "t": "Tests", "c": "Lernkarten", "k": "Aufgaben", "z": "Aufgaben"}},fcc=null,tcc=null;
+function hw(){return HW[lang]||HW.en}
+VS.push("what","fold");
+function pickF(c,sub,fn){Object.keys(CR).forEach(function(k){var b=document.createElement("button");b.className="ls";b.style.margin="10px 0";b.innerHTML='<span class="n">'+ico("folder")+'</span><span class="tx"><b>'+esc(CR[k].n)+'</b><span>'+sub(k)+'</span></span><i class="ar">'+ico("next")+'</i>';b.onclick=function(){fn(k)};c.appendChild(b)})}
+var _rh=R.home;R.home=function(){_rh();var h=hw();$("whatT").textContent=h.b;$("whatI").innerHTML=gi("ai");$("hg").innerHTML=[["fold","books",h.l],["quiz","quiz",h.t],["flash","flash",h.c],["task","task",h.k],["play","play",T.play],["fav","fav",T.fav],["gloss","gloss",T.gloss],["prog","prog",T.prog],["ai","ai",T.ai]].map(function(a){return '<button class="hb" data-h="'+a[0]+'" aria-label="'+esc(a[2])+'">'+gi(a[1])+'<span>'+esc(a[2])+'</span></button>'}).join("")};
+R.fold=function(){$("ft").innerHTML=ico("folder")+"<span>"+esc(hw().l)+"</span>";R.home()};
+R.what=function(){var h=hw(),k=["books","quiz","flash","task","play","ai","chat","prog"];
+ $("v-what").innerHTML='<div class="wrap pg"><div class="hd"><button id="wbk" aria-label="back">'+ico("back")+'</button><span>'+esc(h.b)+'</span></div><div class="c" style="margin-bottom:12px"><p>'+esc(h.i)+'</p></div>'+h.f.map(function(t,i){return '<div class="c fx">'+gi(k[i])+'<p>'+esc(t)+'</p></div>'}).join("")+'</div>';
+ $("wbk").onclick=function(){show("home")}};
+$("v-home").onclick=function(e){var b=e.target.closest("[data-h]");if(!b)return;qCC=fcc=tcc=null;show(b.dataset.h)};
+$("whatBtn").onclick=function(){show("what")};
+$("fb").onclick=function(){show("home")};
+$("cb").onclick=function(){show("fold")};
+var _rq=R.quiz;R.quiz=function(){_rq();if(!qCC){var c=$("c-quiz");c.insertBefore(bt("←",function(){show("home")}),c.firstChild)}};
+R.flash=function(){var c=$("c-flash");c.innerHTML="";
+ if(!fcc){c.appendChild(bt("←",function(){show("home")}));pickF(c,function(k){return cnt(k)+" "+(CW[lang]||CW.en)[0]},function(k){fcc=k;R.flash()});return}
+ var dq=shuf(D.filter(function(x){return CR[fcc].ls.indexOf(x.l)>-1})),i=0,fl=false;
+ function dw(){var x=dq[i%dq.length];c.innerHTML="";c.appendChild(bt("←",function(){fcc=null;R.flash()}));var f=document.createElement("div");f.className="fc";
+  if(fl){var p=document.createElement("div");p.textContent=x.d;f.appendChild(p);var pr=document.createElement("pre");pr.textContent=x.c;f.appendChild(pr)}else f.textContent=x.t;
+  f.onclick=function(){fl=!fl;dw()};c.appendChild(f);var w=document.createElement("div");w.className="lg";
+  w.appendChild(bt(T.flip,function(){fl=!fl;dw()}));w.appendChild(bt(T.next+" ("+(i%dq.length+1)+"/"+dq.length+")",function(){i++;fl=false;dw()},"on"));c.appendChild(w)}
+ if(dq.length)dw()};
+function tkF(k){return TK.filter(function(t){return CR[k].ls.indexOf(+t.split("|")[0])>-1})}
+R.task=function(){var c=$("c-task"),h=hw();c.innerHTML="";
+ if(!tcc){c.appendChild(bt("←",function(){show("home")}));pickF(c,function(k){return tkF(k).length+" "+h.z},function(k){tcc=k;R.task()});return}
+ c.appendChild(bt("←",function(){tcc=null;R.task()}));c.appendChild(mk("m bt",ico("folder")+" "+esc(CR[tcc].n)));
+ var a=tkF(tcc);c.insertAdjacentHTML("beforeend",a.length?a.map(function(t){var p=t.split("|");return '<div class="c" style="margin-bottom:12px"><span class="b">'+T.dars.replace("{n}",CR[tcc].ls.indexOf(+p[0])+1)+'</span><p>'+esc(p[1])+'</p><details><summary>'+T.sol+'</summary><pre>'+esc(p[2])+'</pre></details></div>'}).join(""):'<div class="empty">'+(CW[lang]||CW.en)[1]+'</div>')};
+R.home();
 </script><script>
 /* KodYol sounds: твои mp3 встроены прямо в страницу (base64), отдельные файлы не нужны */
 (function(){
@@ -961,7 +1001,7 @@ bn.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.nv==
 function navAv(){const b=E("nvm");b.innerHTML="";b.append(av(me?MY:{},30))}
 function nav(){document.body.classList.toggle("nonav",window.curV=="ai"||(window.curV=="chat"&&room!=null))}
 const _s=window.show;
-window.show=function(v){const f=window.curV;if((v=="user"&&f!="user")||v=="edit")prev=f;_s(v);nav();const k={edit:"me",user:"find",course:"home",lessons:"home"}[v]||v;bn.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.nv==k))};
+window.show=function(v){const f=window.curV;if((v=="user"&&f!="user")||v=="edit")prev=f;_s(v);nav();const k={edit:"me",user:"find",course:"home",lessons:"home",what:"home",fold:"home"}[v]||v;bn.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.nv==k))};
 function counts(uid,cb){cs.forEach(f=>f());cs=[];let a=[],b=[];const g=()=>cb(b.length,a.length,!!me&&b.some(d=>d.a==me.uid));
  cs.push(onSnapshot(query(collection(db,"follows"),where("b","==",uid)),s=>{b=s.docs.map(d=>d.data());g()},()=>{}));
  cs.push(onSnapshot(query(collection(db,"follows"),where("a","==",uid)),s=>{a=s.docs.map(d=>d.data());g()},()=>{}))}
