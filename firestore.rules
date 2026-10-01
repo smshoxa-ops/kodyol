@@ -6,6 +6,8 @@ service cloud.firestore {
     function isMember(chatId) {
       return signedIn() && (chatId == 'general' || request.auth.uid in chatId.split('_'));
     }
+    function isOwner() { return signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"; }
+    function banned() { return exists(/databases/$(database)/documents/bans/$(request.auth.uid)); }
     function onlyOwnKey(after, before, field) {
       return after.get(field, {}).diff(before.get(field, {})).affectedKeys().hasOnly([request.auth.uid]);
     }
@@ -65,7 +67,7 @@ service cloud.firestore {
 
       match /msgs/{msgId} {
         allow read: if isMember(chatId);
-        allow create: if isMember(chatId)
+        allow create: if isMember(chatId) && !banned()
           && request.resource.data.keys().hasOnly(['uid','name','photo','text','ts'])
           && request.resource.data.uid == request.auth.uid
           && request.resource.data.text is string
@@ -75,7 +77,8 @@ service cloud.firestore {
         allow update: if isMember(chatId) && chatId != 'general'
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['hid'])
           && request.resource.data.hid.toSet().difference(resource.data.get('hid', []).toSet()).hasOnly([request.auth.uid]);
-        allow delete: if false;
+        // владелец может удалять сообщения только в общем чате
+        allow delete: if chatId == 'general' && isOwner();
       }
     }
 
@@ -133,10 +136,21 @@ service cloud.firestore {
       allow read, delete: if signedIn() && request.auth.uid == uid;
     }
 
-    // Жалобы: только создавать
+    // Жалобы: создаёт любой вошедший, читает и закрывает только владелец
     match /reports/{id} {
-      allow create: if signedIn() && request.resource.data.by == request.auth.uid;
-      allow read, update, delete: if false;
+      allow create: if signedIn() && request.resource.data.by == request.auth.uid
+        && request.resource.data.keys().hasOnly(['chat','msg','by','txt','from','fn','ts'])
+        && request.resource.data.ts == request.time;
+      allow read, delete: if isOwner();
+      allow update: if false;
+    }
+
+    // Блокировки: ставит и снимает только владелец; пользователь видит только свою
+    match /bans/{uid} {
+      allow read: if isOwner() || (signedIn() && request.auth.uid == uid);
+      allow create: if isOwner() && request.resource.data.keys().hasOnly(['by','ts']);
+      allow delete: if isOwner();
+      allow update: if false;
     }
   }
 }
