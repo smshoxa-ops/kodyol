@@ -1050,7 +1050,7 @@ function inb(){const b=E("ib");if(!b)return;b.innerHTML="";b.append(mk("div","hd
  const g=mk("div","rw"),gi=mk("div","av");gi.innerHTML=ico("globe");gi.style.cssText="width:54px;height:54px;font-size:24px;background:var(--bd);color:var(--ac)";g.append(gi);const d=mk("div");d.append(mk("b",null,T.cgen),mk("small",null,T.cnote));g.append(d);g.onclick=()=>{room="general";window.R.chat()};b.append(g);
  inbox.filter(c=>!(c.del&&c.del[me.uid]&&c.del[me.uid].toMillis&&c.del[me.uid].toMillis()>=tms(c))).sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid),rt=c.rd&&c.rd[me.uid]&&c.rd[me.uid].toMillis?c.rd[me.uid].toMillis():0,unr=c.lu&&c.lu!=me.uid&&tms(c)>rt,r=row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()});if(unr){r.querySelector("b").style.fontWeight="900";const dt=mk("i");dt.style.cssText="margin-left:auto;width:11px;height:11px;border-radius:50%;background:var(--ac);flex:none";r.append(dt)}b.append(r)})}
 function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>{un&&un();room=null;window.R.chat()};h.append(bk);
- if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};const vb=mk("button");vb.innerHTML=ico("vcam");vb.style.marginLeft="6px";vb.setAttribute("aria-label",K_Cx("v"));vb.onclick=e=>{e.stopPropagation();K_startCall(o,true)};h.append(cl,vb,dc)}
+ if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);const ab=mk("div");ab.style.cssText="position:relative;display:flex;flex:none";ab.append(av(UM[o],36));const dot=mk("i");dot.id="pdot";dot.style.cssText="position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:#2fd84a;border:2px solid var(--bg);display:none";ab.append(dot);const wr=mk("div");wr.style.cssText="display:flex;flex-direction:column;line-height:1.2;min-width:0";const ps=mk("small",null,"");ps.id="pst";ps.style.cssText="font-size:12px;font-weight:400;opacity:.75";wr.append(mk("span",null,nm(UM[o])),ps);h.append(ab,wr);K_pwatch(o);h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};const vb=mk("button");vb.innerHTML=ico("vcam");vb.style.marginLeft="6px";vb.setAttribute("aria-label",K_Cx("v"));vb.onclick=e=>{e.stopPropagation();K_startCall(o,true)};h.append(cl,vb,dc)}
  const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
  const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
@@ -1066,7 +1066,7 @@ async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt
   if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:t.slice(0,80),lu:me.uid,ts:serverTimestamp()},{merge:true})}catch(e){alert(e.message)}}
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
  if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
- E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else inb()};
+ E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else{K_pstop();inb()}};
 const UNT={
  ru:{t:"Придумайте имя пользователя",h:"Минимум 6 символов: маленькие латинские буквы, цифры, точка или _. По нему вас будут находить другие.",ph:"например: dilshod2026",b:"Продолжить",c:"Выйти",k:"Это имя уже занято, выберите другое",s:"Минимум 6 символов",x:"Только латинские буквы, цифры, . и _"},
  uz:{t:"Foydalanuvchi nomini tanlang",h:"Kamida 6 belgi: kichik lotin harflari, raqamlar, nuqta yoki _. Boshqalar sizni shu nom bilan topadi.",ph:"masalan: dilshod2026",b:"Davom etish",c:"Chiqish",k:"Bu nom band, boshqasini tanlang",s:"Kamida 6 belgi",x:"Faqat lotin harflari, raqamlar, . va _"},
@@ -1216,8 +1216,37 @@ async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
 function K_callInit(u){K_callStop();
  K_callUn=onSnapshot(query(collection(db,"calls"),where("to","==",u.uid),where("status","==","ringing")),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();if(Date.now()-t>60000)return;K_incoming(ch.doc.id,x)})},()=>{})}
 function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true)}
-onAuthStateChanged(auth,async u=>{me=u;K_callStop();um&&um();uu&&uu();im&&im();un&&un();
- if(u){K_callInit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
+/* ===== «В сети» / «был(а) в сети»: присутствие через Firestore (коллекция presence) ===== */
+const K_PL={
+ru:{on:"в сети",min:"был(а) в сети {n} мин. назад",today:"был(а) сегодня в {t}",yest:"был(а) вчера в {t}",date:"был(а) {d} в {t}",long:"давно не был(а) в сети"},
+uz:{on:"onlayn",min:"{n} daqiqa oldin onlayn edi",today:"bugun {t} da onlayn edi",yest:"kecha {t} da onlayn edi",date:"{d} {t} da onlayn edi",long:"uzoq vaqt oldin onlayn edi"},
+en:{on:"online",min:"last seen {n} min ago",today:"last seen today at {t}",yest:"last seen yesterday at {t}",date:"last seen {d} at {t}",long:"last seen a long time ago"},
+zh:{on:"在线",min:"{n}分钟前在线",today:"今天 {t} 在线",yest:"昨天 {t} 在线",date:"{d} {t} 在线",long:"很久未上线"},
+es:{on:"en línea",min:"últ. vez hace {n} min",today:"últ. vez hoy a las {t}",yest:"últ. vez ayer a las {t}",date:"últ. vez {d} a las {t}",long:"últ. vez hace mucho"},
+de:{on:"online",min:"zuletzt vor {n} Min. online",today:"zuletzt heute um {t} online",yest:"zuletzt gestern um {t} online",date:"zuletzt {d} um {t} online",long:"zuletzt vor langer Zeit online"}};
+const K_P=(k,v)=>{let t=(K_PL[window.lang]||K_PL.en)[k];for(const x in v||{})t=t.replace("{"+x+"}",v[x]);return t};
+let K_pw=null,K_pv=null,K_pown=null,K_poff=0,K_pu=null,K_pt=null;
+function K_pinit(u){K_pstopSelf();
+ const w=()=>{if(document.visibilityState=="visible")setDoc(doc(db,"presence",u.uid),{t:serverTimestamp()}).catch(()=>{})};
+ w();K_pw=setInterval(w,45000);K_pv=w;document.addEventListener("visibilitychange",K_pv);
+ K_pown=onSnapshot(doc(db,"presence",u.uid),d=>{if(d.metadata.hasPendingWrites)return;const x=d.data();if(x&&x.t&&x.t.toMillis)K_poff=x.t.toMillis()-Date.now()},()=>{})}
+function K_pstopSelf(){clearInterval(K_pw);K_pw=null;if(K_pown){K_pown();K_pown=null}if(K_pv){document.removeEventListener("visibilitychange",K_pv);K_pv=null}}
+function K_pstop(){if(K_pu){K_pu();K_pu=null}clearInterval(K_pt);K_pt=null}
+function K_ppaint(t){const e=E("pst");if(!e){K_pstop();return}const dot=E("pdot"),f=d=>d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+ e.style.color="";e.style.opacity=".75";if(dot)dot.style.display="none";
+ if(!t){e.textContent=K_P("long");return}
+ const now=Date.now()+K_poff,ago=now-t;
+ if(ago<100000){e.textContent=K_P("on");e.style.color="#2fd84a";e.style.opacity="1";if(dot)dot.style.display="block";return}
+ if(ago<3600000){e.textContent=K_P("min",{n:Math.max(1,Math.round(ago/60000))});return}
+ const d=new Date(t),n=new Date(now),y=new Date(now-86400000);
+ if(d.toDateString()==n.toDateString())e.textContent=K_P("today",{t:f(d)});
+ else if(d.toDateString()==y.toDateString())e.textContent=K_P("yest",{t:f(d)});
+ else e.textContent=K_P("date",{d:String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0"),t:f(d)})}
+function K_pwatch(o){K_pstop();let t=0;const paint=()=>K_ppaint(t);
+ K_pu=onSnapshot(doc(db,"presence",o),d=>{const x=d.data();t=x&&x.t&&x.t.toMillis?x.t.toMillis():0;paint()},()=>{});
+ K_pt=setInterval(paint,20000)}
+onAuthStateChanged(auth,async u=>{me=u;K_callStop();K_pstopSelf();um&&um();uu&&uu();im&&im();un&&un();
+ if(u){K_callInit(u);K_pinit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
    const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
