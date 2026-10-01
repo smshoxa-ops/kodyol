@@ -1050,7 +1050,7 @@ function inb(){const b=E("ib");if(!b)return;b.innerHTML="";b.append(mk("div","hd
  const g=mk("div","rw"),gi=mk("div","av");gi.innerHTML=ico("globe");gi.style.cssText="width:54px;height:54px;font-size:24px;background:var(--bd);color:var(--ac)";g.append(gi);const d=mk("div");d.append(mk("b",null,T.cgen),mk("small",null,T.cnote));g.append(d);g.onclick=()=>{room="general";window.R.chat()};b.append(g);
  inbox.filter(c=>!(c.del&&c.del[me.uid]&&c.del[me.uid].toMillis&&c.del[me.uid].toMillis()>=tms(c))).sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid),rt=c.rd&&c.rd[me.uid]&&c.rd[me.uid].toMillis?c.rd[me.uid].toMillis():0,unr=c.lu&&c.lu!=me.uid&&tms(c)>rt,r=row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()});if(unr){r.querySelector("b").style.fontWeight="900";const dt=mk("i");dt.style.cssText="margin-left:auto;width:11px;height:11px;border-radius:50%;background:var(--ac);flex:none";r.append(dt)}b.append(r)})}
 function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>{un&&un();room=null;window.R.chat()};h.append(bk);
- if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button");dc.innerHTML=ico("trash");dc.style.marginLeft="auto";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};h.append(dc)}
+ if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);h.append(av(UM[o],36),mk("span",null,nm(UM[o])));h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};h.append(cl);h.append(dc)}
  const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
  const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
@@ -1093,8 +1093,93 @@ function askUsername(u,r,dn){return new Promise(res=>{
    await w.commit();done(true)}
   catch(e){b.disabled=false;m.textContent=e.code=="permission-denied"?L.k:(e.code||e.message)}};
  setTimeout(()=>i.focus(),60)})}
-onAuthStateChanged(auth,async u=>{me=u;um&&um();uu&&uu();im&&im();un&&un();
- if(u){pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
+/* ===== Голосовые звонки 1 на 1: WebRTC + Firestore (сигналинг) ===== */
+window.IC.phone='<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>';
+window.IC.mic='<path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/>';
+const K_CL={
+ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон"},
+uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon"},
+en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone"},
+zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风"},
+es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono"},
+de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon"}};
+const K_Cx=k=>(K_CL[window.lang]||K_CL.en)[k];
+const K_ICE_CFG={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]};
+let K_cs=null,K_callUn=null,K_rg=null;
+const K_MEDIA={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false};
+function K_setSt(t){const e=E("callSt");if(e)e.textContent=t}
+function K_ring(on){if(K_rg){clearInterval(K_rg.t);try{K_rg.c.close()}catch(e){}K_rg=null}if(!on)return;
+ try{const c=new(window.AudioContext||window.webkitAudioContext)();const beep=()=>{[0,.35].forEach(dt=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=440;o.connect(g);g.connect(c.destination);const t=c.currentTime+dt;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.03);g.gain.linearRampToValueAtTime(0,t+.28);o.start(t);o.stop(t+.3)});if(navigator.vibrate)navigator.vibrate([300,100,300])};beep();K_rg={c,t:setInterval(beep,2200)}}catch(e){}}
+function K_callUI(u){
+ let o=E("K_callUI");if(o)o.remove();
+ o=mk("div");o.id="K_callUI";
+ o.style.cssText="position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 80px) 24px calc(env(safe-area-inset-bottom,0px) + 60px);color:#fff;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#1f6a0c,#071a04 70%,#000)";
+ const top=mk("div");top.style.cssText="display:flex;flex-direction:column;align-items:center;gap:14px";
+ const a=av(u,120);a.style.borderRadius="50%";a.style.boxShadow="0 0 0 10px rgba(150,255,60,.12),0 0 40px rgba(120,255,60,.35)";
+ const n=mk("div",null,nm(u));n.style.cssText="font-size:26px;font-weight:800";
+ const st=mk("div",null,"");st.id="callSt";st.style.cssText="font-size:16px;opacity:.8";
+ top.append(a,n,st);
+ const row=mk("div");row.style.cssText="display:flex;gap:36px;align-items:flex-start;justify-content:center";
+ const rb=(bg,ic,lbl,fn,rot)=>{const w=mk("div");w.style.cssText="display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px";const b=mk("button");b.style.cssText="width:70px;height:70px;border-radius:50%;border:0;display:grid;place-items:center;color:#fff;cursor:pointer;background:"+bg;b.innerHTML=ico(ic);const v=b.querySelector("svg");v.style.cssText="width:30px;height:30px;stroke:#fff;fill:none"+(rot?";transform:rotate(135deg)":"");b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);w.append(b,mk("span",null,lbl));return w};
+ if(K_cs&&K_cs.inc){row.append(rb("#e5484d","phone",K_Cx("d"),()=>K_endCall(true,K_Cx("r")),1),rb("#2faa08","phone",K_Cx("a"),K_acceptCall))}
+ else{row.append(rb("rgba(255,255,255,.2)","mic",K_Cx("mu"),b=>{const t=K_cs&&K_cs.stream&&K_cs.stream.getAudioTracks()[0];if(t){t.enabled=!t.enabled;b.style.background=t.enabled?"rgba(255,255,255,.2)":"#fff";b.querySelector("svg").style.stroke=t.enabled?"#fff":"#000"}}),rb("#e5484d","phone",K_Cx("e"),()=>K_endCall(true,K_Cx("f")),1))}
+ o.append(top,row);document.body.append(o);return o}
+function K_sendIce(c,cand){const x=JSON.stringify(cand);if(!c.ready){c.q.push(x);return}addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{})}
+function K_addC(c,x){const p=c.pc;if(p&&p.remoteDescription)p.addIceCandidate(JSON.parse(x)).catch(()=>{});else c.pend.push(x)}
+function K_flushC(c){const a=c.pend;c.pend=[];a.forEach(x=>K_addC(c,x))}
+function K_listenIce(c){c.un.push(onSnapshot(collection(db,"calls",c.id,"ice"),s=>s.docChanges().forEach(ch=>{if(ch.type=="added"){const x=ch.doc.data();if(x.uid!=me.uid)K_addC(c,x.c)}}),()=>{}))}
+function K_newPC(c){const pc=new RTCPeerConnection(K_ICE_CFG);c.pc=pc;c.stream.getTracks().forEach(t=>pc.addTrack(t,c.stream));
+ const au=document.createElement("audio");au.autoplay=true;au.setAttribute("playsinline","");document.body.append(au);c.au=au;
+ pc.ontrack=e=>{au.srcObject=e.streams[0];au.play&&au.play().catch(()=>{})};
+ pc.onicecandidate=e=>{if(e.candidate)K_sendIce(c,e.candidate)};
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
+ return pc}
+function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_ring(false);clearInterval(c.tm);clearTimeout(c.to);
+ c.un.forEach(f=>{try{f()}catch(e){}});
+ if(notify)updateDoc(doc(db,"calls",c.id),{status:c.inc?"declined":"ended"}).catch(()=>{});
+ try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
+ if(c.au)c.au.remove();
+ const u=E("K_callUI");if(u){if(msg){const e=E("callSt");if(e)e.textContent=msg;setTimeout(()=>u.remove(),1200)}else u.remove()}}
+async function K_startCall(o){
+ if(K_cs||!o)return;
+ if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);return}
+ let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_MEDIA)}catch(e){toast(K_Cx("m"),0);return}
+ const ref=doc(collection(db,"calls"));
+ const c=K_cs={id:ref.id,role:"a",peer:o,un:[],stream,q:[],pend:[],ready:false,inc:false};
+ K_callUI(UM[o]||{});K_setSt(K_Cx("c"));
+ const pc=K_newPC(c);
+ try{const off=await pc.createOffer();await pc.setLocalDescription(off);
+  await setDoc(ref,{from:me.uid,to:o,fromName:MY.username||me.displayName||"User",status:"ringing",offer:{type:off.type,sdp:off.sdp},ts:serverTimestamp()})}
+ catch(e){toast(e.code||e.message,0);K_endCall(false);return}
+ if(K_cs!=c)return;
+ c.ready=true;c.q.splice(0).forEach(x=>addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{}));
+ K_listenIce(c);
+ c.un.push(onSnapshot(ref,d=>{const x=d.data();if(!x||K_cs!=c)return;
+  if(x.status=="active"&&x.answer&&!pc.remoteDescription){K_setSt(K_Cx("n"));pc.setRemoteDescription(x.answer).then(()=>K_flushC(c)).catch(()=>{})}
+  else if(x.status=="declined")K_endCall(false,K_Cx("r"));
+  else if(x.status=="ended")K_endCall(false,K_Cx("f"))},()=>{}));
+ c.to=setTimeout(()=>{if(K_cs==c&&!pc.remoteDescription){updateDoc(ref,{status:"ended"}).catch(()=>{});K_endCall(false,K_Cx("o"))}},45000)}
+async function K_incoming(id,x){
+ if(!UM[x.from]){try{const d=await getDoc(doc(db,"users",x.from));if(d.exists())UM[x.from]={id:x.from,...d.data()}}catch(e){}}
+ if(K_cs){updateDoc(doc(db,"calls",id),{status:"declined"}).catch(()=>{});return}
+ const c=K_cs={id,role:"b",peer:x.from,un:[],offer:x.offer,inc:true,q:[],pend:[],ready:true};
+ K_callUI(UM[x.from]||{name:x.fromName,username:x.fromName});K_setSt(K_Cx("i"));K_ring(true);
+ c.un.push(onSnapshot(doc(db,"calls",id),d=>{const s=d.data()&&d.data().status;if(K_cs==c&&(s=="ended"||s=="declined"))K_endCall(false,K_Cx("f"))},()=>{}));
+ c.to=setTimeout(()=>{if(K_cs==c&&c.inc)K_endCall(true)},45000)}
+async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
+ if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);K_endCall(true);return}
+ try{c.stream=await navigator.mediaDevices.getUserMedia(K_MEDIA)}catch(e){toast(K_Cx("m"),0);K_endCall(true);return}
+ if(K_cs!=c){try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}return}
+ c.inc=false;K_ring(false);clearTimeout(c.to);K_callUI(UM[c.peer]||{});K_setSt(K_Cx("n"));
+ const pc=K_newPC(c);
+ try{await pc.setRemoteDescription(c.offer);const an=await pc.createAnswer();await pc.setLocalDescription(an);
+  await updateDoc(doc(db,"calls",c.id),{status:"active",answer:{type:an.type,sdp:an.sdp}});K_listenIce(c)}
+ catch(e){toast(e.code||e.message,0);K_endCall(true,K_Cx("f"))}}
+function K_callInit(u){K_callStop();
+ K_callUn=onSnapshot(query(collection(db,"calls"),where("to","==",u.uid),where("status","==","ringing")),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();if(Date.now()-t>60000)return;K_incoming(ch.doc.id,x)})},()=>{})}
+function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true)}
+onAuthStateChanged(auth,async u=>{me=u;K_callStop();um&&um();uu&&uu();im&&im();un&&un();
+ if(u){K_callInit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
    const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});

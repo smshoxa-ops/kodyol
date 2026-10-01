@@ -79,6 +79,35 @@ service cloud.firestore {
       }
     }
 
+    // Голосовые звонки 1 на 1 (WebRTC): сигналинг через документ звонка
+    function callMember(callId) {
+      let c = get(/databases/$(database)/documents/calls/$(callId)).data;
+      return signedIn() && (c.from == request.auth.uid || c.to == request.auth.uid);
+    }
+    match /calls/{callId} {
+      allow read: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['from','to','fromName','status','offer','ts'])
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string && request.resource.data.to != request.auth.uid
+        && request.resource.data.status == 'ringing'
+        && request.resource.data.fromName is string && request.resource.data.fromName.size() <= 30
+        && request.resource.data.ts == request.time;
+      allow update: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','answer'])
+        && request.resource.data.status in ['active','ended','declined'];
+      allow delete: if false;
+
+      match /ice/{id} {
+        allow read: if callMember(callId);
+        allow create: if callMember(callId)
+          && request.resource.data.keys().hasOnly(['uid','c'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.c is string && request.resource.data.c.size() < 2000;
+        allow update, delete: if false;
+      }
+    }
+
     // Платный доступ к ИИ: покупатель читает свой документ, писать может только владелец (впиши свой код вместо ADMIN_UID)
     match /subs/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
