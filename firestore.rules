@@ -2,7 +2,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function signedIn() { return request.auth != null; }
+    // забаненный пользователь теряет доступ ко всему (кроме чтения своей записи бана)
+    function signedIn() { return request.auth != null && !exists(/databases/$(database)/documents/bans/$(request.auth.uid)); }
     function isMember(chatId) {
       return signedIn() && (chatId == 'general' || request.auth.uid in chatId.split('_'));
     }
@@ -147,8 +148,8 @@ service cloud.firestore {
 
     // Блокировки: ставит и снимает только владелец; пользователь видит только свою
     match /bans/{uid} {
-      allow read: if isOwner() || (signedIn() && request.auth.uid == uid);
-      allow create: if isOwner() && request.resource.data.keys().hasOnly(['by','ts']);
+      allow read: if request.auth != null && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
+      allow create: if isOwner() && uid != request.auth.uid && request.resource.data.keys().hasOnly(['by','ts']);
       allow delete: if isOwner();
       allow update: if false;
     }

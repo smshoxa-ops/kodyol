@@ -373,6 +373,14 @@ body.nothome .apk{display:none}
 #c-owner .owh{font-weight:700;font-size:14px;color:var(--al)}#c-owner .owt{margin:4px 0;word-break:break-word}
 #c-owner .owa{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 #c-owner .rw .chip{flex:none}
+
+/* v81: экран бана */
+#banScr{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:radial-gradient(80% 60% at 50% 40%,rgba(255,40,40,.28),#050202 70%);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+#banScr .bnb{text-align:center;color:#fff;max-width:420px}
+#banScr .bne{font-size:84px;line-height:1}
+#banScr h1{margin:14px 0 8px;font:900 clamp(34px,11vw,56px)/1.05 Poppins,system-ui,sans-serif;color:#ff4d4d;letter-spacing:1px;text-shadow:0 0 30px rgba(255,60,60,.6)}
+#banScr p{margin:0 0 26px;color:#d8b8b8;font-size:17px}
+#banScr button{padding:13px 34px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font:600 16px Poppins,system-ui,sans-serif;cursor:pointer}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -1317,7 +1325,11 @@ function K_ppaint(t){const e=E("pst");if(!e){K_pstop();return}const dot=E("pdot"
 function K_pwatch(o){K_pstop();let t=0;const paint=()=>K_ppaint(t);
  K_pu=onSnapshot(doc(db,"presence",o),d=>{const x=d.data();t=x&&x.t&&x.t.toMillis?x.t.toMillis():0;paint()},()=>{});
  K_pt=setInterval(paint,20000)}
-onAuthStateChanged(auth,async u=>{me=u;K_callStop();K_pstopSelf();um&&um();uu&&uu();im&&im();un&&un();
+let bnUn=null;
+function banUI(on){let o=document.getElementById("banScr");if(!on){o&&o.remove();document.documentElement.style.overflow="";return}if(o)return;try{K_callStop()}catch(e){}
+ o=document.createElement("div");o.id="banScr";const w=document.createElement("div");w.className="bnb";const e=document.createElement("div");e.className="bne";e.textContent="🚫";const h=document.createElement("h1");h.textContent="ВЫ ЗАБАНЕНЫ";const p=document.createElement("p");p.textContent="Доступ к KodYol закрыт владельцем.";const x=document.createElement("button");x.textContent="Выйти";x.onclick=()=>signOut(auth);w.append(e,h,p,x);o.append(w);document.body.append(o);document.documentElement.style.overflow="hidden"}
+function banWatch(u){bnUn&&bnUn();bnUn=null;banUI(false);if(u)bnUn=onSnapshot(doc(db,"bans",u.uid),d=>banUI(d.exists()),()=>{})}
+onAuthStateChanged(auth,async u=>{me=u;banWatch(u);K_callStop();K_pstopSelf();um&&um();uu&&uu();im&&im();un&&un();
  if(u){K_callInit(u);K_pinit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
    const okU=await askUsername(u,r,dn);if(!okU)return}
