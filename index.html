@@ -422,6 +422,15 @@ body.nothome .apk{display:none}
 #sview .svl,#sview .svr{position:absolute;top:70px;bottom:0;z-index:3}#sview .svl{left:0;width:35%}#sview .svr{right:0;width:65%}
 #sview .svf{padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 12px);min-height:20px}
 #sview .svmsg{width:100%;text-align:left;padding:14px 20px;border-radius:999px;border:1.5px solid rgba(255,255,255,.75);background:none;color:#fff;font:500 16px Poppins,system-ui,sans-serif;cursor:pointer}
+
+/* v85: анимация загрузки истории */
+.stw.up{background:none}
+.stw.up::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(#a6ff3c,#27a400 35%,rgba(39,164,0,0) 70%,#a6ff3c);animation:stspin .9s linear infinite}
+.stw.up .av{position:relative;z-index:1;box-shadow:0 0 0 3px var(--bg)}
+.stw.up .stpl{z-index:2}
+.stw.pop{animation:stpop .6s ease-out}
+@keyframes stspin{to{transform:rotate(360deg)}}
+@keyframes stpop{0%{transform:scale(.88)}55%{transform:scale(1.14)}100%{transform:scale(1)}}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -1201,19 +1210,20 @@ async function stGet(uid){const s=await getDocs(query(collection(db,"stories"),w
  s.docs.forEach(d=>{const x={id:d.id,...d.data()};if(x.exp>now)a.push(x);else if(uid==me.uid){deleteDoc(d.ref).catch(()=>{})}});
  return a.sort((p,q)=>p.exp-q.exp)}
 function stBind(aw,uid,own){
- if(own){const pl=mk("button","stpl");pl.innerHTML=ico("stplus");pl.onclick=e=>{e.stopPropagation();storyCam()};aw.append(pl)}
- stGet(uid).then(l=>{if(!l.length)return;aw.classList.add("has");aw.onclick=()=>storyView(uid,l)}).catch(()=>{})}
+ if(own){const pl=mk("button","stpl");pl.innerHTML=ico("stplus");pl.onclick=e=>{e.stopPropagation();storyCam()};aw.append(pl);if(window.stUp)aw.classList.add("up")}
+ stGet(uid).then(l=>{if(!l.length)return;if(!(own&&window.stUp))aw.classList.add("has");if(own&&window.stPop){window.stPop=0;aw.classList.add("pop")}aw.onclick=()=>storyView(uid,l)}).catch(()=>{})}
 function photoData(u){return new Promise((res,rej)=>{const im=new Image();im.onerror=()=>rej(new Error("img"));im.onload=()=>{let k=Math.min(1,1280/Math.max(im.naturalWidth,im.naturalHeight));
  for(let n=0;n<4;n++){const c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);const g=c.getContext("2d");g.imageSmoothingQuality="high";g.drawImage(im,0,0,c.width,c.height);
   for(const q of [.82,.7,.58]){const d=c.toDataURL("image/jpeg",q);if(d.length<=700000)return res(d)}k*=.75}rej(new Error(XF("big")))};im.src=u})}
+Object.assign(LT.ru,{pd2:"Нет доступа. Вставь актуальный firestore.rules в Firebase и нажми Publish"});Object.assign(LT.en,{pd2:"Permission denied. Publish the latest firestore.rules in Firebase"});Object.assign(LT.uz,{pd2:"Ruxsat yo'q. Firebase'da firestore.rules ni yangilab Publish bosing"});
+async function stUpload(it){window.stUp=1;window.show("me");const t0=Date.now(),u=URL.createObjectURL(it.blob);
+ try{const img=await photoData(u);await addDoc(collection(db,"stories"),{uid:me.uid,type:"photo",img,ts:serverTimestamp(),exp:Date.now()+864e5});window.stPop=1;toast(XF("ok"),1)}
+ catch(e){toast(e.code=="permission-denied"?XF("pd2"):(e.message||e.code),0)}
+ URL.revokeObjectURL(u);await new Promise(r=>setTimeout(r,Math.max(0,1400-(Date.now()-t0))));window.stUp=0;if(window.curV=="me")window.R.me()}
 function storyPrev(it,done){
  const url=URL.createObjectURL(it.blob),o=mk("div");o.id="spv";const hd=mk("div","sct"),bk=mk("button"),pb=mk("button","scp",XF("pub"));bk.innerHTML=ico("back");hd.append(bk,pb);
  const m=mk("img");m.src=url;m.className="spm";o.append(m,hd);document.body.append(o);const close=()=>{URL.revokeObjectURL(url);o.remove()};bk.onclick=close;
- pb.onclick=async()=>{pb.disabled=true;pb.textContent="…";
-  try{const d={uid:me.uid,type:it.type,ts:serverTimestamp(),exp:Date.now()+864e5};
-   d.img=await photoData(url);
-   await addDoc(collection(db,"stories"),d);toast(XF("ok"),1);close();done();if(window.curV=="me")window.R.me()}
-  catch(e){pb.disabled=false;pb.textContent=XF("pub");toast(e.code||e.message,0)}}}
+ pb.onclick=()=>{close();done();stUpload(it)}}
 async function storyCam(){
  if(!me||document.getElementById("scam"))return;
  const o=mk("div"),vd=mk("video"),top=mk("div","sct"),xb=mk("button"),fb=mk("button"),bot=mk("div","scb"),row=mk("div","scr"),gal=mk("button","scg"),sh=mk("button","scs"),fp=mk("button","scf"),fi=mk("input");
