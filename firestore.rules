@@ -150,6 +150,22 @@ service cloud.firestore {
         && request.resource.data.img is string && request.resource.data.img.size() <= 720000;
       allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isOwner());
       allow update: if false;
+
+      // Просмотры и лайки истории: id документа = uid смотревшего
+      match /v/{viewer} {
+        allow get: if signedIn() && (request.auth.uid == viewer || isOwner()
+          || get(/databases/$(database)/documents/stories/$(id)).data.uid == request.auth.uid);
+        allow list: if signedIn() && (isOwner()
+          || get(/databases/$(database)/documents/stories/$(id)).data.uid == request.auth.uid);
+        allow create: if signedIn() && request.auth.uid == viewer
+          && request.resource.data.keys().hasOnly(['ts','lk'])
+          && request.resource.data.ts == request.time
+          && request.resource.data.lk is bool;
+        allow update: if signedIn() && request.auth.uid == viewer
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lk'])
+          && request.resource.data.lk is bool;
+        allow delete: if false;
+      }
     }
 
     // Жалобы: создаёт любой вошедший, читает и закрывает только владелец
