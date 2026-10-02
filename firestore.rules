@@ -177,6 +177,14 @@ service cloud.firestore {
       allow update: if false;
     }
 
+    // Галочки: читают все вошедшие, выдаёт и снимает только владелец
+    match /verified/{uid} {
+      allow read: if signedIn();
+      allow create: if isOwner() && request.resource.data.keys().hasOnly(['by','ts']);
+      allow delete: if isOwner();
+      allow update: if false;
+    }
+
     // Блокировки: ставит и снимает только владелец; пользователь видит только свою
     match /bans/{uid} {
       allow read: if request.auth != null && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
