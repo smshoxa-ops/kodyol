@@ -192,5 +192,17 @@ service cloud.firestore {
       allow delete: if isOwner();
       allow update: if false;
     }
+    // Прогресс уроков (Duolingo-стиль): читает и пишет только сам владелец
+    match /progress/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['tr','done','xp','chest','ts'])
+        && request.resource.data.tr is string && request.resource.data.tr.size() <= 3
+        && request.resource.data.done is map && request.resource.data.done.size() <= 100
+        && request.resource.data.chest is map && request.resource.data.chest.size() <= 100
+        && request.resource.data.xp is number && request.resource.data.xp >= 0 && request.resource.data.xp < 1000000
+        && request.resource.data.ts is number;
+      allow delete: if false;
+    }
   }
 }

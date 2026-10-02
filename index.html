@@ -2008,7 +2008,7 @@ var KEYS=["fs","fe","be","cy","ds"];
 var KEY="kd_duo",S={tr:null,done:{},xp:0,chest:{}};
 try{var _p=JSON.parse(localStorage.getItem(KEY));if(_p)for(var k in _p)S[k]=_p[k]}catch(e){}
 S.done=S.done||{};S.chest=S.chest||{};S.xp=S.xp||0;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(quiet){if(!quiet)S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(!quiet)try{window.dispatchEvent(new Event("kd:save"))}catch(e){}}
 function snd(n){try{if(window.KS)KS.play(n)}catch(e){}}
 function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
@@ -2265,9 +2265,52 @@ function tick(){
  parts=parts.filter(function(p){p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l-=.011;if(p.l<=0||p.y>cv.height+20)return false;cx.save();cx.globalAlpha=Math.min(1,p.l*2);cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore();return true});
  if(parts.length)raf=requestAnimationFrame(tick);else{raf=0;cx.clearRect(0,0,cv.width,cv.height)}}
 document.addEventListener("keydown",function(e){if(e.key=="Enter"&&P&&!$("kdp").hidden){var b=$("kpMain");if(b&&!b.classList.contains("dis")){e.preventDefault();b.click()}}});
+/* ---------- синхронизация с аккаунтом (используется модулем Firebase ниже) ---------- */
+window.kdApi={
+ get:function(){return{uid:S.uid||null,tr:S.tr||"",done:S.done,xp:S.xp,chest:S.chest,ts:S.ts||0}},
+ login:function(uid,r){
+  var had=!!S.tr;
+  if(S.uid&&S.uid!==uid)S={tr:null,done:{},xp:0,chest:{}};
+  S.uid=uid;S.done=S.done||{};S.chest=S.chest||{};S.xp=S.xp||0;
+  if(r){var rd=r.done||{},k;
+   for(k in rd)S.done[k]=Math.max(S.done[k]||0,+rd[k]||0);
+   for(k in (r.chest||{}))S.chest[k]=1;
+   S.xp=Math.max(S.xp,+r.xp||0);
+   if(r.tr&&CR[r.tr]&&(!S.tr||(+r.ts||0)>(S.ts||0)))S.tr=r.tr;
+   S.ts=Math.max(S.ts||0,+r.ts||0)}
+  try{Object.keys(S.done).forEach(function(l){cards(+l).forEach(function(x){var i=D.indexOf(x);if(st.dn.indexOf(i)<0)st.dn.push(i)})});if(window.save)window.save()}catch(e){}
+  save(true);
+  if(!had&&S.tr)mode="path";
+  if(!P&&window.curV=="fold")kdRender()},
+ logout:function(){
+  if(!S.uid)return;
+  S={tr:null,done:{},xp:0,chest:{}};save(true);mode="choose";pickTr=null;
+  if(!P&&window.curV=="fold")kdRender()}};
 /* кнопка «назад» в старом конспекте теперь ведёт на дорожку */
 var lb=$("lb");if(lb)lb.onclick=function(){show("fold")};
 })();
 </script>
 
+<script type="module">
+/* KodYol: прогресс уроков хранится в аккаунте Google/Email (Firestore: progress/{uid}) */
+import{getApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const app=getApp(),auth=getAuth(app),db=getFirestore(app);
+let uid=null,tm=0,ready=false;
+function push(){
+ if(!uid||!ready||!window.kdApi)return;
+ const g=kdApi.get();if(g.uid!==uid)return;
+ setDoc(doc(db,"progress",uid),{tr:g.tr||"",done:g.done,xp:g.xp,chest:g.chest,ts:g.ts||Date.now()}).catch(()=>{})}
+window.addEventListener("kd:save",()=>{clearTimeout(tm);tm=setTimeout(push,800)});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){clearTimeout(tm);push()}});
+onAuthStateChanged(auth,async u=>{
+ ready=false;
+ if(!u){uid=null;window.kdApi&&kdApi.logout();return}
+ uid=u.uid;
+ let r=null;
+ try{const s=await getDoc(doc(db,"progress",u.uid));if(s.exists())r=s.data()}catch(e){return}
+ if(uid!==u.uid||!window.kdApi)return;
+ kdApi.login(u.uid,r);ready=true;push()});
+</script>
 </body></html>
