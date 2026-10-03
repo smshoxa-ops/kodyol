@@ -830,13 +830,19 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 .stb:active{transform:scale(.88);background:var(--bd)}
 #stp.on .stb{animation:stbin .38s cubic-bezier(.2,.9,.3,1.25) backwards;animation-delay:calc(var(--i,0)*22ms + 80ms)}
 @keyframes stbin{from{transform:scale(.4) translateY(14px);opacity:0}to{transform:none;opacity:1}}
-#c-chat .bar{transition:bottom .3s cubic-bezier(.22,.9,.3,1),padding-bottom .3s}
+#c-chat .bar{bottom:var(--kb,0px);transition:bottom .28s cubic-bezier(.22,.9,.3,1),padding-bottom .28s}
+html.kbo #c-chat .bar{padding-bottom:10px}
+html.kbo #c-chat #cm{padding-bottom:calc(var(--kb,0px) + 96px)}
 #th.sto .bar{bottom:var(--stkh,300px);padding-bottom:10px}
 #th.sto #cm{padding-bottom:calc(var(--stkh,300px) + 96px)}
 #th.nt #stp,#th.nt .bar{transition:none!important}
 #c-chat .m.stk{background:none!important;padding:2px 4px;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 #c-chat .m.stk .slw{width:128px;height:128px;display:block}
 #c-chat .m.stk .lb{display:block;text-align:right;margin:0}
+/* v117: плавный стык баннера с фоном */
+.pcard .pban::before{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 0%,color-mix(in srgb,var(--pcb) 35%,transparent) 45%,color-mix(in srgb,var(--pcb) 80%,transparent) 78%,var(--pcb) 100%)}
+.pcard .pban::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-1px;height:34%;z-index:1;pointer-events:none;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);-webkit-mask-image:linear-gradient(180deg,transparent,#000 85%);mask-image:linear-gradient(180deg,transparent,#000 85%)}
+.pcard .pban .pbc{z-index:3}
 /* v116: история на весь экран + блюр вместо чёрных полос */
 #sview .svb{position:absolute;inset:0;margin:0;border-radius:0;flex:none;background:#000}
 #sview .svm .svbg{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;filter:blur(34px) brightness(.55) saturate(1.35);z-index:0;animation:none}
@@ -1991,21 +1997,34 @@ bored:{c:"a-droop",f:()=>sEye(0,2,1)+'<path d="M38 62V58Q46 47 54 58V62ZM66 62V5
 function slimeEl(id,sz){const m=SLM[id];if(!m)return document.createTextNode("");const w=document.createElement("span");w.className="slw"+(sz?" "+sz:"");w.setAttribute("role","img");w.setAttribute("aria-label",SLM_NAMES[id]||"");
  w.innerHTML='<svg class="slm '+m.c+'" viewBox="0 0 120 120"><ellipse class="sh" cx="60" cy="108" rx="38" ry="5" fill="#000" opacity=".35"/><g class="bw"><path d="'+SB+'" fill="url(#kdsg)"/><ellipse cx="42" cy="44" rx="15" ry="8" fill="#fff" opacity=".28" transform="rotate(-25 42 44)"/><path d="M30 98Q60 106 90 98" stroke="#2f8a00" stroke-width="4" fill="none" opacity=".25" stroke-linecap="round"/>'+m.f()+'</g></svg>';return w}
 
-const STK_SM='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M8 14.2c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><circle cx="9" cy="9.8" r=".9" fill="currentColor"/><circle cx="15" cy="9.8" r=".9" fill="currentColor"/></svg>',STK_KB='<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M6.5 10h.01M10 10h.01M14 10h.01M17.5 10h.01M7.5 14h9"/></svg>';
-let stkBase=window.innerHeight;
-function stkH(){const vv=window.visualViewport,ci=E("ci"),foc=ci&&document.activeElement===ci;
- if(!foc)stkBase=window.innerHeight;
- else{const kb=Math.max(stkBase-window.innerHeight,vv?stkBase-vv.height-vv.offsetTop:0);if(kb>150)try{localStorage.setItem("kd_kb",String(Math.round(kb)))}catch(e){}}
+let stkBase=window.innerHeight,stkDone=null,stkT=0;
+function stkH(){const vv=window.visualViewport,ci=E("ci"),foc=!!ci&&document.activeElement===ci;
+ if(!foc&&!stkDone)stkBase=window.innerHeight;
+ let kb=vv?Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop)):0;if(kb<80)kb=0;
+ const R=document.documentElement;R.style.setProperty("--kb",kb+"px");R.classList.toggle("kbo",kb>0);
+ const real=Math.max(kb,stkBase-window.innerHeight);
+ if(real>150&&(foc||stkDone))try{localStorage.setItem("kd_kb",String(real))}catch(e){}
  let h=300;try{h=+localStorage.getItem("kd_kb")||300}catch(e){}
- h=Math.min(Math.max(h,220),Math.round(stkBase*.5));document.documentElement.style.setProperty("--stkh",h+"px")}
-function stkOpen(on,now){const p=E("stp"),th=E("th");if(!p||!th)return;const was=p.classList.contains("on"),o=on==null?!was:on;if(o===was)return;
+ h=Math.min(Math.max(h,220),Math.round(stkBase*.55));R.style.setProperty("--stkh",h+"px");
+ if(stkDone&&kb>120){const f=stkDone;f()}}
+const STK_SM='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M8 14.2c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><circle cx="9" cy="9.8" r=".9" fill="currentColor"/><circle cx="15" cy="9.8" r=".9" fill="currentColor"/></svg>',STK_KB='<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M6.5 10h.01M10 10h.01M14 10h.01M17.5 10h.01M7.5 14h9"/></svg>';
+function stkOpen(on,now){const p=E("stp"),th=E("th");if(!p||!th)return;const was=p.classList.contains("on"),o=on==null?!was:on;
+ if(!o){stkDone=null;clearTimeout(stkT)}
+ if(o===was)return;
  if(now){th.classList.add("nt");requestAnimationFrame(()=>requestAnimationFrame(()=>th.classList.remove("nt")))}
  stkH();p.classList.toggle("on",o);p.setAttribute("aria-hidden",o?"false":"true");th.classList.toggle("sto",o);
- const b=E("ce");if(b){b.classList.toggle("on",o);b.innerHTML=STK_SM;b.setAttribute("aria-label","Стикеры")}
+ const b=E("ce");if(b){b.classList.toggle("on",o);b.innerHTML=o?STK_KB:STK_SM;b.setAttribute("aria-label",o?"Клавиатура":"Стикеры")}
  if(o){const ci=E("ci");if(ci)ci.blur();window.scrollTo(0,document.body.scrollHeight);setTimeout(()=>window.scrollTo(0,document.body.scrollHeight),320)}}
-function stkInit(){stkOpen(false,true);const ce=E("ce");if(ce&&!ce.dataset.k){ce.dataset.k=1;ce.innerHTML=STK_SM;ce.setAttribute("aria-label","Стикеры");ce.onclick=()=>{const p=E("stp");if(p&&p.classList.contains("on"))stkOpen(false);else stkOpen(true)};E("ci").onfocus=()=>stkOpen(false,true)}
+/* клавиатура поднимается: панель стоит на месте и убирается без анимации, когда клавиатура уже видна, поэтому поле ввода не прыгает и не прячется */
+function stkSwap(){const p=E("stp");if(!p||!p.classList.contains("on"))return;clearTimeout(stkT);
+ const done=()=>{clearTimeout(stkT);stkDone=null;stkOpen(false,true);setTimeout(()=>window.scrollTo(0,document.body.scrollHeight),50)};
+ stkDone=done;stkT=setTimeout(done,800)}
+function stkInit(){stkOpen(false,true);const ce=E("ce");
+ if(ce&&!ce.dataset.k){ce.dataset.k=1;ce.innerHTML=STK_SM;ce.setAttribute("aria-label","Стикеры");
+  ce.onclick=()=>{const p=E("stp");if(p&&p.classList.contains("on")){const ci=E("ci");stkSwap();if(ci)ci.focus({preventScroll:true})}else stkOpen(true)};
+  E("ci").addEventListener("focus",stkSwap)}
  {const cm=E("cm");if(cm&&!cm.dataset.k){cm.dataset.k=1;cm.addEventListener("click",()=>{const p=E("stp");if(p&&p.classList.contains("on"))stkOpen(false)})}}
- if(!window.__stkK){window.__stkK=1;window.addEventListener("resize",stkH);if(window.visualViewport)window.visualViewport.addEventListener("resize",stkH)}
+ if(!window.__stkK){window.__stkK=1;window.addEventListener("resize",stkH);if(window.visualViewport){window.visualViewport.addEventListener("resize",stkH);window.visualViewport.addEventListener("scroll",stkH)}document.addEventListener("focusout",()=>setTimeout(stkH,60))}
  stkH();
  if(E("stp")||!E("th"))return;const p=document.createElement("div");p.id="stp";p.setAttribute("aria-hidden","true");const g=document.createElement("div");g.className="stg";
  Object.keys(SLM).forEach((k,i)=>{const b=document.createElement("button");b.type="button";b.className="stb";b.style.setProperty("--i",i);b.setAttribute("aria-label",SLM_NAMES[k]);b.append(slimeEl(k));b.onclick=()=>sendStk(k);g.append(b)});p.append(g);E("th").append(p)}
