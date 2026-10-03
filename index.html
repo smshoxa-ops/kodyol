@@ -543,6 +543,27 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 #kdFan .kf-b:active{transform:scale(.9);box-shadow:0 2px 0 #1d7006}
 #kdFan .kf-b svg{width:29px;height:29px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
 @media(prefers-reduced-motion:reduce){#kdFan .kf-b,#kdFan .kf-bg{transition:none!important}}
+
+/* ===== Входящий звонок: «динамический остров» сверху ===== */
+.kisl{--w:min(calc(100vw - 20px),420px);position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:310;width:var(--w);height:78px;box-sizing:border-box;border-radius:39px;background:#000;overflow:hidden;transform:translateX(-50%);box-shadow:0 12px 32px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.08);color:#fff;animation:kiIn .62s cubic-bezier(.2,1.25,.3,1) both}
+.kisl.on{animation:kiGlow 1.8s ease-in-out infinite}
+.kisl.out{animation:kiOut .3s cubic-bezier(.5,0,.8,.4) forwards}
+@keyframes kiIn{0%{width:126px;height:36px;border-radius:20px;opacity:0;transform:translateX(-50%) translateY(-12px) scale(.88)}18%{opacity:1}100%{width:var(--w);height:78px;border-radius:39px;transform:translateX(-50%) translateY(0) scale(1)}}
+@keyframes kiOut{from{width:var(--w);height:78px;border-radius:39px;opacity:1;transform:translateX(-50%)}to{width:126px;height:36px;border-radius:20px;opacity:0;transform:translateX(-50%) translateY(-10px) scale(.9)}}
+@keyframes kiGlow{0%,100%{box-shadow:0 12px 32px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.08),0 0 0 0 rgba(120,255,60,0)}50%{box-shadow:0 12px 32px rgba(0,0,0,.55),inset 0 0 0 1px rgba(120,255,60,.35),0 0 0 5px rgba(120,255,60,.22)}}
+.kisl .ki-in{position:absolute;inset:0;display:flex;align-items:center;gap:12px;padding:0 13px;opacity:0;animation:kiC .38s .24s ease-out both}
+@keyframes kiC{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.kisl .ki-av{flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;cursor:pointer;display:block}
+.kisl .ki-av .av{width:52px!important;height:52px!important;border-radius:50%;font-size:22px!important}
+.kisl .ki-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;cursor:pointer;text-align:left}
+.kisl .ki-tx small{font-size:12.5px;line-height:1.1;color:rgba(255,255,255,.62);font-weight:500}
+.kisl .ki-tx b{font-size:17px;line-height:1.2;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kisl .ki-b{flex:none;width:52px;height:52px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s}
+.kisl .ki-b:active{transform:scale(.88)}
+.kisl .ki-b.d{background:#e5484d}.kisl .ki-b.a{background:#2faa08}
+.kisl .ki-b svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kisl .ki-b.d svg{transform:rotate(135deg)}
+@media(prefers-reduced-motion:reduce){.kisl,.kisl.on,.kisl .ki-in{animation:none!important;opacity:1}}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -1569,15 +1590,18 @@ function K_setSt(t){const e=E("callSt");if(e)e.textContent=t;K_bubT(t)}
 let K_AUD=null,K_primed=false;
 function K_audInit(){if(K_AUD)return K_AUD;K_AUD={};[["o","ring-out.mp3"],["i","ring-in.mp3"]].forEach(a=>{const e=new Audio();e.src=a[1];e.loop=true;e.preload="auto";e.setAttribute("playsinline","");K_AUD[a[0]]=e});return K_AUD}
 ["pointerdown","touchend","click","keydown"].forEach(ev=>document.addEventListener(ev,function(){if(K_primed)return;K_primed=true;try{const A=K_audInit();Object.keys(A).forEach(k=>{const e=A[k];e.muted=true;const p=e.play();const done=()=>{try{e.pause();e.currentTime=0}catch(x){}e.muted=false};if(p&&p.then)p.then(done,()=>{e.muted=false;K_primed=false});else done()})}catch(x){K_primed=false}},{capture:true,passive:true}));
+const K_RPAUSE={o:6500,i:0};/* пауза между повторами, мс: o — когда звонишь (~6.5 с), i — входящий (0 = без паузы) */
 function K_ring(on){
- if(K_rg){clearInterval(K_rg.t);clearInterval(K_rg.v);try{K_rg.c&&K_rg.c.close()}catch(e){}K_rg=null}
- if(K_AUD)Object.keys(K_AUD).forEach(k=>{try{K_AUD[k].pause();K_AUD[k].currentTime=0}catch(e){}});
+ if(K_rg){clearInterval(K_rg.t);clearInterval(K_rg.v);clearTimeout(K_rg.w);try{K_rg.c&&K_rg.c.close()}catch(e){}K_rg=null}
+ if(K_AUD)Object.keys(K_AUD).forEach(k=>{const e=K_AUD[k];e.onended=null;try{e.pause();e.currentTime=0}catch(x){}});
  try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}
  if(!on)return;
- const out=on===2,rg=K_rg={c:null,t:null,v:null};
+ const out=on===2,pz=K_RPAUSE[out?"o":"i"],rg=K_rg={c:null,t:null,v:null,w:null};
  /* 2 = исходящий (ты звонишь): ring-out.mp3 · true = входящий: ring-in.mp3 */
  const beepFb=()=>{try{const c=new(window.AudioContext||window.webkitAudioContext)();const beep=()=>{[0,.35].forEach(dt=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=440;o.connect(g);g.connect(c.destination);const t=c.currentTime+dt;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.03);g.gain.linearRampToValueAtTime(0,t+.28);o.start(t);o.stop(t+.3)})};beep();rg.c=c;rg.t=setInterval(beep,2200)}catch(e){}};
- try{const a=K_audInit()[out?"o":"i"];a.muted=false;a.volume=1;a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{if(K_rg===rg&&!out)beepFb()})}catch(e){if(!out)beepFb()}
+ try{const a=K_audInit()[out?"o":"i"];a.muted=false;a.volume=1;a.currentTime=0;a.loop=!pz;
+  a.onended=pz?()=>{clearTimeout(rg.w);rg.w=setTimeout(()=>{if(K_rg!==rg)return;try{a.currentTime=0;const q=a.play();if(q&&q.catch)q.catch(()=>{})}catch(e){}},pz)}:null;
+  const p=a.play();if(p&&p.catch)p.catch(()=>{if(K_rg===rg&&!out)beepFb()})}catch(e){if(!out)beepFb()}
  if(!out&&navigator.vibrate){const vib=()=>navigator.vibrate([300,100,300]);vib();rg.v=setInterval(vib,2200)}}
 async function K_spk(c,on){const au=c.au;if(!au)return;
  try{if(au.setSinkId&&navigator.mediaDevices.enumerateDevices){const ds=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind=="audiooutput");
@@ -1601,6 +1625,20 @@ function K_logCall(c){if(c.role!="a"||!c.ready||!me||me.uid!=c.uid)return;
  const k=c.t0?"end":(c.dec?"dec":"miss"),sec=c.t0?Math.round((Date.now()-c.t0)/1000):0,id=[c.uid,c.peer].sort().join("_"),lbl=(c.video?"🎥 ":"📞 ")+K_Cx(k=="end"?(c.video?"vce":"ce"):k=="dec"?"cd":"cn");
  addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:"§call|"+k+"|"+sec+(c.video?"|1":""),ts:serverTimestamp()})
  .then(()=>setDoc(doc(db,"chats",id),{members:id.split("_"),last:lbl,lu:me.uid,ts:serverTimestamp()},{merge:true})).catch(()=>{})}
+/* ===== Входящий звонок как «остров» сверху (вместо полного экрана) ===== */
+function K_islRm(now){const o=E("K_isl");if(!o)return;if(now){o.remove();return}if(o.classList.contains("out"))return;o.classList.remove("on");o.classList.add("out");setTimeout(()=>o.remove(),300)}
+function K_island(u){
+ K_islRm(1);const o=mk("div","kisl");o.id="K_isl";o.setAttribute("role","alertdialog");o.setAttribute("aria-label",K_Cx(K_cs&&K_cs.video?"vi":"i"));
+ const inn=mk("div","ki-in"),aw=mk("span","ki-av"),a=av(u,52);aw.append(a);
+ const tx=mk("div","ki-tx"),sm=mk("small",null,K_Cx(K_cs&&K_cs.video?"vi":"i")),nb=mk("b",null,nm(u));tx.append(sm,nb);
+ const btn=(cls,lbl,fn)=>{const b=mk("button","ki-b "+cls);b.innerHTML=ico("phone");b.setAttribute("aria-label",lbl);b.onclick=e=>{e.stopPropagation();fn()};return b};
+ inn.append(aw,tx,btn("d",K_Cx("d"),()=>K_endCall(true,K_Cx("r"))),btn("a",K_Cx("a"),K_acceptCall));
+ /* нажатие на имя/аватар → полноэкранный вариант */
+ const big=()=>{if(!K_cs||!K_cs.inc)return;K_islRm();K_callUI(u);K_setSt(K_Cx(K_cs.video?"vi":"i"))};
+ aw.onclick=tx.onclick=big;
+ o.append(inn);document.body.append(o);
+ setTimeout(()=>{if(o.isConnected&&!o.classList.contains("out"))o.classList.add("on")},700);
+ try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}return o}
 function K_callUI(u){
  let o=E("K_callUI");const re=!!o;if(o)o.remove();K_bubRm(1);K_min=false;
  o=mk("div");o.id="K_callUI";if(!re)o.style.animation="kcIn .38s cubic-bezier(.2,.9,.3,1) both";
@@ -1692,7 +1730,7 @@ function K_newPC(c){const pc=new RTCPeerConnection(K_ICE_CFG);c.pc=pc;c.stream.g
  pc.onicecandidate=e=>{if(e.candidate)K_sendIce(c,e.candidate)};pc.oniceconnectionstatechange=()=>{if(pc.iceConnectionState=="failed"&&K_cs==c)K_endCall(true,K_Cx("x"))};
  pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected")clearTimeout(c.ct);if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
  return pc}
-function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);K_ring(false);clearInterval(c.tm);clearTimeout(c.to);clearTimeout(c.ct);
+function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);K_ring(false);K_islRm();clearInterval(c.tm);clearTimeout(c.to);clearTimeout(c.ct);
  c.un.forEach(f=>{try{f()}catch(e){}});
  if(notify)updateDoc(doc(db,"calls",c.id),{status:c.inc?"declined":"ended"}).catch(()=>{});
  try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
@@ -1722,14 +1760,14 @@ async function K_incoming(id,x){
  if(!UM[x.from]){try{const d=await getDoc(doc(db,"users",x.from));if(d.exists())UM[x.from]={id:x.from,...d.data()}}catch(e){}}
  if(K_cs){updateDoc(doc(db,"calls",id),{status:"declined"}).catch(()=>{});return}
  const c=K_cs={id,role:"b",peer:x.from,un:[],offer:x.offer,inc:true,q:[],pend:[],ready:true,spk:true,uid:me.uid,video:!!x.video,face:"user"};
- K_callUI(UM[x.from]||{name:x.fromName,username:x.fromName});K_setSt(K_Cx(x.video?"vi":"i"));K_ring(true);
+ K_island(UM[x.from]||{name:x.fromName,username:x.fromName});K_ring(true);
  c.un.push(onSnapshot(doc(db,"calls",id),d=>{const s=d.data()&&d.data().status;if(K_cs==c&&(s=="ended"||s=="declined"))K_endCall(false,K_Cx("f"))},()=>{}));
  c.to=setTimeout(()=>{if(K_cs==c&&c.inc)K_endCall(true)},45000)}
 async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);K_endCall(true);return}
  try{c.stream=await navigator.mediaDevices.getUserMedia(K_media(c.video))}catch(e){toast(K_Cx(c.video?"mc":"m"),0);K_endCall(true);return}
  if(K_cs!=c){try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}return}
- c.inc=false;K_ring(false);clearTimeout(c.to);K_callUI(UM[c.peer]||{});K_setSt(K_Cx("n"));
+ c.inc=false;K_ring(false);clearTimeout(c.to);K_islRm();K_callUI(UM[c.peer]||{});K_setSt(K_Cx("n"));
  const pc=K_newPC(c);K_watch(c);
  try{await pc.setRemoteDescription(c.offer);const an=await pc.createAnswer();await pc.setLocalDescription(an);
   await updateDoc(doc(db,"calls",c.id),{status:"active",answer:{type:an.type,sdp:an.sdp}});K_listenIce(c)}
