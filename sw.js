@@ -1,6 +1,6 @@
 // KodYol service worker: офлайн-режим для статических файлов сайта
-const CACHE = "kodyol-v102";
-const ASSETS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "logo.png", "favicon.png"];
+const CACHE = "kodyol-v103";
+const ASSETS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "logo.png", "favicon.png", "ring-out.mp3", "ring-in.mp3"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(

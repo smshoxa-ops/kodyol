@@ -1566,8 +1566,19 @@ let K_cs=null,K_callUn=null,K_rg=null;
 const K_media=v=>({audio:K_MEDIA.audio,video:v?{facingMode:"user",width:{ideal:640},height:{ideal:480}}:false});
 const K_MEDIA={audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false};
 function K_setSt(t){const e=E("callSt");if(e)e.textContent=t;K_bubT(t)}
-function K_ring(on){if(K_rg){clearInterval(K_rg.t);try{K_rg.c.close()}catch(e){}K_rg=null}if(!on)return;
- try{const c=new(window.AudioContext||window.webkitAudioContext)();const beep=()=>{[0,.35].forEach(dt=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=440;o.connect(g);g.connect(c.destination);const t=c.currentTime+dt;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.03);g.gain.linearRampToValueAtTime(0,t+.28);o.start(t);o.stop(t+.3)});if(navigator.vibrate)navigator.vibrate([300,100,300])};beep();K_rg={c,t:setInterval(beep,2200)}}catch(e){}}
+let K_AUD=null,K_primed=false;
+function K_audInit(){if(K_AUD)return K_AUD;K_AUD={};[["o","ring-out.mp3"],["i","ring-in.mp3"]].forEach(a=>{const e=new Audio();e.src=a[1];e.loop=true;e.preload="auto";e.setAttribute("playsinline","");K_AUD[a[0]]=e});return K_AUD}
+["pointerdown","touchend","click","keydown"].forEach(ev=>document.addEventListener(ev,function(){if(K_primed)return;K_primed=true;try{const A=K_audInit();Object.keys(A).forEach(k=>{const e=A[k];e.muted=true;const p=e.play();const done=()=>{try{e.pause();e.currentTime=0}catch(x){}e.muted=false};if(p&&p.then)p.then(done,()=>{e.muted=false;K_primed=false});else done()})}catch(x){K_primed=false}},{capture:true,passive:true}));
+function K_ring(on){
+ if(K_rg){clearInterval(K_rg.t);clearInterval(K_rg.v);try{K_rg.c&&K_rg.c.close()}catch(e){}K_rg=null}
+ if(K_AUD)Object.keys(K_AUD).forEach(k=>{try{K_AUD[k].pause();K_AUD[k].currentTime=0}catch(e){}});
+ try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}
+ if(!on)return;
+ const out=on===2,rg=K_rg={c:null,t:null,v:null};
+ /* 2 = исходящий (ты звонишь): ring-out.mp3 · true = входящий: ring-in.mp3 */
+ const beepFb=()=>{try{const c=new(window.AudioContext||window.webkitAudioContext)();const beep=()=>{[0,.35].forEach(dt=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=440;o.connect(g);g.connect(c.destination);const t=c.currentTime+dt;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.03);g.gain.linearRampToValueAtTime(0,t+.28);o.start(t);o.stop(t+.3)})};beep();rg.c=c;rg.t=setInterval(beep,2200)}catch(e){}};
+ try{const a=K_audInit()[out?"o":"i"];a.muted=false;a.volume=1;a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{if(K_rg===rg&&!out)beepFb()})}catch(e){if(!out)beepFb()}
+ if(!out&&navigator.vibrate){const vib=()=>navigator.vibrate([300,100,300]);vib();rg.v=setInterval(vib,2200)}}
 async function K_spk(c,on){const au=c.au;if(!au)return;
  try{if(au.setSinkId&&navigator.mediaDevices.enumerateDevices){const ds=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind=="audiooutput");
   const pick=ds.find(d=>on?/speaker|динамик/i.test(d.label)&&!/ear|receiver/i.test(d.label):/earpiece|receiver|разговор/i.test(d.label));
@@ -1694,7 +1705,7 @@ async function K_startCall(o,video){
  let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_media(video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}
  const ref=doc(collection(db,"calls"));
  const c=K_cs={id:ref.id,role:"a",peer:o,un:[],stream,q:[],pend:[],ready:false,inc:false,spk:true,uid:me.uid,video:!!video,face:"user"};
- K_callUI(UM[o]||{});K_setSt(K_Cx("c"));
+ K_callUI(UM[o]||{});K_setSt(K_Cx("c"));K_ring(2);
  const pc=K_newPC(c);
  try{const off=await pc.createOffer();await pc.setLocalDescription(off);
   await setDoc(ref,{from:me.uid,to:o,fromName:MY.username||me.displayName||"User",status:"ringing",video:!!video,offer:{type:off.type,sdp:off.sdp},ts:serverTimestamp()})}
@@ -1703,7 +1714,7 @@ async function K_startCall(o,video){
  c.ready=true;c.q.splice(0).forEach(x=>addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{}));
  K_listenIce(c);
  c.un.push(onSnapshot(ref,d=>{const x=d.data();if(!x||K_cs!=c)return;
-  if(x.status=="active"&&x.answer&&!pc.remoteDescription){K_setSt(K_Cx("n"));K_watch(c);pc.setRemoteDescription(x.answer).then(()=>K_flushC(c)).catch(()=>{})}
+  if(x.status=="active"&&x.answer&&!pc.remoteDescription){K_ring(false);K_setSt(K_Cx("n"));K_watch(c);pc.setRemoteDescription(x.answer).then(()=>K_flushC(c)).catch(()=>{})}
   else if(x.status=="declined"){c.dec=1;K_endCall(false,K_Cx("r"))}
   else if(x.status=="ended")K_endCall(false,K_Cx("f"))},()=>{}));
  c.to=setTimeout(()=>{if(K_cs==c&&!pc.remoteDescription){updateDoc(ref,{status:"ended"}).catch(()=>{});K_endCall(false,K_Cx("o"))}},45000)}
