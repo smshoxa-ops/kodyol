@@ -518,6 +518,31 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 .wi.on .t,.wi.on .pl{animation:wpop .42s cubic-bezier(.3,1.7,.5,1)}
 @keyframes wpop{from{transform:scale(.93)}to{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.wi.on .t,.wi.on .pl{animation:none}}
+
+.ei{display:inline-block;flex:none;vertical-align:middle;overflow:visible}
+.kd-st .e,.kp-hp .e{display:inline-flex;align-items:center;line-height:0}
+.kd-st .e .ei,.kp-hp .e .ei{width:24px;height:24px;filter:drop-shadow(0 1.5px 0 rgba(0,0,0,.18))}
+.kd-tk .ei{width:26px;height:26px}
+.kd-opt .ti .ei{width:34px;height:34px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.18))}
+.kd-n .em{display:grid;place-items:center}
+.kd-n .em .ei{width:44px;height:44px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.2))}
+.kp-sc b .ei{width:18px;height:18px;vertical-align:-3px}
+.kd-pop p .ei{width:16px;height:16px;vertical-align:-3px}
+
+/* ===== Веер-меню вокруг маскота (нажми на слайма) ===== */
+.kd-row .kd-mas{pointer-events:auto!important;cursor:pointer;z-index:5;-webkit-tap-highlight-color:transparent}
+.kd-row .kd-mas:active svg{transform:scale(.92)}
+#kdFan{position:fixed;inset:0;z-index:2147483000;touch-action:none;overscroll-behavior:contain}
+#kdFan .kf-bg{position:absolute;inset:0;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .28s}
+#kdFan.on .kf-bg{opacity:1}
+#kdFan .kf-m{position:fixed;pointer-events:auto;cursor:pointer;margin:0}
+#kdFan .kf-b{position:fixed;width:60px;height:60px;margin:0;padding:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#fff;border:1.5px solid rgba(255,255,255,.38);background:linear-gradient(145deg,#8bf02a,#2a9d0a);box-shadow:0 10px 24px -4px rgba(60,200,0,.55),0 4px 0 #1d7006,inset 0 1px 0 rgba(255,255,255,.5);-webkit-tap-highlight-color:transparent;opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2);transition:transform .46s cubic-bezier(.34,1.56,.64,1) var(--d),opacity .2s var(--d)}
+#kdFan.on .kf-b{opacity:1;transform:none}
+#kdFan.off .kf-b{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2);transition:transform .22s ease-in var(--r),opacity .18s var(--r)}
+#kdFan.off .kf-bg{opacity:0;transition:opacity .22s}
+#kdFan .kf-b:active{transform:scale(.9);box-shadow:0 2px 0 #1d7006}
+#kdFan .kf-b svg{width:29px;height:29px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
+@media(prefers-reduced-motion:reduce){#kdFan .kf-b,#kdFan .kf-bg{transition:none!important}}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -2070,7 +2095,54 @@ uz:{ask:"Nimani o'rganmoqchisiz?",ask2:"Yo'nalishni tanlang. Uni istalgan vaqt a
 function t(){return I[window.lang]||I.en}
 function f(s,o){return s.replace(/\{(\w+)\}/g,function(_,k){return o[k]})}
 /* ---------- данные направлений ---------- */
-var TR={fs:{e:"🚀",c1:"#58cc02",c2:"#2a7a05"},fe:{e:"🎨",c1:"#1cb0f6",c2:"#0b6fb0"},be:{e:"⚙️",c1:"#ff9f43",c2:"#d9601a"},cy:{e:"🛡️",c1:"#e84393",c2:"#a3206a"},ds:{e:"📊",c1:"#f9ca24",c2:"#c9921a"}};
+
+/* ---------- векторные иконки вместо смайликов ---------- */
+var EI={
+rocket:'<path d="M12 2c3 2.2 4.6 5.6 4.6 9.2V15H7.4v-3.8C7.4 7.6 9 4.2 12 2z" fill="#eef2f7"/><path d="M12 2c3 2.2 4.6 5.6 4.6 9.2V15H12z" fill="#cfd8e3"/><path d="M12 2c1.3.9 2.4 2.1 3.2 3.5H8.8C9.6 4.1 10.7 2.9 12 2z" fill="#ff4b4b"/><circle cx="12" cy="9.6" r="2.1" fill="#1cb0f6" stroke="#5b6b7d" stroke-width="1"/><path d="M7.4 11.6L4 15.6v3l3.4-2z" fill="#ff4b4b"/><path d="M16.6 11.6L20 15.6v3l-3.4-2z" fill="#e03a3a"/><rect x="7.4" y="15" width="9.2" height="1.9" rx=".95" fill="#8a97a8"/><path d="M9.9 17.2c0 2 .8 3.4 2.1 4.8 1.3-1.4 2.1-2.8 2.1-4.8z" fill="#ff9600"/><path d="M11.2 17.2c0 1.1.3 1.9.8 2.7.5-.8.8-1.6.8-2.7z" fill="#ffc800"/>',
+palette:'<path d="M12 2.5C6.8 2.5 2.5 6.6 2.5 11.7c0 4.6 3.6 8 8 8 1.3 0 2-.8 2-1.7 0-.5-.2-.9-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1 .8-1.7 1.8-1.7H17c2.5 0 4.5-1.9 4.5-4.4C21.5 5.6 17.3 2.5 12 2.5z" fill="#ffe2b3"/><circle cx="7.2" cy="11.2" r="1.6" fill="#ff4b4b"/><circle cx="10.6" cy="7" r="1.6" fill="#ffc800"/><circle cx="15.6" cy="7.4" r="1.6" fill="#58cc02"/><circle cx="7.9" cy="15.3" r="1.6" fill="#1cb0f6"/>',
+gear:'<g fill="#aeb8c6"><rect x="10.2" y="1.8" width="3.6" height="20.4" rx="1.2"/><rect x="10.2" y="1.8" width="3.6" height="20.4" rx="1.2" transform="rotate(45 12 12)"/><rect x="10.2" y="1.8" width="3.6" height="20.4" rx="1.2" transform="rotate(90 12 12)"/><rect x="10.2" y="1.8" width="3.6" height="20.4" rx="1.2" transform="rotate(135 12 12)"/></g><circle cx="12" cy="12" r="7.2" fill="#e3e8ef"/><circle cx="12" cy="12" r="3" fill="#4a5568"/>',
+shield:'<path d="M12 2.2l8 3v6.2c0 5-3.4 8.7-8 10.4-4.6-1.7-8-5.4-8-10.4V5.2z" fill="#e3e8ef"/><path d="M12 2.2v19.6c4.6-1.7 8-5.4 8-10.4V5.2z" fill="#bcc7d5"/><path d="M8.2 12l2.7 2.8 5-5.6" fill="none" stroke="#58cc02" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>',
+chart:'<rect x="3.5" y="13" width="4.6" height="8" rx="1.3" fill="#1cb0f6"/><rect x="9.7" y="8" width="4.6" height="13" rx="1.3" fill="#58cc02"/><rect x="15.9" y="3" width="4.6" height="18" rx="1.3" fill="#ff4b4b"/>',
+fire:'<path d="M12 1.8c.6 3.2-1.4 4.6-3 6.6C7.4 10.2 6 12 6 14.6 6 18.7 8.7 22 12 22s6-3.3 6-7.4c0-2.3-1-4.1-2.2-5.5-.3 1.2-.9 2-1.8 2.4.5-3.8-.5-7.6-2-9.7z" fill="#ff9600"/><path d="M12 22c-2 0-3.5-1.6-3.5-3.7 0-1.9 1.4-3 2.4-4.4.3-.5.5-1 .6-1.7 1.9 1.5 4 3.3 4 6 0 2.3-1.5 3.8-3.5 3.8z" fill="#ffc800"/>',
+bolt:'<path d="M13.6 1.6L4.6 13.5h6.1l-1.4 8.9 9.4-12.3h-6.2z" fill="#ffc800" stroke="#ff9600" stroke-width="1.3" stroke-linejoin="round"/>',
+heart:'<path d="M12 21.4C6 17 2.6 13.6 2.6 9.3c0-2.8 2.1-4.9 4.8-4.9 1.8 0 3.4.9 4.6 2.7 1.2-1.8 2.8-2.7 4.6-2.7 2.7 0 4.8 2.1 4.8 4.9 0 4.3-3.4 7.7-9.4 12.1z" fill="#ff4b4b"/><path d="M6.2 8.6c.4-1.2 1.3-1.9 2.6-1.9" fill="none" stroke="#ff9a9a" stroke-width="1.7" stroke-linecap="round"/>',
+gift:'<rect x="4" y="11.5" width="16" height="10" rx="1.6" fill="#ff4b4b"/><rect x="2.5" y="7.5" width="19" height="4.6" rx="1.3" fill="#ff7a7a"/><rect x="10.6" y="7.5" width="2.8" height="14" fill="#ffd23f"/><path d="M12 7.5C9.4 7.5 7 6.6 7 4.8c0-1.4 1.6-2.1 3-1.5 1 .4 2 2.2 2 4.2z" fill="#ffd23f"/><path d="M12 7.5c2.6 0 5-.9 5-2.7 0-1.4-1.6-2.1-3-1.5-1 .4-2 2.2-2 4.2z" fill="#ffc400"/>',
+gift0:'<rect x="4" y="11.5" width="16" height="10" rx="1.6" fill="#c98a4a"/><rect x="10.6" y="11.5" width="2.8" height="10" fill="#e9c27a"/><g transform="rotate(-14 6 8)"><rect x="2" y="4.6" width="19" height="4.4" rx="1.3" fill="#e0a867"/><rect x="9.6" y="4.6" width="2.8" height="4.4" fill="#e9c27a"/></g>',
+trophy:'<path d="M7 3h10v6.2c0 2.9-2.2 5-5 5s-5-2.1-5-5z" fill="#ffc800"/><path d="M7 5H4v1.6C4 8.8 5.4 10 7.4 10.2M17 5h3v1.6c0 2.2-1.4 3.4-3.4 3.6" fill="none" stroke="#ff9600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="10.7" y="14" width="2.6" height="3.6" fill="#ff9600"/><rect x="7.5" y="17.4" width="9" height="3.3" rx="1.1" fill="#ffb020"/><path d="M9.3 5.2v3.6" stroke="#fff3b0" stroke-width="1.5" stroke-linecap="round"/>'
+};
+
+/* ---------- веер-меню: нажал на слайма, вокруг появляются иконки ---------- */
+var FANI=[["gloss","gloss"],["play","play"],["prog","prog"],["quiz","quiz"]];
+function kdFan(m){
+ if(document.getElementById("kdFan"))return;
+ var sv=m.querySelector("svg");if(!sv)return;
+ var sr=sv.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight,
+ cx=sr.left+sr.width/2,cy=sr.top+sr.height*.56,dir=cx>vw/2?-1:1,
+ R=Math.min(150,Math.max(100,dir<0?cx-48:vw-cx-48)),ANG=[-48,-16,16,48],S=60,
+ lo=70+Math.sin(48*Math.PI/180)*R+S/2,hi=vh-100-Math.sin(48*Math.PI/180)*R-S/2,
+ yc=Math.max(lo,Math.min(hi,cy)),
+ lab={gloss:T.gloss,play:T.play,prog:T.prog,quiz:hw().t},
+ ov=document.createElement("div");ov.id="kdFan";ov.setAttribute("role","menu");
+ var h='<div class="kf-bg"></div>';
+ FANI.forEach(function(a,i){
+  var x=cx+dir*R*Math.cos(ANG[i]*Math.PI/180),y=yc+R*Math.sin(ANG[i]*Math.PI/180);
+  h+='<button class="kf-b" role="menuitem" data-k="'+a[0]+'" aria-label="'+esc(lab[a[1]]||a[0])+'" style="left:'+(x-S/2).toFixed(1)+'px;top:'+(y-S/2).toFixed(1)+'px;--dx:'+(cx-x).toFixed(1)+'px;--dy:'+(cy-y).toFixed(1)+'px;--d:'+(i*.045).toFixed(3)+'s;--r:'+((3-i)*.03).toFixed(3)+'s">'+ico(a[1])+'</button>'});
+ ov.innerHTML=h;
+ var c=sv.cloneNode(true);c.classList.add("kf-m");c.setAttribute("data-m","happy");
+ c.style.cssText="left:"+sr.left+"px;top:"+sr.top+"px;width:"+sr.width+"px;height:"+sr.height+"px";
+ ov.appendChild(c);document.body.appendChild(ov);
+ var cl=false;
+ function close(k){if(cl)return;cl=true;document.removeEventListener("keydown",kd);ov.classList.remove("on");ov.classList.add("off");
+  setTimeout(function(){ov.remove();if(k){qCC=fcc=tcc=null;show(k)}},k?160:260)}
+ function kd(e){if(e.key==="Escape")close()}
+ document.addEventListener("keydown",kd);
+ ov.querySelector(".kf-bg").onclick=function(){close()};c.onclick=function(){close()};
+ ov.querySelectorAll(".kf-b").forEach(function(b){b.onclick=function(e){e.stopPropagation();close(b.dataset.k)}});
+ try{snd("pop")}catch(e){}try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}
+ requestAnimationFrame(function(){requestAnimationFrame(function(){ov.classList.add("on")})});
+}
+function ei(n,sz){return '<svg class="ei" viewBox="0 0 24 24" width="'+(sz||24)+'" height="'+(sz||24)+'" aria-hidden="true">'+EI[n]+'</svg>'}
+var TR={fs:{e:ei("rocket",34),c1:"#58cc02",c2:"#2a7a05"},fe:{e:ei("palette",34),c1:"#1cb0f6",c2:"#0b6fb0"},be:{e:ei("gear",34),c1:"#ff9f43",c2:"#d9601a"},cy:{e:ei("shield",34),c1:"#e84393",c2:"#a3206a"},ds:{e:ei("chart",34),c1:"#f9ca24",c2:"#c9921a"}};
 var KEYS=["fs","fe","be","cy","ds"];
 /* ---------- хранилище ---------- */
 var KEY="kd_duo",S={tr:null,done:{},xp:0,chest:{}};
@@ -2152,9 +2224,9 @@ function renderPath(){
  var banL=curL||ls[ls.length-1],banI=curL?li:ls.length-1;
  var html='<div class="kd-top"><button class="kd-bk" id="kdHome" aria-label="home">'+ico("back")+'</button>'+
   '<button class="kd-tk" id="kdSw" aria-label="'+esc(L.chg)+'">'+TR[tr].e+'</button>'+
-  '<button class="kd-st fire'+(sn?'':' off')+'"><span class="e">🔥</span>'+sn+'</button>'+
-  '<button class="kd-st xp"><span class="e">⚡</span><span id="kdXp">'+S.xp+'</span></button>'+
-  '<button class="kd-st hp"><span class="e">❤️</span>5</button></div>'+
+  '<button class="kd-st fire'+(sn?'':' off')+'"><span class="e">'+ei("fire",24)+'</span>'+sn+'</button>'+
+  '<button class="kd-st xp"><span class="e">'+ei("bolt",24)+'</span><span id="kdXp">'+S.xp+'</span></button>'+
+  '<button class="kd-st hp"><span class="e">'+ei("heart",24)+'</span>5</button></div>'+
   '<div class="kd-ban"><div class="tx"><small>'+esc(L.sec)+' 1 · '+esc(L.mod)+' '+(banI+1)+'</small><b>'+esc(LL[banL-1]||"")+'</b></div><button id="kdNotes" aria-label="notes">'+ico("books")+'</button></div>'+
   '<div class="kd-path">';
  it.forEach(function(x){
@@ -2170,12 +2242,12 @@ function renderPath(){
   }else if(x.k=="c"){
    var okc=isDone(x.after),claimed=S.chest[x.id];
    cls=claimed?"ch opn":okc?"ch rdy":"ch lock";
-   inner='<button class="kd-n '+cls+'" data-ch="'+x.id+'"><span class="em">'+(claimed?"📭":okc?"🎁":"🎁")+'</span></button>';
+   inner='<button class="kd-n '+cls+'" data-ch="'+x.id+'"><span class="em">'+ei(claimed?"gift0":"gift",44)+'</span></button>';
    pop='<div class="kd-pop '+(okc&&!claimed?'':'lk')+'"><h4>'+esc(L.bonus)+'</h4><p>'+esc(L.chest)+'</p>'+(okc&&!claimed?'<button class="kd-btn" data-claim="'+x.id+'">'+esc(L.chestOpen)+' · +25 XP</button>':'<p style="margin-top:6px">'+esc(claimed?L.chestDone:L.chestLock)+'</p>')+'</div>';
    if(!okc)inner=inner.replace('class="kd-n ch lock"','class="kd-n ch lock" style="filter:grayscale(1) brightness(.8)"')
   }else{
    var fin=allDone;cls=fin?"ch rdy":"ch lock";
-   inner='<button class="kd-n '+cls+'" data-tr="1" style="'+(fin?'':'filter:grayscale(1) brightness(.8)')+'"><span class="em">🏆</span></button>';
+   inner='<button class="kd-n '+cls+'" data-tr="1" style="'+(fin?'':'filter:grayscale(1) brightness(.8)')+'"><span class="em">'+ei("trophy",44)+'</span></button>';
    pop='<div class="kd-pop '+(fin?'':'lk')+'"><h4>'+esc(L.trophy)+'</h4><p>'+esc(fin?L.trophyT:L.chestLock)+'</p></div>'}
   html+='<div class="kd-row" data-j="'+j+'" style="--x:'+off+'px"><div class="kd-nw" style="--x:'+off+'px;--d:'+d+'s">'+inner+'</div>'+pop+mas+'</div>';
   j++});
@@ -2184,6 +2256,7 @@ function renderPath(){
  $("kdHome").onclick=function(){show("home")};
  $("kdSw").onclick=function(){mode="choose";pickTr=S.tr;kdRender()};
  $("kdNotes").onclick=function(){if(banL){cur=banL;openLesson(banL)}};
+ h.querySelectorAll(".kd-mas").forEach(function(m){m.onclick=function(e){e.stopPropagation();kdFan(m)}});
  h.querySelectorAll(".kd-row").forEach(function(row){
   var btn=row.querySelector(".kd-n");if(!btn)return;
   btn.onclick=function(e){e.stopPropagation();
@@ -2209,7 +2282,7 @@ function claim(id,btn){
  var r=btn.getBoundingClientRect();confetti(r.left+r.width/2,r.top,70);
  var row=btn.closest(".kd-row"),n=row.querySelector(".kd-n");n.className="kd-n ch opn";n.querySelector(".em").textContent="📭";
  var xp=$("kdXp");if(xp)xp.textContent=S.xp;
- var p=row.querySelector(".kd-pop");p.className="kd-pop lk";p.innerHTML='<h4>'+esc(t().bonus)+'</h4><p>+25 XP ✨</p>';
+ var p=row.querySelector(".kd-pop");p.className="kd-pop lk";p.innerHTML='<h4>'+esc(t().bonus)+'</h4><p>+25 XP '+ei("bolt",16)+'</p>';
  setTimeout(function(){row.classList.remove("open");openRow=null},1100)}
 /* ---------- генерация упражнений ---------- */
 function toks(c){return c.trim().split(/\s+/)}
@@ -2236,7 +2309,7 @@ function startLesson(l){
  P.total=P.q.length;P.t0=Date.now();
  var d=$("kdp");d.hidden=false;document.body.style.overflow="hidden";snd("fold");drawShell();showStep()}
 function drawShell(){
- $("kdp").innerHTML='<div class="kp-top"><button class="kp-x" id="kpX" aria-label="close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><div class="kp-bar"><i id="kpBar"></i></div><div class="kp-hp" id="kpHp"><span class="e">❤️</span><span id="kpH">'+P.hearts+'</span></div></div><div class="kp-body" id="kpBody"></div><div class="kp-ft" id="kpFt"><div class="in" id="kpIn"></div></div>';
+ $("kdp").innerHTML='<div class="kp-top"><button class="kp-x" id="kpX" aria-label="close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><div class="kp-bar"><i id="kpBar"></i></div><div class="kp-hp" id="kpHp"><span class="e">'+ei("heart",24)+'</span><span id="kpH">'+P.hearts+'</span></div></div><div class="kp-body" id="kpBody"></div><div class="kp-ft" id="kpFt"><div class="in" id="kpIn"></div></div>';
  $("kpX").onclick=quitAsk}
 function setBar(){var p=Math.min(100,Math.round(100*P.i/P.total));var b=$("kpBar");if(b)b.style.width=Math.max(p,P.i?4:0)+"%"}
 function ft(cls,html){var e=$("kpFt");e.className="kp-ft "+(cls||"");$("kpIn").innerHTML=html}
@@ -2333,7 +2406,7 @@ function finish(){
  S.done[l]=Math.max(S.done[l]||0,acc>=90?3:acc>=60?2:1);S.xp+=gain;save();
  try{cards(l).forEach(function(x){var i=D.indexOf(x);if(st.dn.indexOf(i)<0)st.dn.push(i)});if(window.save)window.save()}catch(e){}
  $("kpBar").style.width="100%";snd("send");
- $("kpBody").innerHTML='<div class="kp-end">'+mascot(140,"happy")+'<h2>'+esc(L.done)+'</h2><p class="sub">'+esc(L.doneS)+'</p><div class="kp-stats"><div class="kp-sc" style="--c:var(--y);--i:0"><small>'+esc(L.xp)+'</small><b id="cX">0</b></div><div class="kp-sc" style="--c:var(--g);--i:1"><small>'+esc(L.acc)+'</small><b id="cA">0%</b></div><div class="kp-sc" style="--c:var(--r);--i:2"><small>'+esc(L.hearts)+'</small><b>❤️ '+Math.max(0,P.hearts)+'</b></div></div></div>';
+ $("kpBody").innerHTML='<div class="kp-end">'+mascot(140,"happy")+'<h2>'+esc(L.done)+'</h2><p class="sub">'+esc(L.doneS)+'</p><div class="kp-stats"><div class="kp-sc" style="--c:var(--y);--i:0"><small>'+esc(L.xp)+'</small><b id="cX">0</b></div><div class="kp-sc" style="--c:var(--g);--i:1"><small>'+esc(L.acc)+'</small><b id="cA">0%</b></div><div class="kp-sc" style="--c:var(--r);--i:2"><small>'+esc(L.hearts)+'</small><b>'+ei("heart",18)+' '+Math.max(0,P.hearts)+'</b></div></div></div>';
  ft("",'<button class="kd-btn g" id="kpMain">'+esc(L.cont)+'</button>');
  $("kpMain").onclick=function(){closeP();setTimeout(function(){var n=$("kd")&&$("kd").querySelector(".kd-n.cur");if(n)n.scrollIntoView({block:"center",behavior:"smooth"})},250)};
  count($("cX"),gain,"+",900);count($("cA"),acc,"",900,"%");
