@@ -2732,6 +2732,144 @@ body:has(#v-fold:not([hidden]) .kd-ch) #bn{display:none}
 @keyframes kdFlame{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.14) rotate(3deg)}}
 @keyframes kdLoad{to{width:100%}}
 @media(prefers-reduced-motion:reduce){.kd *,#kdp *,.kd-wait *{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}}
+
+/* ===== Glass-кнопки v2: океан (голубой + мятный), быстрая аврора, реакция на нажатие ===== */
+@keyframes gbSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes gbFlow{
+ 0%{background-position:0% 50%,100% 40%,30% 100%}
+ 50%{background-position:100% 30%,0% 80%,80% 0%}
+ 100%{background-position:20% 90%,90% 20%,0% 60%}}
+@keyframes gbSweep{0%,12%{background-position:170% 0,0 0}58%,100%{background-position:-70% 0,0 0}}
+@keyframes gbGlow{0%,100%{filter:saturate(1) brightness(.97)}50%{filter:saturate(1.12) brightness(1.04)}}
+@keyframes gbJelly{0%{transform:scale(.94)}35%{transform:scale(1.07,.93)}60%{transform:scale(.97,1.05)}80%{transform:scale(1.015,.99)}100%{transform:scale(1)}}
+@keyframes gbRip{from{transform:translate(-50%,-50%) scale(0);opacity:.85}to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+@keyframes gbRing{from{transform:translate(-50%,-50%) scale(0);opacity:1}to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+
+.kd-btn,.wi .bg,.kd-ban,.kd-bk,.kd-tk,.kd-ban button,.apk,
+.pr button.pri,.pcard .prow .pr button.pri,.bar button,#c-chat .bar button{
+ --k1:#f0338f;--k2:#b80e62;--k3:#9a3dea;--k4:#ff6aa8;--kt:#fff;
+ --kg:rgba(240,50,140,.5);--rim:rgba(255,170,214,.38);--spd:4.2s;
+ position:relative;isolation:isolate;overflow:hidden;
+ background:var(--k2);color:var(--kt);
+ -webkit-tap-highlight-color:transparent}
+
+/* аврора: вращающийся конус цвета (быстро) */
+.kd-btn::before,.wi .bg::before,.kd-ban::before,.kd-bk::before,.kd-tk::before,.kd-ban button::before,.apk::before,
+.pr button.pri::before,.pcard .prow .pr button.pri::before,.bar button::before,#c-chat .bar button::before{
+ content:"";position:absolute;left:50%;top:50%;width:max(260%,380px);aspect-ratio:1;z-index:-2;pointer-events:none;
+ transform:translate(-50%,-50%);
+ background:
+  radial-gradient(circle 120px at 70% 50%,var(--k4),transparent),
+  radial-gradient(circle 120px at 60% 67%,var(--k1),transparent),
+  radial-gradient(circle 120px at 40% 67%,var(--k3),transparent),
+  radial-gradient(circle 120px at 30% 50%,var(--k4),transparent),
+  radial-gradient(circle 120px at 40% 33%,var(--k1),transparent),
+  radial-gradient(circle 120px at 60% 33%,var(--k3),transparent);
+ opacity:.95;animation:gbSpin var(--spd) linear infinite}
+
+/* стекло: пятна, блик-проход, ободок */
+.kd-btn::after,.wi .bg::after,.kd-ban::after,.kd-bk::after,.kd-tk::after,.kd-ban button::after,.apk::after,
+.pr button.pri::after,.pcard .prow .pr button.pri::after,.bar button::after,#c-chat .bar button::after{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
+ background:
+  linear-gradient(110deg,transparent 40%,rgba(255,190,225,.26) 50%,transparent 60%),
+  radial-gradient(60% 120% at 50% 130%,rgba(255,120,190,.22),transparent 70%),
+  linear-gradient(180deg,rgba(255,200,230,.14),rgba(255,255,255,0) 45%);
+ background-size:260% 100%,100% 100%,100% 100%;background-repeat:no-repeat;
+ box-shadow:inset 0 0 0 1.5px var(--rim),inset 0 8px 14px -10px rgba(255,190,225,.3);
+ animation:gbSweep 2.6s cubic-bezier(.5,0,.3,1) infinite}
+
+.kd-btn{
+ border-radius:999px;padding:17px 24px;min-height:56px;border:0;
+ text-shadow:0 1px 3px rgba(70,0,40,.5);
+ box-shadow:0 10px 24px -10px var(--kg);
+ transition:transform .2s cubic-bezier(.3,1.6,.5,1),box-shadow .2s;
+ animation:gbGlow 2.8s ease-in-out infinite}
+.kd-btn.g,.kp-ft .kd-btn.g{background:var(--k2);color:var(--kt);box-shadow:0 12px 28px -8px var(--kg)}
+
+/* нажатие: сжатие, ускорение авроры, вспышка */
+.kd-btn:active,.wi:active .bg,.kd-bk:active,.kd-tk:active,.apk:active,.kd-ban button:active,
+.pr button.pri:active,.bar button:active,#c-chat .bar button:active{--spd:.9s}
+.kd-btn:active{transform:scale(.94);filter:brightness(1.08) saturate(1.15);box-shadow:0 4px 16px -4px var(--kg),0 0 18px 0 var(--kg)}
+.kd-btn.g:active{box-shadow:0 4px 16px -4px var(--kg),0 0 18px 0 var(--kg)}
+.kd-btn.jelly,.kd-bk.jelly,.kd-tk.jelly,.apk.jelly,.pr button.pri.jelly,.bar button.jelly{animation:gbJelly .55s cubic-bezier(.3,1.4,.5,1)}
+.wi .bg.jelly{animation:gbJelly .55s cubic-bezier(.3,1.4,.5,1)}
+
+/* волна от места касания */
+.gbr{position:absolute;z-index:-1;pointer-events:none;border-radius:50%;left:0;top:0;width:var(--s,260px);height:var(--s,260px);
+ background:radial-gradient(circle,rgba(255,170,215,.5) 0,rgba(255,120,190,.2) 40%,transparent 68%);animation:gbRip .75s cubic-bezier(.2,.7,.3,1) forwards}
+.gbr.ring{background:none;border:2px solid rgba(255,170,215,.7);box-shadow:0 0 12px rgba(255,80,160,.6);animation:gbRing .6s cubic-bezier(.2,.8,.3,1) .05s forwards}
+
+/* кнопка в карточке урока: светлее остальных, но розовая */
+.kd-btn:not(.g):not(.sec):not(.rd):not(.dis):not(.ln){--k1:#ff4fa3;--k2:#d4237a;--k3:#b04cf0;--k4:#ff86bd;--spd:5s}
+
+/* стеклянная прозрачная (ЧИТАТЬ КОНСПЕКТ) */
+.kd-btn.sec{
+ --k1:rgba(240,51,143,.4);--k2:rgba(150,10,85,.62);--k3:rgba(154,61,234,.4);--k4:rgba(255,106,168,.3);--kg:rgba(0,0,0,.4);--rim:rgba(255,170,214,.4);
+ margin-top:12px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 22px -10px var(--kg)}
+.kd-btn.sec::after{background:
+  linear-gradient(110deg,transparent 40%,rgba(255,190,225,.2) 50%,transparent 60%),
+  linear-gradient(180deg,rgba(255,200,230,.1),rgba(255,255,255,0) 45%);
+ background-size:260% 100%,100% 100%;background-repeat:no-repeat}
+
+/* красная: неверный ответ */
+.kd-btn.rd,.kp-ft.no .kd-btn.g{
+ --k1:#ff3b30;--k2:#c4122a;--k3:#ff7a1a;--k4:#ff6b5a;--kg:rgba(255,60,80,.6);background:var(--k2);box-shadow:0 12px 28px -8px var(--kg)}
+
+/* неактивная: тихое стекло */
+.kd-btn.dis{--k2:var(--lk);--kt:var(--mu);--rim:rgba(255,255,255,.14);background:var(--lk);box-shadow:none;text-shadow:none;animation:none;opacity:.92}
+.kd-btn.dis::before{display:none}
+.kd-btn.dis::after{animation:none;background:linear-gradient(180deg,rgba(255,255,255,.1),transparent 55%);box-shadow:inset 0 0 0 1.5px var(--rim)}
+
+/* контурная (ВЫЙТИ) */
+.kd-btn.ln{background:transparent;box-shadow:none;text-shadow:none;animation:none;--rim:var(--bd);color:var(--b)}
+.kd-btn.ln::before{display:none}
+.kd-btn.ln::after{animation:none;background:none;box-shadow:inset 0 0 0 2px var(--rim)}
+
+/* НАЧАТЬ на главной (барабан) */
+.wi .bg{
+ position:absolute;border-radius:999px;box-shadow:0 14px 36px -8px var(--kg),0 0 0 1px rgba(255,255,255,.06);
+ animation:gbGlow 2.8s ease-in-out infinite}
+.wi.on .t,.wi.on .pl{text-shadow:0 2px 8px rgba(70,0,40,.5)}
+.wi:not(.on) .bg,.wi:not(.on) .bg::before,.wi:not(.on) .bg::after{animation-play-state:paused}
+.wi:active .bg{filter:brightness(1.08) saturate(1.15);transition:filter .1s}
+.wi.on:active .t,.wi.on:active .pl{transform:scale(.95)}
+
+/* баннер раздела: аврора на основе цвета направления */
+.kd-ban{
+ --k2:#b80e62;--k1:#f0338f;--k3:#9a3dea;--k4:#ff6aa8;--kg:rgba(240,50,140,.5);--spd:9s;
+ border-radius:22px;box-shadow:0 10px 24px -10px var(--kg)}
+.kd-ban::after{animation-duration:5s;background:
+  linear-gradient(110deg,transparent 40%,rgba(255,190,225,.2) 50%,transparent 60%),
+  linear-gradient(180deg,rgba(255,200,230,.1),rgba(255,255,255,0) 50%);
+ background-size:260% 100%,100% 100%;background-repeat:no-repeat}
+.kd-ban small,.kd-ban b{text-shadow:0 1px 3px rgba(70,0,40,.4)}
+.kd-ban button{
+ --spd:6s;border-left:1.5px solid rgba(255,170,214,.3);background:rgba(255,255,255,.06);border-radius:0;
+ transition:background .2s}
+.kd-ban button::before{opacity:.55}.kd-ban button::after{box-shadow:none;background:linear-gradient(180deg,rgba(255,200,230,.1),transparent 60%);animation:none}
+.kd-ban button .i{transition:transform .25s cubic-bezier(.3,1.7,.5,1);filter:drop-shadow(0 1px 3px rgba(70,0,40,.45))}
+.kd-ban button:active{background:rgba(255,255,255,.14)}
+.kd-ban button:active .i{transform:scale(.8) rotate(-14deg)}
+
+/* кнопки назад / тема направления */
+.kd-bk,.kd-tk{
+ --k2:#2a0a1e;--k1:rgba(240,51,143,.9);--k3:rgba(154,61,234,.8);--k4:rgba(255,106,168,.7);--spd:7s;--rim:rgba(255,170,214,.28);
+ border:0;color:#fff;box-shadow:0 8px 18px -8px var(--kg);transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.kd-bk::before,.kd-tk::before{opacity:.5}
+.kd-bk::after,.kd-tk::after{animation-duration:4s}
+.kd-bk:active,.kd-tk:active{transform:scale(.86)}
+
+/* остальные главные кнопки сайта */
+.apk{--spd:5s;box-shadow:0 8px 20px -8px var(--kg);color:#fff;text-shadow:0 1px 3px rgba(70,0,40,.45)}
+.pr button.pri,.pcard .prow .pr button.pri,.bar button,#c-chat .bar button{
+ background:var(--k2);color:#fff;text-shadow:0 1px 3px rgba(70,0,40,.45);box-shadow:0 8px 20px -8px var(--kg);
+ transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.pr button.pri:active,.bar button:active,#c-chat .bar button:active{transform:scale(.93)}
+
+@media(prefers-reduced-motion:reduce){
+ .kd-btn,.kd-btn::before,.kd-btn::after,.wi .bg,.wi .bg::before,.wi .bg::after,.kd-ban::before,.kd-ban::after,.kd-bk::before,.kd-tk::before,.apk::before,
+ .pr button.pri::before,.bar button::before,#c-chat .bar button::before,.pr button.pri::after,.bar button::after,#c-chat .bar button::after,.gbr{animation:none!important}}
 </style>
 
 <div id="kdp" hidden></div>
@@ -3127,5 +3265,34 @@ onAuthStateChanged(auth,async u=>{
  try{const s=await getDoc(doc(db,"progress",u.uid));if(s.exists())r=s.data()}catch(e){return}
  if(uid!==u.uid||!window.kdApi)return;
  kdApi.login(u.uid,r);ready=true;push()});
+</script>
+<script>
+/* волна + «желе» + вибро при нажатии на стеклянные кнопки */
+(function(){
+ var SEL=".kd-btn:not(.dis),.wi.on,.kd-bk,.kd-tk,.kd-ban button,.apk,.pr button.pri,.pcard .prow .pr button.pri,.bar button,#c-chat .bar button";
+ var rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+ function wave(host,x,y){
+  var r=host.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2;
+  ["","ring"].forEach(function(c){
+   var d=document.createElement("span");d.className="gbr"+(c?" "+c:"");
+   d.style.setProperty("--s",s+"px");d.style.left=(x-r.left)+"px";d.style.top=(y-r.top)+"px";
+   host.appendChild(d);d.addEventListener("animationend",function(){d.remove()});
+  });
+ }
+ function jelly(el){
+  el.classList.remove("jelly");void el.offsetWidth;el.classList.add("jelly");
+  el.addEventListener("animationend",function f(e){if(e.animationName==="gbJelly"){el.classList.remove("jelly");el.removeEventListener("animationend",f)}});
+ }
+ document.addEventListener("pointerdown",function(e){
+  var t=e.target.closest&&e.target.closest(SEL);if(!t||rm)return;
+  var host=t.classList.contains("wi")?t.querySelector(".bg"):t;if(!host)return;
+  wave(host,e.clientX,e.clientY);
+  try{navigator.vibrate&&navigator.vibrate(8)}catch(x){}
+ },true);
+ document.addEventListener("pointerup",function(e){
+  var t=e.target.closest&&e.target.closest(SEL);if(!t||rm)return;
+  var host=t.classList.contains("wi")?t.querySelector(".bg"):t;if(host)jelly(host);
+ },true);
+})();
 </script>
 </body></html>
