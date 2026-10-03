@@ -412,8 +412,8 @@ body.nothome .apk{display:none}
 .pbc{position:absolute;right:10px;top:10px;display:flex;align-items:center;gap:6px;padding:8px 12px;border:0;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font:600 12.5px Poppins,system-ui,sans-serif;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .pbc .i{width:16px;height:16px}
 .pbody{position:relative;padding:0 16px 16px}
-.pcard .pf{position:relative;z-index:2;display:flex;align-items:flex-end;gap:4px;margin:0}
-.pcard .pf .stw{margin:-47px -7px -7px;flex:none}
+.pcard .pf{position:relative;z-index:2;display:flex;align-items:flex-start;gap:4px;margin:0}
+.pcard .pf .stw{margin:-50px -7px -7px;flex:none}.pcard .pf .st{padding-top:12px}.pcard .st b{white-space:nowrap}
 .pcard .pf .stw .av{box-shadow:0 0 0 4px var(--pcb)}
 .pcard .st{flex:1;display:flex;justify-content:space-around;text-align:center;gap:0;padding-bottom:4px}
 .pcard .st{min-width:0;gap:0}.pcard .st>div{flex:1 1 0;min-width:0;padding:0 1px}.pcard .st>div+div{border-left:1px solid var(--bd)}.pcard .st span{display:block;font-size:10px;letter-spacing:-.2px;overflow:visible;white-space:nowrap}
@@ -428,6 +428,19 @@ body.nothome .apk{display:none}
 .pcard .prow .pr button.pri{background:linear-gradient(135deg,#24980a,#6fd915);color:#fff}
 .pbio{margin-top:12px;color:var(--mu);font-size:14.5px;line-height:1.45;word-break:break-word}
 .pbanE .pban{border-radius:18px}
+
+/* v111: профиль на весь экран — баннер от края до края и под статус-баром (как на фото) */
+body:has(#v-me:not([hidden]) .pcard) .tb,body:has(#v-user:not([hidden]) .pcard) .tb{display:none}
+#c-me:has(.pcard),#c-user:has(.pcard){position:relative;padding-top:0}
+.pcard{width:100vw;margin:0 0 14px calc(50% - 50vw);border-radius:0;border:0;background:transparent;--pcb:var(--bg)}
+:root[data-theme="light"] .pcard{--pcb:var(--bg)}
+.pcard .pban{aspect-ratio:auto;height:calc(56.25vw + env(safe-area-inset-top,0px) + 24px);max-height:460px;min-height:210px}
+.pcard .pbc{top:auto;bottom:12px;right:14px}
+#c-me:has(.pcard)>.hd,#c-user:has(.pcard)>.hd{position:absolute;z-index:6;top:0;left:50%;width:100vw;margin:0 0 0 -50vw;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 10px) max(14px,calc((100vw - 980px)/2 + 14px)) 34px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0));color:#fff;pointer-events:none}
+#c-me:has(.pcard)>.hd>span,#c-user:has(.pcard)>.hd>span{display:none}
+#c-me:has(.pcard)>.hd button,#c-user:has(.pcard)>.hd button{pointer-events:auto;background:rgba(0,0,0,.4);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#c-me:has(.pcard)>.hd .stpb,#c-user:has(.pcard)>.hd .stpb{margin-right:0}
+.pcard .pbody{padding:0 max(16px,calc((100vw - 980px)/2 + 16px)) 6px}
 
 /* v83: истории */
 .stw{position:relative;display:inline-block;border-radius:50%;padding:7px;margin:-7px;flex:none}
@@ -1417,9 +1430,9 @@ function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  if(own){const cb=mk("button","pbc");cb.type="button";cb.setAttribute("aria-label",X("pcb"));cb.innerHTML=ico("stgal")+" <span>"+X("pcb")+"</span>";const bf=mk("input");bf.type="file";bf.accept="image/*";bf.hidden=true;cb.onclick=()=>bf.click();
   bf.onchange=()=>{const f=bf.files[0];if(!f)return;bf.value="";cropPhoto(f,b64=>{setDoc(doc(db,"users",me.uid),{banner:b64},{merge:true}).then(()=>{MY.banner=b64;toast(X("sv"),1);window.R.me()}).catch(e=>toast(e.code=="permission-denied"?X("pd"):(e.code||e.message),0))},Object.assign({hint:X("pbh")},BANNER))};ban.append(cb,bf)}
  const bd=mk("div","pbody");
- const p=mk("div","pf");const aw=mk("div","stw");aw.append(av(u,80));p.append(aw);stBind(aw,uid,own);const st=mk("div","st");
+ const p=mk("div","pf");const aw=mk("div","stw");aw.append(av(u,92));p.append(aw);stBind(aw,uid,own);const st=mk("div","st");
  st.innerHTML='<div><b>'+(u.learned||0)+'</b><span>'+T.done+'</span></div><div><b class="s1">0</b><span>'+T.fol+'</span></div><div><b class="s2">0</b><span>'+T.fng+'</span></div>';p.append(st);
- const idr=mk("div","prow"),idn=mk("div","pid"),nmb=mk("b",null,u.name||"");if(isV(uid))nmb.append(VB(16));idn.append(nmb);if(u.username)idn.append(mk("span",null,"@"+u.username));
+ const idr=mk("div","prow"),idn=mk("div","pid"),nmb=mk("b",null,nm(u));if(isV(uid))nmb.append(VB(16));idn.append(nmb);if(u.username)idn.append(mk("span",null,"@"+u.username));
  const pr=mk("div","pr");idr.append(idn,pr);bd.append(p,idr);if(u.bio)bd.append(mk("div","pbio",u.bio));card.append(ban,bd);box.append(card);
  counts(uid,(f1,f2,isf)=>{box.querySelector(".s1").textContent=(OWNER_FAKE&&isV(uid))?vFol(uid):f1;box.querySelector(".s2").textContent=f2;pr.innerHTML="";
   if(own){const e=mk("button",null,T.edt);e.onclick=()=>window.show("edit");const h=mk("button",null,T.shr);h.onclick=share;pr.append(e,h);if(!box.querySelector(".so")){const m=mk("div","info",me.email||"");m.style.textAlign="left";const o=mk("button","chip so",X("out"));o.onclick=()=>signOut(auth);const ob=isAdm()?mk("button","chip ownb"):null;if(ob){ob.innerHTML=ico("crown")+" <span>Владелец</span>";ob.onclick=()=>window.show("owner")}ob?box.append(m,ob,o):box.append(m,o)}}
