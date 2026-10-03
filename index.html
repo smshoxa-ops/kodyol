@@ -615,7 +615,7 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 #dr{left:auto;right:0;transform:translateX(105%);box-shadow:-8px 0 30px rgba(0,0,0,.3)}
 #dr.o{transform:none}
 
-/* v108: экран выбора языка для новых пользователей */
+/* v109: экран выбора языка (после регистрации и выбора имени) */
 .lgo{position:fixed;inset:0;z-index:9998;background:radial-gradient(90% 60% at 50% 18%,rgba(110,255,0,.16),transparent 70%),var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 28px) 18px calc(env(safe-area-inset-bottom,0px) + 22px);overflow-y:auto;animation:lgofade .35s ease-out}
 .lgo.out{animation:lgofade .35s ease-in reverse forwards;pointer-events:none}
 .lgo-top{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;margin:auto 0;padding:10px 0;max-width:420px}
@@ -1086,12 +1086,11 @@ var _sl=setLang;setLang=function(l){D.forEach(function(x,i){var v=(TR[l]&&TR[l][
 window.KLANG_FIRST=!(ld("kl")&&TT[ld("kl")]);
 setLang(ld("kl")&&TT[ld("kl")]?ld("kl"):"uz");
 
-/* ===== v108: при первом заходе показываем выбор языка (после выбора запоминается в "kl") ===== */
-(function(){
- if(!window.KLANG_FIRST)return;
+/* ===== v109: выбор языка показывается один раз — после регистрации и выбора имени пользователя (window.kdPickLang) ===== */
+window.kdPickLang=function(){return new Promise(function(resolve){
+ if(document.querySelector(".lgo")){resolve();return}
  var Q={ru:["Какой язык вы хотите?","Выберите язык. Его можно сменить позже в Настройках."],uz:["Qaysi tilni xohlaysiz?","Tilni tanlang. Keyinroq Sozlamalarda o'zgartirish mumkin."],en:["Which language do you want?","Pick a language. You can change it later in Settings."],zh:["你想用哪种语言？","请选择语言，之后可在设置中更改。"],es:["¿Qué idioma quieres?","Elige un idioma. Puedes cambiarlo luego en Ajustes."],de:["Welche Sprache möchtest du?","Wähle eine Sprache. Du kannst sie später in den Einstellungen ändern."]};
  var ord=["ru","uz","en","zh","es","de"].filter(function(k){return TT[k]&&Q[k]});
- try{localStorage.removeItem("kl")}catch(e){}
  function open(){
   var o=document.createElement("div");o.className="lgo";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");
   var top=document.createElement("div");top.className="lgo-top";
@@ -1111,11 +1110,11 @@ setLang(ld("kl")&&TT[ld("kl")]?ld("kl"):"uz");
     if(done)return;done=true;clearInterval(iv);
     list.querySelectorAll(".lgo-b").forEach(function(x){x.classList.toggle("on",x===b)});
     qs.classList.remove("sw");sb.classList.remove("sw");put(k);setLang(k);
-    setTimeout(function(){o.classList.add("out");document.documentElement.style.overflow="";setTimeout(function(){o.remove()},380)},520)};
+    setTimeout(function(){o.classList.add("out");document.documentElement.style.overflow="";setTimeout(function(){o.remove();resolve()},380)},520)};
    list.appendChild(b)});
   o.appendChild(top);o.appendChild(list);document.body.appendChild(o);document.documentElement.style.overflow="hidden"}
  if(document.body)open();else document.addEventListener("DOMContentLoaded",open)
-})();
+})};
 
 /* ===== Новая главная: кнопка «Что такое KodYol?» → инфо + Уроки/Тесты/Карточки/Задания ===== */
 var HW={"ru": {"b": "ЧТО ТАКОЕ KodYol?", "i": "KodYol — сайт, где программирование изучают шаг за шагом: от первых строк кода до профессии. Работает на телефоне и компьютере.", "f": ["Уроки: Full Stack, Frontend, Backend, Cybersecurity и Data Science", "Тесты после каждого урока, звёзды за результат", "Карточки для быстрого повторения", "Задания с готовыми решениями", "Практика кода: пиши и запускай код прямо на сайте", "AI-учитель отвечает на вопросы по темам", "Чат с другими учениками и уведомления", "Прогресс, серия дней и избранное; 6 языков, светлая и тёмная тема"], "l": "Уроки", "t": "Тесты", "c": "Карточки", "k": "Задания", "z": "заданий"}, "uz": {"b": "KodYol NIMA?", "i": "KodYol — dasturlashni bosqichma-bosqich o'rganish uchun sayt: birinchi kod qatoridan kasbgacha. Telefon va kompyuterda ishlaydi.", "f": ["Darslar: Full Stack, Frontend, Backend, Cybersecurity va Data Science", "Har bir darsdan keyin testlar, natijaga yulduzcha", "Tez takrorlash uchun kartochkalar", "Tayyor yechimli topshiriqlar", "Kod maydoni: kodni saytning o'zida yozing va ishga tushiring", "AI ustoz mavzular bo'yicha savollarga javob beradi", "Boshqa o'quvchilar bilan chat va bildirishnomalar", "Progress, kunlik seriya va sevimlilar; 6 til, och va to'q mavzu"], "l": "Darslar", "t": "Testlar", "c": "Kartochkalar", "k": "Topshiriqlar", "z": "topshiriq"}, "en": {"b": "WHAT IS KodYol?", "i": "KodYol is a site for learning programming step by step, from your first lines of code to a career. It works on phone and computer.", "f": ["Lessons: Full Stack, Frontend, Backend, Cybersecurity and Data Science", "Quizzes after every lesson, with stars for your score", "Flashcards for quick review", "Tasks with ready solutions", "Code playground: write and run code right on the site", "AI tutor that answers questions about the topics", "Chat with other learners and notifications", "Progress, day streak and favorites; 6 languages, light or dark theme"], "l": "Lessons", "t": "Quizzes", "c": "Flashcards", "k": "Tasks", "z": "tasks"}, "zh": {"b": "KodYol 是什么？", "i": "KodYol 是一个循序渐进学习编程的网站，从第一行代码到职业发展。手机和电脑都能使用。", "f": ["课程：Full Stack、Frontend、Backend、Cybersecurity 和 Data Science", "每节课后有测验，按成绩获得星星", "用于快速复习的记忆卡片", "附带参考答案的练习任务", "代码练习：直接在网站上编写并运行代码", "AI 老师解答各个主题的问题", "与其他学习者聊天并接收通知", "学习进度、连续天数和收藏；6 种语言，浅色或深色主题"], "l": "课程", "t": "测验", "c": "卡片", "k": "任务", "z": "个任务"}, "es": {"b": "¿QUÉ ES KodYol?", "i": "KodYol es un sitio para aprender programación paso a paso, desde las primeras líneas de código hasta una profesión. Funciona en móvil y ordenador.", "f": ["Lecciones: Full Stack, Frontend, Backend, Cybersecurity y Data Science", "Pruebas tras cada lección, con estrellas según tu resultado", "Tarjetas para repasar rápido", "Tareas con soluciones listas", "Práctica de código: escribe y ejecuta código en el propio sitio", "Tutor IA que responde preguntas sobre los temas", "Chat con otros estudiantes y notificaciones", "Progreso, racha de días y favoritos; 6 idiomas, tema claro u oscuro"], "l": "Lecciones", "t": "Pruebas", "c": "Tarjetas", "k": "Tareas", "z": "tareas"}, "de": {"b": "WAS IST KodYol?", "i": "KodYol ist eine Seite zum schrittweisen Programmierenlernen, von den ersten Codezeilen bis zum Beruf. Sie läuft auf Handy und Computer.", "f": ["Lektionen: Full Stack, Frontend, Backend, Cybersecurity und Data Science", "Tests nach jeder Lektion, mit Sternen für dein Ergebnis", "Lernkarten zum schnellen Wiederholen", "Aufgaben mit fertigen Lösungen", "Code-Labor: Code direkt auf der Seite schreiben und ausführen", "KI-Tutor, der Fragen zu den Themen beantwortet", "Chat mit anderen Lernenden und Benachrichtigungen", "Fortschritt, Tage-Serie und Favoriten; 6 Sprachen, helles oder dunkles Design"], "l": "Lektionen", "t": "Tests", "c": "Lernkarten", "k": "Aufgaben", "z": "Aufgaben"}},fcc=null,tcc=null;
@@ -1996,7 +1995,7 @@ function banWatch(u){bnUn&&bnUn();bnUn=null;banUI(false);if(u)bnUn=onSnapshot(do
 onAuthStateChanged(auth,async u=>{me=u;banWatch(u);K_callStop();K_pstopSelf();um&&um();uu&&uu();im&&im();un&&un();
  if(u){vLoad();K_callInit(u);K_pinit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
-   const okU=await askUsername(u,r,dn);if(!okU)return}
+   const okU=await askUsername(u,r,dn);if(!okU)return;try{await window.kdPickLang()}catch(e){}}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
   ntFirst=true;ntSeen={};im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{ntIn(s,u);inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
