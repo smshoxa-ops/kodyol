@@ -207,6 +207,25 @@ service cloud.firestore {
       allow update: if false;
     }
 
+    // Поддержка: пользователь создаёт обращение и читает только свои; владелец читает всё, отвечает и удаляет
+    match /support/{id} {
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','name','un','cat','txt','st','ts'])
+        && request.resource.data.txt is string
+        && request.resource.data.txt.size() >= 10 && request.resource.data.txt.size() <= 1000
+        && request.resource.data.cat is string && request.resource.data.cat.size() <= 20
+        && request.resource.data.name is string && request.resource.data.name.size() <= 30
+        && request.resource.data.un is string && request.resource.data.un.size() <= 20
+        && request.resource.data.st == 'new'
+        && request.resource.data.ts == request.time;
+      allow read: if isOwner() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow update: if isOwner()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st','reply','rts'])
+        && request.resource.data.st == 'done'
+        && (!('reply' in request.resource.data) || (request.resource.data.reply is string && request.resource.data.reply.size() <= 500));
+      allow delete: if isOwner();
+    }
+
     // Галочки: читают все вошедшие, выдаёт и снимает только владелец
     match /verified/{uid} {
       allow read: if signedIn();
