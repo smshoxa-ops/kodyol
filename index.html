@@ -564,6 +564,51 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 .kisl .ki-b svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .kisl .ki-b.d svg{transform:rotate(135deg)}
 @media(prefers-reduced-motion:reduce){.kisl,.kisl.on,.kisl .ki-in{animation:none!important;opacity:1}}
+
+/* v105: чат как в Telegram — скрепка, меню вложений, файлы и фото в пузырях */
+#c-chat .bar #ca{width:46px;height:46px;padding:0;border-radius:50%;background:var(--card);border:1px solid var(--bd);color:var(--tx);display:grid;place-items:center;flex:none;transition:transform .15s,background .2s}
+#c-chat .bar #ca svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+#c-chat .bar #ca:active{transform:scale(.9) rotate(-12deg)}
+#c-chat .bar #ca.on svg{transform:rotate(45deg)}
+.atsh{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;animation:atfade .18s ease-out}
+.atsh.out{animation:atfade .18s ease-in reverse forwards}
+.atpn{width:100%;max-width:520px;background:var(--card);border-radius:24px 24px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 22px);display:flex;justify-content:space-around;gap:8px;box-shadow:0 -10px 40px rgba(0,0,0,.35);animation:atup .26s cubic-bezier(.2,.9,.3,1.1)}
+.atsh.out .atpn{animation:atup .18s ease-in reverse forwards}
+.atpn::before{content:"";position:absolute;top:8px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:var(--bd)}
+.atpn{position:relative;padding-top:30px}
+.ati{background:none;border:0;color:var(--tx);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;padding:4px 10px;flex:1}
+.ati i{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.28);transition:transform .15s}
+.ati:active i{transform:scale(.9)}
+.ati svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.atsh .ati{animation:atpop .3s cubic-bezier(.2,.9,.3,1.3) backwards}
+.atsh .ati:nth-child(2){animation-delay:.05s}.atsh .ati:nth-child(3){animation-delay:.1s}
+@keyframes atfade{from{opacity:0}to{opacity:1}}
+@keyframes atup{from{transform:translateY(100%)}to{transform:none}}
+@keyframes atpop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+@keyframes atsp{to{transform:rotate(360deg)}}
+#c-chat .m.att{padding:9px 14px 7px 9px;max-width:min(88%,340px)}
+#c-chat .m.att.ai{padding:3px;border-radius:20px;overflow:hidden}
+#c-chat .m.att.pend{opacity:.85}
+.atf{display:flex;align-items:center;gap:12px;min-width:210px;cursor:pointer}
+.atc{width:54px;height:54px;border-radius:50%;background:#fff;color:#2faa08;display:grid;place-items:center;flex:none;position:relative;transition:transform .15s}
+.atc:active{transform:scale(.92)}
+.atc svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.m.bt .atc{background:#2faa08;color:#fff}
+.atc.ld::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:3px solid transparent;border-top-color:#fff;animation:atsp .8s linear infinite}
+.m.bt .atc.ld::after{border-top-color:#2faa08}
+.atr{min-width:0;flex:1}
+.atn{font-weight:600;font-size:16px;line-height:1.25;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ats{display:flex;justify-content:space-between;gap:14px;font-size:13px;opacity:.8;margin-top:3px}
+.atim{position:relative;line-height:0;width:min(72vw,300px)}
+.atim img{display:block;width:100%;height:auto;max-height:400px;object-fit:cover;border-radius:17px;cursor:zoom-in}
+.att-t{position:absolute;right:9px;bottom:8px;background:rgba(0,0,0,.45);color:#fff;border-radius:11px;padding:1px 8px;font-size:12px;line-height:1.6}
+.aview{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.94);display:flex;align-items:center;justify-content:center;animation:atfade .2s ease-out}
+.aview.out{animation:atfade .18s ease-in reverse forwards}
+.aview img{max-width:100%;max-height:100%;object-fit:contain;transition:filter .3s,transform .3s}
+.aview img.lo{filter:blur(8px)}
+.avt{position:absolute;top:0;left:0;right:0;display:flex;justify-content:flex-end;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 12px}
+.avt button{width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;cursor:pointer}
+.avt svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style></head><body>
 <header class="tb"><button class="mb" id="mb" aria-label="menu" data-ic="menu"></button><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
@@ -1523,7 +1568,7 @@ function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const 
  const m=E("cm");m.innerHTML="";
  un=onSnapshot(query(collection(db,"chats",room,"msgs"),orderBy("ts","desc"),limit(100)),s=>{m.innerHTML="";let pv=0,lastD=null,pi=null;
   s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid;if((d.hid||[]).includes(me.uid)||tms(d)<=dl())return;const b=mk("div","m "+(mine?"u":"bt"));const tt=tms(d);if(!pv||tt-pv>900000){m.append(mk("div","tsp",tf(d)));pi=null}pv=tt;lastD=d;b.onclick=()=>b.classList.toggle("sel");
-   if(!mine&&room=="general"){const ow=isV(d.uid),nb=mk("b",null,d.name+(ow?" ":"\n"));if(ow){nb.append(VB(14));nb.append(document.createTextNode("\n"))}nb.style.cursor="pointer";nb.onclick=()=>openU(d.uid);b.append(nb)};if(d.text.startsWith("§call|")){const q=d.text.split("|");b.append(K_callCard(q[1],+q[2]||0,mine,tf(d),q[3]=="1"))}else b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
+   if(!mine&&room=="general"){const ow=isV(d.uid),nb=mk("b",null,d.name+(ow?" ":"\n"));if(ow){nb.append(VB(14));nb.append(document.createTextNode("\n"))}nb.style.cursor="pointer";nb.onclick=()=>openU(d.uid);b.append(nb)};if(d.text.startsWith("§call|")){const q=d.text.split("|");b.append(K_callCard(q[1],+q[2]||0,mine,tf(d),q[3]=="1"))}else if(d.att&&d.att.fid){b.classList.add("att");if(d.att.k=="img")b.classList.add("ai");b.append(K_attCard(d,mine,tf(d),room))}else b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
    if(!mine){const f=mk("button","chip");f.innerHTML=ico("flag");f.style.cssText="font-size:11px;padding:2px 8px";f.onclick=()=>{addDoc(collection(db,"reports"),{chat:room,msg:x.id,by:me.uid,txt:String(d.text).slice(0,500),from:d.uid,fn:String(d.name||"").slice(0,30),ts:serverTimestamp()});f.textContent="✓";f.disabled=true};b.append(f)}
    if(room!="general"){const z=mk("button","chip");z.innerHTML=ico("trash");z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
    if(mine){m.append(b);pi=null}else{const w=mk("div","mr"),a=av(UM[d.uid]||{name:d.name,photo:d.photo},36);a.style.cursor="pointer";a.onclick=()=>openU(d.uid);if(pi&&pi.uid==d.uid)pi.a.style.visibility="hidden";pi={uid:d.uid,a};w.append(a,b);m.append(w)}});seenEl=null;if(lastD&&lastD.uid==me.uid&&room!="general"){seenEl=mk("div","seen");m.append(seenEl);lastMine={t:tms(lastD)};paintSeen()}window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
@@ -1531,9 +1576,84 @@ async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt
  try{const mref=await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:t.slice(0,500),ts:serverTimestamp()});
   if(id!="general"&&PUSH_URL)fetch(PUSH_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({chatId:id,msgId:mref.id}),keepalive:true}).catch(()=>{});
   if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:t.slice(0,80),lu:me.uid,ts:serverTimestamp()},{merge:true})}catch(e){alert(e.message)}}
+
+/* ===== v105: вложения в чате (фото и файлы). Данные хранятся в chats/{id}/files, в сообщении только превью ===== */
+const AT_CLIP='<svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>',
+AT_IMG='<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+AT_CAM='<svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+AT_FILE='<svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/></svg>',
+AT_DL='<svg viewBox="0 0 24 24"><path d="M12 3v13M6 11l6 6 6-6M5 21h14"/></svg>',
+AT_X='<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+const ATMAX=680*1024;
+const AT={
+ ru:{att:"Прикрепить",gal:"Галерея",cam:"Камера",file:"Файл",photo:"Фото",big:"Файл слишком большой. Максимум 680 КБ",fail:"Не удалось загрузить файл",kb:"КБ",mb:"МБ"},
+ en:{att:"Attach",gal:"Gallery",cam:"Camera",file:"File",photo:"Photo",big:"File is too large. Max 680 KB",fail:"Could not load the file",kb:"KB",mb:"MB"},
+ uz:{att:"Biriktirish",gal:"Galereya",cam:"Kamera",file:"Fayl",photo:"Rasm",big:"Fayl juda katta. Maksimum 680 KB",fail:"Faylni yuklab bo'lmadi",kb:"KB",mb:"MB"},
+ zh:{att:"附件",gal:"相册",cam:"相机",file:"文件",photo:"照片",big:"文件太大，最大 680 KB",fail:"无法加载文件",kb:"KB",mb:"MB"},
+ es:{att:"Adjuntar",gal:"Galería",cam:"Cámara",file:"Archivo",photo:"Foto",big:"El archivo es demasiado grande. Máximo 680 KB",fail:"No se pudo cargar el archivo",kb:"KB",mb:"MB"},
+ de:{att:"Anhängen",gal:"Galerie",cam:"Kamera",file:"Datei",photo:"Foto",big:"Datei zu groß. Maximal 680 KB",fail:"Datei konnte nicht geladen werden",kb:"KB",mb:"MB"}};
+const AX=k=>((AT[window.lang]||AT.en)[k]);
+const K_sz=n=>n<1048576?Math.max(1,Math.round(n/1024))+" "+AX("kb"):(n/1048576).toFixed(1)+" "+AX("mb");
+let atBusy=false;const atCache=new Map();
+function K_attMenu(){
+ if(E("atsh"))return;const btn=E("ca");btn.classList.add("on");
+ const o=mk("div","atsh"),pn=mk("div","atpn");o.id="atsh";
+ const close=()=>{btn.classList.remove("on");o.classList.add("out");setTimeout(()=>o.remove(),190)};
+ [["gal","#7c4dff",AT_IMG,"cf1"],["cam","#ff5a5f",AT_CAM,"cf3"],["file","#2f9bff",AT_FILE,"cf2"]].forEach(([k,c,ic,inp])=>{
+  const b=mk("button","ati");b.type="button";const i=mk("i");i.style.background=c;i.innerHTML=ic;b.append(i,mk("span",null,AX(k)));b.onclick=()=>{close();E(inp).click()};pn.append(b)});
+ o.onclick=e=>{if(e.target==o)close()};o.append(pn);document.body.append(o)}
+function K_b64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onerror=()=>rej(new Error(AX("fail")));r.onload=()=>res(String(r.result).split(",")[1]||"");r.readAsDataURL(f)})}
+function K_thumb(u){return new Promise((res,rej)=>{const im=new Image();im.onerror=()=>rej(new Error(AX("fail")));im.onload=()=>{let k=Math.min(1,360/Math.max(im.naturalWidth,im.naturalHeight));
+ for(let n=0;n<5;n++){const c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.naturalWidth*k));c.height=Math.max(1,Math.round(im.naturalHeight*k));c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+  for(const q of [.6,.45,.3]){const d=c.toDataURL("image/jpeg",q);if(d.length<=28000)return res(d)}k*=.75}rej(new Error(AX("fail")))};im.src=u})}
+async function K_attSend(f){
+ if(!f||!me||room==null||atBusy)return;
+ const id=room,isImg=/^image\/(jpeg|png|webp)$/.test(f.type);
+ if(!isImg&&f.size>ATMAX){toast(AX("big"),0);return}
+ atBusy=true;
+ const m=E("cm"),p=mk("div","m u att pend"),w=mk("div","atf"),c=mk("div","atc ld");c.innerHTML=isImg?AT_IMG:AT_FILE;
+ const r=mk("div","atr");r.append(mk("div","atn",f.name||AX("photo")),mk("div","ats",K_sz(f.size)));w.append(c,r);p.append(w);m.append(p);window.scrollTo(0,document.body.scrollHeight);
+ try{
+  let data,type=f.type||"application/octet-stream",att;
+  if(isImg){const u=URL.createObjectURL(f);try{const full=await photoData(u),th=await K_thumb(u);data=full.split(",")[1];type="image/jpeg";att={k:"img",th}}finally{URL.revokeObjectURL(u)}}
+  else{data=await K_b64(f);att={k:"file"}}
+  const name=(f.name||(isImg?"photo.jpg":"file")).slice(0,100),sz=isImg?Math.round(data.length*3/4):f.size;type=type.slice(0,100);
+  const fref=doc(collection(db,"chats",id,"files"));
+  await setDoc(fref,{uid:me.uid,name,type,sz,data,ts:serverTimestamp()});
+  att.n=name;att.s=sz;att.t=type;att.fid=fref.id;
+  const label=(isImg?"📷 "+AX("photo"):"📎 "+name).slice(0,500);
+  const mref=await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:label,att,ts:serverTimestamp()});
+  if(id!="general"&&PUSH_URL)fetch(PUSH_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({chatId:id,msgId:mref.id}),keepalive:true}).catch(()=>{});
+  if(id!="general")await setDoc(doc(db,"chats",id),{members:id.split("_"),last:label.slice(0,80),lu:me.uid,ts:serverTimestamp()},{merge:true})
+ }catch(e){toast(e.code=="permission-denied"?XF("pd2"):(e.message||e.code||AX("fail")),0)}
+ finally{atBusy=false;p.remove()}}
+async function K_attFetch(a,rid){
+ if(atCache.has(a.fid))return atCache.get(a.fid);
+ const s=await getDoc(doc(db,"chats",rid,"files",a.fid));if(!s.exists())throw new Error(AX("fail"));
+ const d=s.data();atCache.set(a.fid,d);if(atCache.size>6)atCache.delete(atCache.keys().next().value);return d}
+async function K_attSave(a,rid){
+ const d=await K_attFetch(a,rid),bin=atob(d.data),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+ const ty=d.type=="application/pdf"||/^image\/(jpeg|png|webp)$/.test(d.type)?d.type:"application/octet-stream";
+ const url=URL.createObjectURL(new Blob([u8],{type:ty})),l=document.createElement("a");l.href=url;l.download=d.name||"file";document.body.append(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(url),8000)}
+function K_imgView(a,rid){
+ const o=mk("div","aview"),im=mk("img","lo"),top=mk("div","avt"),x=mk("button"),dl=mk("button");
+ im.src=a.th;im.alt="";x.innerHTML=AT_X;dl.innerHTML=AT_DL;x.type=dl.type="button";top.append(dl,x);o.append(im,top);
+ const close=()=>{o.classList.add("out");setTimeout(()=>o.remove(),190)};
+ o.onclick=e=>{if(e.target==o||e.target==im)close()};x.onclick=close;
+ dl.onclick=e=>{e.stopPropagation();K_attSave(a,rid).catch(()=>toast(AX("fail"),0))};
+ document.body.append(o);
+ K_attFetch(a,rid).then(d=>{im.src="data:image/jpeg;base64,"+d.data;im.classList.remove("lo")}).catch(()=>toast(AX("fail"),0))}
+function K_attCard(d,mine,tm,rid){
+ const a=d.att,w=mk("div"),tt=tm+(mine?" ✓":"");
+ if(a.k=="img"&&typeof a.th=="string"&&a.th.startsWith("data:image/")){
+  w.className="atim";const im=mk("img");im.src=a.th;im.alt="";im.onclick=e=>{e.stopPropagation();K_imgView(a,rid)};w.append(im,mk("span","att-t",tt));return w}
+ w.className="atf";const c=mk("div","atc");c.innerHTML=mine?AT_FILE:AT_DL;
+ const r=mk("div","atr"),n=mk("div","atn",String(a.n||"file")),s=mk("div","ats");s.append(mk("span",null,K_sz(+a.s||0)),mk("span",null,tt));r.append(n,s);w.append(c,r);
+ const go=async e=>{e.stopPropagation();if(c.classList.contains("ld"))return;c.classList.add("ld");try{await K_attSave(a,rid);c.innerHTML=AT_FILE}catch(er){toast(AX("fail"),0)}c.classList.remove("ld")};
+ c.onclick=go;n.onclick=go;return w}
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
- if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()}}
- E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else{K_pstop();inb()}};
+ if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><button id="ca" type="button"></button><input id="ci" maxlength="500" autocomplete="off"><button id="cs"></button></div><input type="file" id="cf1" accept="image/*" hidden><input type="file" id="cf2" hidden><input type="file" id="cf3" accept="image/*" capture="environment" hidden></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()};E("ca").onclick=K_attMenu;["cf1","cf2","cf3"].forEach(k=>E(k).onchange=e=>{const f=e.target.files[0];e.target.value="";K_attSend(f)});E("ci").onpaste=e=>{const f=e.clipboardData&&e.clipboardData.files&&e.clipboardData.files[0];if(f){e.preventDefault();K_attSend(f)}}}
+ E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("ca").innerHTML=AT_CLIP;E("ca").setAttribute("aria-label",AX("att"));E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else{K_pstop();inb()}};
 const UNT={
  ru:{t:"Придумайте имя пользователя",h:"Минимум 6 символов: маленькие латинские буквы, цифры, точка или _. По нему вас будут находить другие.",ph:"например: dilshod2026",b:"Продолжить",c:"Выйти",k:"Это имя уже занято, выберите другое",s:"Минимум 6 символов",x:"Только латинские буквы, цифры, . и _"},
  uz:{t:"Foydalanuvchi nomini tanlang",h:"Kamida 6 belgi: kichik lotin harflari, raqamlar, nuqta yoki _. Boshqalar sizni shu nom bilan topadi.",ph:"masalan: dilshod2026",b:"Davom etish",c:"Chiqish",k:"Bu nom band, boshqasini tanlang",s:"Kamida 6 belgi",x:"Faqat lotin harflari, raqamlar, . va _"},

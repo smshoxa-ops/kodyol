@@ -9,6 +9,19 @@ service cloud.firestore {
     }
     function isOwner() { return signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"; }
     function banned() { return exists(/databases/$(database)/documents/bans/$(request.auth.uid)); }
+    // Вложение в сообщении (фото или файл): только метаданные и маленькое превью
+    function validAtt(d) {
+      return !('att' in d) || (
+        d.att is map
+        && d.att.keys().hasOnly(['k','n','s','t','th','fid'])
+        && d.att.k in ['img','file']
+        && d.att.n is string && d.att.n.size() <= 100
+        && d.att.s is number && d.att.s <= 700000
+        && d.att.t is string && d.att.t.size() <= 100
+        && d.att.fid is string && d.att.fid.size() <= 40
+        && (!('th' in d.att) || (d.att.th is string && d.att.th.size() <= 30000 && d.att.th[0:23] == 'data:image/jpeg;base64,'))
+      );
+    }
     function onlyOwnKey(after, before, field) {
       return after.get(field, {}).diff(before.get(field, {})).affectedKeys().hasOnly([request.auth.uid]);
     }
@@ -69,16 +82,32 @@ service cloud.firestore {
       match /msgs/{msgId} {
         allow read: if isMember(chatId);
         allow create: if isMember(chatId) && !banned()
-          && request.resource.data.keys().hasOnly(['uid','name','photo','text','ts'])
+          && request.resource.data.keys().hasOnly(['uid','name','photo','text','ts','att'])
           && request.resource.data.uid == request.auth.uid
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 500
-          && request.resource.data.ts == request.time;
+          && request.resource.data.ts == request.time
+          && validAtt(request.resource.data);
         // «удалить у себя»: можно только добавить свой uid в hid
         allow update: if isMember(chatId) && chatId != 'general'
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['hid'])
           && request.resource.data.hid.toSet().difference(resource.data.get('hid', []).toSet()).hasOnly([request.auth.uid]);
         // владелец может удалять сообщения только в общем чате
+        allow delete: if chatId == 'general' && isOwner();
+      }
+
+      // Содержимое вложений (до ~680 КБ): читают участники чата, создаёт автор, менять нельзя
+      match /files/{fid} {
+        allow read: if isMember(chatId);
+        allow create: if isMember(chatId) && !banned()
+          && request.resource.data.keys().hasOnly(['uid','name','type','sz','data','ts'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.name is string && request.resource.data.name.size() <= 100
+          && request.resource.data.type is string && request.resource.data.type.size() <= 100
+          && request.resource.data.sz is number && request.resource.data.sz <= 700000
+          && request.resource.data.data is string && request.resource.data.data.size() <= 950000
+          && request.resource.data.ts == request.time;
+        allow update: if false;
         allow delete: if chatId == 'general' && isOwner();
       }
     }
