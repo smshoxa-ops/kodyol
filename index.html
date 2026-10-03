@@ -277,6 +277,16 @@ h2 .gi.sm{margin-right:8px}
 #un-bx input{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:14px;border:1px solid var(--bd);background:transparent;color:var(--tx);font-size:16px;text-align:center}
 #un-m{min-height:20px;margin:8px 0 12px;font-size:13px;color:#e5484d}
 #un-bx .pw-b{width:100%}#un-c{margin-top:10px;background:none;border:0;color:var(--mu);font-size:14px;cursor:pointer;padding:8px}
+/* v109: окно «Придумайте имя» — непрозрачное, кнопка видна */
+#un-ov{background:rgba(3,6,2,.92)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#un-ov #un-bx{background:#0f1a0b!important;color:#eaf7df;border:1px solid rgba(160,255,90,.28);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+:root[data-theme="light"] #un-ov #un-bx{background:#fff!important;color:#10240a}
+#un-ov #un-bx p{color:#9fb593}
+:root[data-theme="light"] #un-ov #un-bx p{color:#587049}
+#un-ov #un-bx input{background:rgba(255,255,255,.06);border:1px solid rgba(160,255,90,.3);color:inherit}
+#un-ov #un-bx .pw-b{display:block;width:100%;padding:14px 20px;border:0;border-radius:14px;background:linear-gradient(135deg,#24980a,#6fd915);color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+#un-ov #un-bx .pw-b:disabled{opacity:.6}
+#un-ov #un-c{color:#9fb593}
 
 /* ===== GREEN GLASS v52 ===== */
 :root:root:root{--bg:#050805;--card:rgba(16,28,12,.55);--tx:#eaf7df;--mu:#8fa884;--bd:rgba(160,255,90,.14);--ac:#2faa08;--ac2:#7be61c;--al:#a4ff52;--cb:rgba(0,0,0,.45);--ct:#c6ff8f}
@@ -1716,7 +1726,10 @@ window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
 const UNT={
  ru:{t:"Придумайте имя пользователя",h:"Минимум 6 символов: маленькие латинские буквы, цифры, точка или _. По нему вас будут находить другие.",ph:"например: dilshod2026",b:"Продолжить",c:"Выйти",k:"Это имя уже занято, выберите другое",s:"Минимум 6 символов",x:"Только латинские буквы, цифры, . и _"},
  uz:{t:"Foydalanuvchi nomini tanlang",h:"Kamida 6 belgi: kichik lotin harflari, raqamlar, nuqta yoki _. Boshqalar sizni shu nom bilan topadi.",ph:"masalan: dilshod2026",b:"Davom etish",c:"Chiqish",k:"Bu nom band, boshqasini tanlang",s:"Kamida 6 belgi",x:"Faqat lotin harflari, raqamlar, . va _"},
- en:{t:"Choose your username",h:"At least 6 characters: lowercase Latin letters, digits, dot or _. Others will find you by it.",ph:"e.g. dilshod2026",b:"Continue",c:"Sign out",k:"This name is taken, choose another",s:"At least 6 characters",x:"Only Latin letters, digits, . and _"}};
+ en:{t:"Choose your username",h:"At least 6 characters: lowercase Latin letters, digits, dot or _. Others will find you by it.",ph:"e.g. dilshod2026",b:"Continue",c:"Sign out",k:"This name is taken, choose another",s:"At least 6 characters",x:"Only Latin letters, digits, . and _"},
+ zh:{t:"设置你的用户名",h:"至少 6 个字符：小写拉丁字母、数字、点或 _。其他人将通过它找到你。",ph:"例如：dilshod2026",b:"继续",c:"退出",k:"该名称已被占用，请换一个",s:"至少 6 个字符",x:"仅限拉丁字母、数字、. 和 _"},
+ es:{t:"Elige tu nombre de usuario",h:"Mínimo 6 caracteres: letras latinas minúsculas, números, punto o _. Los demás te encontrarán por él.",ph:"p. ej.: dilshod2026",b:"Continuar",c:"Salir",k:"Este nombre ya está en uso, elige otro",s:"Mínimo 6 caracteres",x:"Solo letras latinas, números, . y _"},
+ de:{t:"Wähle deinen Benutzernamen",h:"Mindestens 6 Zeichen: kleine lateinische Buchstaben, Ziffern, Punkt oder _. Andere finden dich damit.",ph:"z. B.: dilshod2026",b:"Weiter",c:"Abmelden",k:"Dieser Name ist vergeben, wähle einen anderen",s:"Mindestens 6 Zeichen",x:"Nur lateinische Buchstaben, Ziffern, . und _"}};
 function askUsername(u,r,dn){return new Promise(res=>{
  const L=UNT[window.lang]||UNT.en;
  const ov=document.createElement("div");ov.id="un-ov";const bx=document.createElement("div");bx.id="un-bx";
@@ -1995,7 +2008,8 @@ function banWatch(u){bnUn&&bnUn();bnUn=null;banUI(false);if(u)bnUn=onSnapshot(do
 onAuthStateChanged(auth,async u=>{me=u;banWatch(u);K_callStop();K_pstopSelf();um&&um();uu&&uu();im&&im();un&&un();
  if(u){vLoad();K_callInit(u);K_pinit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
-   const okU=await askUsername(u,r,dn);if(!okU)return;try{await window.kdPickLang()}catch(e){}}
+   try{await window.kdPickLang()}catch(e){}
+   const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
   ntFirst=true;ntSeen={};im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{ntIn(s,u);inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
