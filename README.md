@@ -63,3 +63,12 @@ Google Cloud Console → Credentials → API key проекта → **HTTP refer
 
 ## Меню скачивания (v136)
 Кнопка в шапке главной открывает меню: Android (`kodyol.apk`) и iPhone (`kodyol.ipa`) + подсказка «На экран Домой». Положите `kodyol.ipa` рядом с `index.html`; пока его нет, пункт iPhone неактивен. Сборка .ipa без Mac: GitHub Actions, `.github/workflows/ios.yml`.
+
+## v139
+- Нет зума двойным тапом и щипком (viewport + `touch-action:manipulation` + gesture-события).
+- На телефонах и в приложении нельзя выделять/копировать текст (кроме полей ввода и элементов с классом `kd-sel`).
+- Кнопка «Скачать» (APK/IPA) скрыта в приложении (класс `is-app` на `<html>`, определяется в начале `index.html`). Если открыть сайт как `?app=1`, режим приложения включится принудительно.
+- Отключён автоперевод браузера (`translate="no"`): Яндекс переводил интерфейс с узбекского («НАЧАТЬ» → «Начало»).
+- Service Worker: `updateViaCache:"none"`, сеть без кэша для страниц, автоперезагрузка при новой версии.
+- Подсказка про окно Play Protect в окне скачивания.
+- Полоска адреса в APK убирается файлом `.well-known/assetlinks.json` в репозитории `smshoxa-ops.github.io` (см. папку `user-site-repo`).

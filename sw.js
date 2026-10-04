@@ -1,5 +1,5 @@
 // KodYol service worker: офлайн-режим для статических файлов сайта
-const CACHE = "kodyol-v138";
+const CACHE = "kodyol-v139";
 const ASSETS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "logo.png", "favicon.png", "ring-out.mp3", "ring-in.mp3"];
 
 self.addEventListener("install", (e) => {
@@ -28,7 +28,7 @@ self.addEventListener("fetch", (e) => {
   // Страницы: сначала сеть (свежая версия), при отсутствии интернета — из кэша
   if (req.mode === "navigate") {
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: "no-store" })
         .then((res) => {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put("index.html", copy));
