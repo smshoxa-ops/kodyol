@@ -30,6 +30,10 @@ jobs:
           }
           EOF
           npx cap add ios
+          # разрешения на микрофон и камеру (нужны для звонков)
+          PL="ios/App/App/Info.plist"
+          /usr/libexec/PlistBuddy -c "Add :NSMicrophoneUsageDescription string KodYol uses the microphone for calls" "$PL"
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string KodYol uses the camera for video calls" "$PL"
           # иконка приложения из icon-512.png
           ICON="ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png"
           if [ -f "$ICON" ]; then sips -z 1024 1024 ../icon-512.png --out "$ICON"; fi
