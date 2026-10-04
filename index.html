@@ -2906,6 +2906,26 @@ body:has(#v-fold:not([hidden]) .kd-ch) #bn{display:none}
 @keyframes kdnDot{0%,80%,100%{transform:translateY(0);opacity:.35}40%{transform:translateY(-6px);opacity:1}}
 @keyframes kdnFill{to{width:100%}}
 
+/* ===== Меню урока (.kd-pop): появление «жидкой каплей» — вытягивается из шарика, перетекает в карточку, кнопки отделяются ===== */
+.kd-row.open .kd-pop{animation:kdPopGoo .9s both}
+@keyframes kdPopGoo{
+ 0%{opacity:0;transform:translateX(-50%) translateY(-54px) scale(.14,.08);border-radius:60px;filter:blur(12px) saturate(1.8);background:#d4237a;box-shadow:0 0 0 #8d0a50,0 0 34px 8px rgba(255,60,160,.8);animation-timing-function:cubic-bezier(.3,.7,.3,1)}
+ 8%{opacity:1}
+ 30%{transform:translateX(-50%) translateY(-24px) scale(.34,.5);border-radius:42px;filter:blur(7px) saturate(1.5);animation-timing-function:cubic-bezier(.3,.8,.3,1)}
+ 62%{transform:translateX(-50%) translateY(-1px) scale(1.07,.9);border-radius:28px;filter:blur(2px) saturate(1.15);animation-timing-function:ease-in-out}
+ 82%{transform:translateX(-50%) translateY(0) scale(.99,1.02);filter:blur(0)}
+ 100%{transform:translateX(-50%) scale(1);filter:none}}
+.kd-row.open .kd-pop h4{animation:kdPopTx .6s cubic-bezier(.2,1.3,.4,1) .34s backwards}
+.kd-row.open .kd-pop p{animation:kdPopTx .65s cubic-bezier(.2,1.3,.4,1) .42s backwards}
+.kd-row.open .kd-pop .kd-btn{animation:kdPopBtn .8s cubic-bezier(.25,1,.35,1) .5s backwards}
+.kd-row.open .kd-pop .kd-btn.sec{animation-delay:.64s}
+@keyframes kdPopTx{from{opacity:0;filter:blur(9px);transform:translateY(10px) scale(.92)}}
+@keyframes kdPopBtn{
+ 0%{opacity:0;filter:blur(10px) saturate(2.2) brightness(1.3);transform:translateY(-24px) scale(.5,.26)}
+ 50%{opacity:1;filter:blur(3px) saturate(1.5);transform:translateY(3px) scale(1.05,1.1)}
+ 75%{transform:translateY(0) scale(.985,.98);filter:blur(0)}
+ 100%{opacity:1;filter:none;transform:none}}
+
 /* ===== Вступительная анимация (неоновый контур кнопки НАЧАТЬ → проявление интерфейса) ===== */
 html.kdi-hold{overflow:hidden}
 html.kdi-hold .tb,html.kdi-hold .hero,html.kdi-hold #whatBtn,html.kdi-hold #bn,html.kdi-hold .wh .wi:not(.on){opacity:0!important}
