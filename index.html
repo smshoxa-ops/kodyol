@@ -1598,13 +1598,15 @@ function navAv(){const b=E("nvm");b.innerHTML="";b.append(av(me?MY:{},30))}
 function nav(){document.body.classList.toggle("nonav",window.curV=="ai"||(window.curV=="chat"&&room!=null));document.body.classList.toggle("nothome",window.curV!="home")}
 const _s=window.show;
 window.show=function(v){const f=window.curV;if(v!="owner"&&v!="user"&&window.owUn){window.owUn();window.owUn=null}if((v=="user"&&f!="user")||v=="edit")prev=f;_s(v);nav();const k={edit:"me",owner:"me",support:"me",user:"find",course:"home",lessons:"home",what:"home",fold:"home"}[v]||v;bn.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.nv==k))};
-/* ===== v144: Reels (как в Instagram): вертикальная лента, лайки, комментарии, репосты, подписка, загрузка видео ===== */
+/* ===== v145: Reels (как в Instagram): вертикальная лента, лайки, комментарии, репосты, подписка, загрузка видео ===== */
 const RLT={
-ru:{nw:"Новые",pp:"Популярные",flw:"Подписаться",fwd:"Вы подписаны",more:"ещё",cm:"Комментарии",cmp:"Добавить комментарий…",cmn:"Комментариев пока нет",rep:"Репост",shr:"Поделиться",cp:"Ссылка скопирована",del:"Удалить",delq:"Удалить этот reel?",up:"Новый reel",pick:"Выбрать видео",cap:"Напиши подпись…",pub:"Опубликовать",p1:"Сжимаю видео… не закрывай экран",p2:"Загружаю…",ok:"Опубликовано ✓",emp:"Пока нет reels. Опубликуй первый!",big:"Видео слишком большое даже после сжатия. Выбери короче",uns:"Этот браузер не умеет сжимать видео. Выбери ролик до 2.5 МБ",bad:"Не удалось открыть видео",max:"До 30 секунд (длиннее обрежется)",snd:"Звук выключен",ago0:"сейчас",agm:"мин",agh:"ч",agd:"д",lnk:"Копировать ссылку",cls:"Закрыть",fail:"Не удалось загрузить reel",nof:"Нет доступа. Вставь актуальный firestore.rules в Firebase и нажми Publish"},
-en:{nw:"New",pp:"Popular",flw:"Follow",fwd:"Following",more:"more",cm:"Comments",cmp:"Add a comment…",cmn:"No comments yet",rep:"Repost",shr:"Share",cp:"Link copied",del:"Delete",delq:"Delete this reel?",up:"New reel",pick:"Choose video",cap:"Write a caption…",pub:"Post",p1:"Compressing video… keep the screen on",p2:"Uploading…",ok:"Posted ✓",emp:"No reels yet. Post the first one!",big:"Video is too large even after compression. Pick a shorter one",uns:"This browser can't compress video. Pick a clip under 2.5 MB",bad:"Could not open the video",max:"Up to 30 seconds (longer will be trimmed)",snd:"Sound is off",ago0:"now",agm:"m",agh:"h",agd:"d",lnk:"Copy link",cls:"Close",fail:"Could not load the reel",nof:"Permission denied. Publish the latest firestore.rules in Firebase"},
-uz:{nw:"Yangi",pp:"Mashhur",flw:"Obuna bo'lish",fwd:"Obunasiz",more:"yana",cm:"Izohlar",cmp:"Izoh qo'shing…",cmn:"Hozircha izoh yo'q",rep:"Repost",shr:"Ulashish",cp:"Havola nusxalandi",del:"O'chirish",delq:"Bu reelni o'chirasizmi?",up:"Yangi reel",pick:"Video tanlash",cap:"Izoh yozing…",pub:"Joylash",p1:"Video siqilmoqda… ekranni o'chirmang",p2:"Yuklanmoqda…",ok:"Joylandi ✓",emp:"Hozircha reel yo'q. Birinchisini joylang!",big:"Video siqilgandan keyin ham katta. Qisqaroq tanlang",uns:"Bu brauzer videoni siqolmaydi. 2.5 MB gacha video tanlang",bad:"Videoni ochib bo'lmadi",max:"30 soniyagacha (uzunrog'i kesiladi)",snd:"Ovoz o'chiq",ago0:"hozir",agm:"daq",agh:"soat",agd:"kun",lnk:"Havolani nusxalash",cls:"Yopish",fail:"Reelni yuklab bo'lmadi",nof:"Ruxsat yo'q. Firebase'da firestore.rules ni yangilab Publish bosing"}};
+ru:{nw:"Новые",pp:"Популярные",flw:"Подписаться",fwd:"Вы подписаны",more:"ещё",cm:"Комментарии",cmp:"Добавить комментарий…",cmn:"Комментариев пока нет",rep:"Репост",shr:"Поделиться",cp:"Ссылка скопирована",del:"Удалить",delq:"Удалить этот reel?",up:"Новый reel",pick:"Выбрать видео",cap:"Напиши подпись…",pub:"Опубликовать",p1:"Сжимаю видео… не закрывай экран",p2:"Загружаю…",ok:"Опубликовано ✓",emp:"Пока нет reels. Опубликуй первый!",big:"Видео слишком большое даже после сжатия. Выбери короче",uns:"Этот браузер не умеет сжимать видео. Выбери ролик до 12 МБ",bad:"Не удалось открыть видео",max:"До 60 секунд, качество до 720p (длиннее обрежется)",snd:"Звук выключен",ago0:"сейчас",agm:"мин",agh:"ч",agd:"д",lnk:"Копировать ссылку",cls:"Закрыть",fail:"Не удалось загрузить reel",nof:"Нет доступа. Вставь актуальный firestore.rules в Firebase и нажми Publish"},
+en:{nw:"New",pp:"Popular",flw:"Follow",fwd:"Following",more:"more",cm:"Comments",cmp:"Add a comment…",cmn:"No comments yet",rep:"Repost",shr:"Share",cp:"Link copied",del:"Delete",delq:"Delete this reel?",up:"New reel",pick:"Choose video",cap:"Write a caption…",pub:"Post",p1:"Compressing video… keep the screen on",p2:"Uploading…",ok:"Posted ✓",emp:"No reels yet. Post the first one!",big:"Video is too large even after compression. Pick a shorter one",uns:"This browser can't compress video. Pick a clip under 12 MB",bad:"Could not open the video",max:"Up to 60 seconds, up to 720p (longer will be trimmed)",snd:"Sound is off",ago0:"now",agm:"m",agh:"h",agd:"d",lnk:"Copy link",cls:"Close",fail:"Could not load the reel",nof:"Permission denied. Publish the latest firestore.rules in Firebase"},
+uz:{nw:"Yangi",pp:"Mashhur",flw:"Obuna bo'lish",fwd:"Obunasiz",more:"yana",cm:"Izohlar",cmp:"Izoh qo'shing…",cmn:"Hozircha izoh yo'q",rep:"Repost",shr:"Ulashish",cp:"Havola nusxalandi",del:"O'chirish",delq:"Bu reelni o'chirasizmi?",up:"Yangi reel",pick:"Video tanlash",cap:"Izoh yozing…",pub:"Joylash",p1:"Video siqilmoqda… ekranni o'chirmang",p2:"Yuklanmoqda…",ok:"Joylandi ✓",emp:"Hozircha reel yo'q. Birinchisini joylang!",big:"Video siqilgandan keyin ham katta. Qisqaroq tanlang",uns:"Bu brauzer videoni siqolmaydi. 12 MB gacha video tanlang",bad:"Videoni ochib bo'lmadi",max:"60 soniyagacha, 720p gacha (uzunrog'i kesiladi)",snd:"Ovoz o'chiq",ago0:"hozir",agm:"daq",agh:"soat",agd:"kun",lnk:"Havolani nusxalash",cls:"Yopish",fail:"Reelni yuklab bo'lmadi",nof:"Ruxsat yo'q. Firebase'da firestore.rules ni yangilab Publish bosing"}};
 const RX=k=>((RLT[window.lang]||RLT.en)[k])||RLT.en[k];
-const RL_MAXDUR=30,RL_CH=480*1024,RL_MAXSZ=2900000;
+const RL_MAXDUR=60,RL_CH=480*1024,RL_MAXSZ=30*1024*1024,RL_RAW=12*1024*1024;
+/* v145: видео хранится в Supabase Storage (бесплатно, без Blaze). Ключ publishable — публичный по задумке */
+const SB_URL="https://pgjpmgevsvyuuchvqlca.supabase.co",SB_KEY="sb_publishable_wNSHZEk7cTY-rSykgo1WHQ_l1c68Ouj",SB_BKT="reels";
 const RL={tab:"new",items:[],last:null,more:true,loading:false,io:null,cur:null,muted:false,fl:null,st:{},vurl:new Map(),pend:new Map(),uc:new Map(),uid:null,el:null,feed:null,dp:0,first:null};
 const RLI={
  heart:'<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.4-9.3C1.3 7.9 3.2 4.5 6.6 4.5c2 0 3.6 1.1 5.4 3.2 1.8-2.1 3.4-3.2 5.4-3.2 3.4 0 5.3 3.4 4 6.7-1.9 4.7-9.4 9.3-9.4 9.3z"/></svg>',
@@ -1624,6 +1626,7 @@ async function rlUser(uid){if(UM[uid])return UM[uid];if(RL.uc.has(uid))return RL
 function rlSt(id){return RL.st[id]||(RL.st[id]={lk:false,rp:false,ld:false,busy:false})}
 function rlB2U(b64){const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u}
 async function rlFetch(r){
+ if(r.url)return r.url;
  if(RL.vurl.has(r.id))return RL.vurl.get(r.id);
  if(RL.pend.has(r.id))return RL.pend.get(r.id);
  const p=(async()=>{
@@ -1654,7 +1657,7 @@ async function rlLoad(reset){
   let q=query(collection(db,"reels"),orderBy("ts","desc"),limit(pop?60:12));
   if(!reset&&RL.last)q=query(collection(db,"reels"),orderBy("ts","desc"),startAfter(RL.last),limit(12));
   const s=await getDocs(q);if(s.docs.length)RL.last=s.docs[s.docs.length-1];RL.more=!pop&&s.docs.length>=12;
-  let arr=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>r.uid&&r.n&&!RL.items.some(x=>x.id==r.id));
+  let arr=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>r.uid&&(r.n||r.url)&&!RL.items.some(x=>x.id==r.id));
   if(reset&&RL.first&&RL.tab=="new"){const f=RL.first;RL.first=null;let r=arr.find(x=>x.id==f);if(r)arr=arr.filter(x=>x!==r);else{try{const g=await getDoc(doc(db,"reels",f));if(g.exists())r=Object.assign({id:g.id},g.data())}catch(e){}}if(r)arr.unshift(r)}
   if(pop){const now=Date.now();const sc=r=>((r.lk||0)+2*(r.cm||0)+3*(r.rp||0)+1)/Math.pow((now-(tms(r)||now))/36e5+2,1.2);arr.sort((a,b)=>sc(b)-sc(a))}
   arr.forEach(r=>{RL.items.push(r);RL.feed.append(rlItem(r))});
@@ -1734,7 +1737,7 @@ function rlMenu(r,it){
  add(RX("cls"),()=>{},"cn");o.onclick=e=>{if(e.target==o)close()};o.append(p);document.body.append(o)}
 async function rlDelete(r,it){
  if(!confirm(RX("delq")))return;
- try{await deleteDoc(doc(db,"reels",r.id));for(let i=0;i<(r.n||1);i++)await deleteDoc(doc(db,"rchunks",r.id+"_"+i)).catch(()=>{});
+ try{await deleteDoc(doc(db,"reels",r.id));for(let i=0;i<(r.url?0:(r.n||1));i++)await deleteDoc(doc(db,"rchunks",r.id+"_"+i)).catch(()=>{});
   const nx=it.nextElementSibling||it.previousElementSibling;RL.io.unobserve(it);if(RL.cur===it)RL.cur=null;it.remove();RL.items=RL.items.filter(x=>x!==r);if(nx&&nx.scrollIntoView)nx.scrollIntoView();
   if(!RL.items.length)rlLoad(true)}
  catch(e){toast(e.code=="permission-denied"?RX("nof"):(e.code||RX("fail")),0)}}
@@ -1759,18 +1762,18 @@ function rlComments(r,it){
   catch(e){toast(e.code=="permission-denied"?RX("nof"):(e.code||RX("fail")),0)}finally{sb.disabled=false}};
  sb.onclick=send;inp.onkeydown=e=>{if(e.key=="Enter")send()}}
 
-/* ---------- загрузка: сжатие в браузере (480p, ~450 кбит/с, до 30 с) и хранение кусками в Firestore ---------- */
+/* ---------- загрузка: сжатие в браузере (720p, ~1.5 Мбит/с, до 60 с) и хранение в Supabase Storage ---------- */
 function rlThumb(v){try{const k=Math.min(1,180/Math.max(v.videoWidth,v.videoHeight)),c=document.createElement("canvas");c.width=Math.max(2,Math.round(v.videoWidth*k));c.height=Math.max(2,Math.round(v.videoHeight*k));c.getContext("2d").drawImage(v,0,0,c.width,c.height);
  for(const q of[.6,.45,.3,.2]){const d=c.toDataURL("image/jpeg",q);if(d.length<=28000)return d}}catch(e){}return""}
 function rlEncode(v,dur,onp){return new Promise((res,rej)=>{
  const MR=window.MediaRecorder;if(!MR)return rej(new Error("uns"));
- const k=Math.min(1,480/Math.min(v.videoWidth,v.videoHeight),854/Math.max(v.videoWidth,v.videoHeight)),w=Math.max(2,Math.round(v.videoWidth*k/2)*2),h=Math.max(2,Math.round(v.videoHeight*k/2)*2);
+ const k=Math.min(1,720/Math.min(v.videoWidth,v.videoHeight),1280/Math.max(v.videoWidth,v.videoHeight)),w=Math.max(2,Math.round(v.videoWidth*k/2)*2),h=Math.max(2,Math.round(v.videoHeight*k/2)*2);
  const cv=document.createElement("canvas");cv.width=w;cv.height=h;const cx=cv.getContext("2d");
  if(!cv.captureStream)return rej(new Error("uns"));
  const stream=cv.captureStream(30);let ac=null;
  try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){ac=new AC();const src=ac.createMediaElementSource(v),dst=ac.createMediaStreamDestination();src.connect(dst);dst.stream.getAudioTracks().forEach(t=>stream.addTrack(t));if(ac.state=="suspended")ac.resume()}}catch(e){}
  const mt=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4","video/webm;codecs=vp8,opus","video/webm"].find(t=>MR.isTypeSupported&&MR.isTypeSupported(t));
- let rec;try{rec=new MR(stream,Object.assign(mt?{mimeType:mt}:{},{videoBitsPerSecond:450000,audioBitsPerSecond:48000}))}catch(e){return rej(new Error("uns"))}
+ let rec;try{rec=new MR(stream,Object.assign(mt?{mimeType:mt}:{},{videoBitsPerSecond:1500000,audioBitsPerSecond:96000}))}catch(e){return rej(new Error("uns"))}
  const parts=[];let done=false,raf=0;
  rec.ondataavailable=e=>{if(e.data&&e.data.size)parts.push(e.data)};
  const fin=()=>{if(done)return;done=true;cancelAnimationFrame(raf);v.pause();try{rec.state!="inactive"&&rec.stop()}catch(e){}};
@@ -1781,11 +1784,18 @@ function rlEncode(v,dur,onp){return new Promise((res,rej)=>{
  v.muted=false;v.volume=1;v.currentTime=0;rec.start(250);
  const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{done=true;try{rec.stop()}catch(e){}rej(new Error("bad"))});
  raf=requestAnimationFrame(draw)})}
+function rlSbPut(blob,mime,path,onp){return new Promise((res,rej)=>{
+ const x=new XMLHttpRequest();x.open("POST",SB_URL+"/storage/v1/object/"+SB_BKT+"/"+path);
+ x.setRequestHeader("apikey",SB_KEY);x.setRequestHeader("Authorization","Bearer "+SB_KEY);x.setRequestHeader("x-upsert","false");x.setRequestHeader("Content-Type",mime);x.setRequestHeader("cache-control","max-age=31536000");
+ x.upload.onprogress=e=>{if(e.lengthComputable)onp(e.loaded/e.total)};
+ x.onload=()=>x.status>=200&&x.status<300?res():rej(new Error("sb"+x.status));
+ x.onerror=()=>rej(new Error("net"));x.ontimeout=()=>rej(new Error("net"));x.timeout=300000;x.send(blob)})}
 async function rlPublish(blob,mime,dur,cap,th,onp){
- const id=doc(collection(db,"reels")).id,n=Math.ceil(blob.size/RL_CH);if(n>6||blob.size>RL_MAXSZ)throw new Error("big");
- for(let i=0;i<n;i++){const d=await K_b64(blob.slice(i*RL_CH,(i+1)*RL_CH));
-  await setDoc(doc(db,"rchunks",id+"_"+i),{rid:id,i,uid:me.uid,d,ts:serverTimestamp()});onp((i+1)/(n+1))}
- await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.round(dur*10)/10,sz:blob.size,n,mime,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id}
+ const id=doc(collection(db,"reels")).id;if(blob.size>RL_MAXSZ)throw new Error("big");
+ const ext=/webm/.test(mime)?"webm":"mp4",path=me.uid+"/"+id+"."+ext;
+ await rlSbPut(blob,mime,path,onp);
+ const url=SB_URL+"/storage/v1/object/public/"+SB_BKT+"/"+path;
+ await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.round(dur*10)/10,sz:blob.size,n:0,mime,url,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id}
 function rlUpload(){
  if(E("rlup")||!me)return;rlPauseAll();
  const o=mk("div","rl-ov up"),p=mk("div","rl-us"),h=mk("div","rl-ch"),x=mk("button");x.type="button";x.innerHTML=RLI.x;o.id="rlup";h.append(mk("b",null,RX("up")),x);
@@ -1805,7 +1815,7 @@ function rlUpload(){
    pk.hidden=true;ta.hidden=false;go.hidden=false;nt.hidden=true}};
  go.onclick=async()=>{if(busy||!file)return;busy=true;go.disabled=true;ta.disabled=true;pb.hidden=false;bi.style.width="0%";
   try{let blob,mime;const total=pv.duration||dur;
-   const okRaw=file.size<=RL_MAXSZ&&/^video\/(mp4|webm)$/.test(file.type)&&total<=RL_MAXDUR+.5;
+   const okRaw=file.size<=RL_RAW&&/^video\/(mp4|webm)$/.test(file.type)&&total<=RL_MAXDUR+.5;
    if(okRaw){blob=file;mime=file.type}
    else{st.textContent=RX("p1");const r=await rlEncode(pv,dur,q=>{bi.style.width=Math.round(q*50)+"%"});blob=r.blob;mime=r.mime}
    if(!blob.size||blob.size>RL_MAXSZ)throw new Error("big");
@@ -1814,7 +1824,7 @@ function rlUpload(){
    busy=false;toast(RX("ok"),1);try{pv.pause();URL.revokeObjectURL(pv.src)}catch(e){}o.remove();RL.tab="new";RL.first=id;
    RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}
   catch(e){busy=false;go.disabled=false;ta.disabled=false;pb.hidden=true;try{pv.pause()}catch(_){}
-   pk.hidden=false;go.hidden=true;ta.hidden=true;pv.hidden=true;st.textContent=e.message=="big"?RX("big"):e.message=="uns"?RX("uns"):e.message=="bad"?RX("bad"):(e.code=="permission-denied"?RX("nof"):RX("fail"))}};
+   pk.hidden=false;go.hidden=true;ta.hidden=true;pv.hidden=true;st.textContent=e.message=="big"?RX("big"):e.message=="uns"?RX("uns"):e.message=="bad"?RX("bad"):/^sb4(01|03)$/.test(e.message)?"Supabase: нет прав. Выполни SQL-политику (см. инструкцию)":(e.code=="permission-denied"?RX("nof"):RX("fail"))}};
  o.onclick=e=>{if(e.target==o)close()}}
 /* показ/скрытие экрана */
 window.R.reels=()=>{
@@ -3930,7 +3940,7 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});
 }catch(e){}})();
 </script>
 <style id="kd-reels">
-/* v144: Reels */
+/* v145: Reels */
 body.rl-on{background:#000}body.rl-on .tb,body.rl-on .apk{display:none!important}
 .rl{position:fixed;inset:0;z-index:15;background:#000;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--rlb:calc(env(safe-area-inset-bottom,0px) + 100px)}
 .rl[hidden]{display:none}

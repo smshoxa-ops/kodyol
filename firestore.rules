@@ -207,12 +207,14 @@ service cloud.firestore {
     match /reels/{id} {
       allow read: if signedIn();
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['uid','cap','dur','sz','n','mime','th','lk','cm','rp','ts'])
+        && request.resource.data.keys().hasOnly(['uid','cap','dur','sz','n','mime','url','th','lk','cm','rp','ts'])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.cap is string && request.resource.data.cap.size() <= 150
-        && request.resource.data.dur is number && request.resource.data.dur <= 31
-        && request.resource.data.sz is number && request.resource.data.sz <= 2900000
-        && request.resource.data.n is number && request.resource.data.n >= 1 && request.resource.data.n <= 6
+        && request.resource.data.dur is number && request.resource.data.dur <= 61
+        && request.resource.data.sz is number && request.resource.data.sz <= 31457280
+        && request.resource.data.n is number && request.resource.data.n >= 0 && request.resource.data.n <= 6
+        && (request.resource.data.n >= 1 || ('url' in request.resource.data && request.resource.data.url is string
+            && request.resource.data.url.matches('^https://pgjpmgevsvyuuchvqlca[.]supabase[.]co/storage/v1/object/public/reels/.*')))
         && request.resource.data.mime is string && request.resource.data.mime.size() <= 60
         && request.resource.data.th is string && request.resource.data.th.size() <= 30000
         && request.resource.data.lk == 0 && request.resource.data.cm == 0 && request.resource.data.rp == 0
