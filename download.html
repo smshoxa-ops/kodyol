@@ -93,15 +93,15 @@ a.back{display:block;text-align:center;color:var(--mu);margin-top:22px;font-size
   if (isIOS){ i.classList.add("me"); main.insertBefore(i, a); sub.textContent = "Мы определили: у тебя iPhone";
     document.getElementById("pwaSteps").hidden = false; }
 
-  // Если файла .ipa ещё нет на сервере, кнопка станет неактивной
-  fetch("kodyol.ipa", {method:"HEAD"}).then(function(r){
-    if(!r.ok) throw 0;
-  }).catch(function(){
-    var b = document.getElementById("ipaBtn");
-    b.textContent = "IPA скоро будет";
-    b.setAttribute("aria-disabled","true");
-    document.getElementById("pwaSteps").hidden = false;
-  });
+  // Кнопка IPA отключается только если файла точно нет (ошибка 404)
+  fetch("kodyol.ipa", {method:"HEAD", cache:"no-store"}).then(function(r){
+    if(r.status === 404){
+      var b = document.getElementById("ipaBtn");
+      b.textContent = "IPA скоро будет";
+      b.setAttribute("aria-disabled","true");
+      document.getElementById("pwaSteps").hidden = false;
+    }
+  }).catch(function(){});
 })();
 </script>
 </body></html>
