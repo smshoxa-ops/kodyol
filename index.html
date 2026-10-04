@@ -1478,9 +1478,10 @@ if(document.readyState=="loading")document.addEventListener("DOMContentLoaded",u
 </script><script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,where,orderBy,limit,onSnapshot,serverTimestamp,updateDoc,arrayUnion,writeBatch,getCountFromServer}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{getFirestore,initializeFirestore,persistentLocalCache,persistentMultipleTabManager,collection,addDoc,setDoc,getDoc,getDocs,deleteDoc,doc,query,where,orderBy,limit,onSnapshot,serverTimestamp,updateDoc,arrayUnion,writeBatch,getCountFromServer}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const FBCFG={apiKey:"AIzaSyDErp20oOqNZ_Yh13gm99miyvAzp-gWiH8",authDomain:"kodyol-cc1e7.firebaseapp.com",projectId:"kodyol-cc1e7",storageBucket:"kodyol-cc1e7.firebasestorage.app",messagingSenderId:"127627076102",appId:"1:127627076102:web:bab284f58ba48955fc5987"};const app=initializeApp(FBCFG);
-const auth=getAuth(app),db=getFirestore(app);
+const auth=getAuth(app);let db;try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}catch(e){db=getFirestore(app)}
+const TC={},PF=new Set();/* v143: кэш сообщений по комнатам -> чат открывается мгновенно */
 import{getMessaging,getToken,isSupported}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 /* Ссылка на бесплатный push-сервер (Cloudflare Worker). Пусто = push при закрытом приложении выключен */
 const PUSH_URL="https://late-cell-a0b6kodyol-push.gggggg33333yccy.workers.dev/";
@@ -1520,7 +1521,7 @@ function ntSys(id,name,txt){
  }catch(e){}}
 /* вызывается при каждом обновлении списка чатов */
 function ntIn(s,u){
- const first=ntFirst;ntFirst=false;
+ const first=ntFirst;if(!s.metadata.fromCache)ntFirst=false;
  s.docs.forEach(d=>{
   const c=d.data({serverTimestamps:"estimate"}),t=tms(c),prev=ntSeen[d.id]||0;
   if(t>prev)ntSeen[d.id]=t;
@@ -1618,7 +1619,7 @@ function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
    const m=mk("button",null,T.msgB);m.onclick=()=>{room=[me.uid,uid].sort().join("_");window.show("chat")};pr.append(f,m)}})}
 function openU(id){if(me&&id==me.uid)return window.show("me");vu=id;window.show("user")}
 window.R.me=()=>{const b=E("c-me");if(!me){login(b);return}if((MY.learned||0)!=window.st.dn.length)setDoc(doc(db,"users",me.uid),{learned:window.st.dn.length},{merge:true}).catch(()=>{});prof(b,MY,me.uid,true)};
-window.R.user=()=>{const b=E("c-user");if(!me){login(b);return}if(!UM[vu]){getDoc(doc(db,"users",vu)).then(d=>{if(d.exists()){UM[vu]=d.data();window.R.user()}}).catch(()=>{});return}prof(b,UM[vu],vu,false)};
+window.R.user=()=>{const b=E("c-user");if(!me){login(b);return}if(!UM[vu]){b.innerHTML='<div class="kdm"><i class="kdsp"></i></div>';getDoc(doc(db,"users",vu)).then(d=>{if(d.exists()){UM[vu]=d.data();window.R.user()}}).catch(()=>{});return}prof(b,UM[vu],vu,false)};
 window.R.edit=()=>{const b=E("c-edit");if(!me){login(b);return}b.innerHTML="";
  const h=mk("div","hd"),bk=mk("button",null,"←");bk.onclick=()=>window.show("me");h.append(bk,mk("span",null,T.edt));b.append(h);
  let bv=MY.banner||"";const bw=mk("div","pbanE"),bb=mk("div","pban"),paintB=()=>{bb.innerHTML="";if(bv){const i2=mk("img");i2.src=bv;i2.alt="";bb.append(i2)}};paintB();
@@ -1961,17 +1962,20 @@ window.R.find=()=>{const b=E("c-find");if(!me){login(b);return}if(!E("fq")){b.in
 function inb(){const b=E("ib");if(!b)return;b.innerHTML="";const sr=mk("div","strow");sr.id="strow";b.append(sr);stRowPaint();stRowLoad();b.append(mk("div","hd",T.inb));
  const g=mk("div","rw"),gi=mk("div","av");gi.innerHTML=ico("globe");gi.style.cssText="width:54px;height:54px;font-size:24px;background:var(--bd);color:var(--ac)";g.append(gi);const d=mk("div");d.append(mk("b",null,T.cgen),mk("small",null,T.cnote));g.append(d);g.onclick=()=>{room="general";window.R.chat()};b.append(g);
  inbox.filter(c=>!(c.del&&c.del[me.uid]&&c.del[me.uid].toMillis&&c.del[me.uid].toMillis()>=tms(c))).sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid),rt=c.rd&&c.rd[me.uid]&&c.rd[me.uid].toMillis?c.rd[me.uid].toMillis():0,unr=c.lu&&c.lu!=me.uid&&tms(c)>rt,r=row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()});K_pdot(r,o);if(unr){r.querySelector("b").style.fontWeight="900";const dt=mk("i");dt.style.cssText="margin-left:auto;width:11px;height:11px;border-radius:50%;background:var(--ac);flex:none";r.append(dt)}b.append(r)})}
+function kdPre(){try{const ids=["general"].concat(inbox.slice().sort((a,c)=>tms(c)-tms(a)).slice(0,3).map(c=>c.id));ids.forEach(r=>{if(PF.has(r)||TC[r])return;PF.add(r);getDocs(query(collection(db,"chats",r,"msgs"),orderBy("ts","desc"),limit(30))).then(q=>{if(!TC[r])TC[r]=q}).catch(()=>{})})}catch(e){}}
 function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>{un&&un();room=null;window.R.chat()};h.append(bk);
  if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);const ab=mk("div");ab.style.cssText="position:relative;display:flex;flex:none";ab.append(av(UM[o],36));const dot=mk("i");dot.id="pdot";dot.style.cssText="position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:#2fd84a;border:2px solid var(--bg);display:none";ab.append(dot);const wr=mk("div");wr.style.cssText="display:flex;flex-direction:column;line-height:1.2;min-width:0";const ps=mk("small",null,"");ps.id="pst";ps.style.cssText="font-size:12px;font-weight:400;opacity:.75";wr.append(mk("span",null,nm(UM[o])),ps);h.append(ab,wr);K_pwatch(o);h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button","ha");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button","ha");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};const vb=mk("button","ha");vb.innerHTML=ico("vcam");vb.style.marginLeft="6px";vb.setAttribute("aria-label",K_Cx("v"));vb.onclick=e=>{e.stopPropagation();K_startCall(o,true)};h.append(cl,vb)}
  const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
  const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
- un=onSnapshot(query(collection(db,"chats",room,"msgs"),orderBy("ts","desc"),limit(100)),s=>{m.innerHTML="";let pv=0,lastD=null,pi=null;
+ const rend=s=>{m.innerHTML="";let pv=0,lastD=null,pi=null;
   s.docs.slice().reverse().forEach(x=>{const d=x.data({serverTimestamps:"estimate"}),mine=d.uid==me.uid;if((d.hid||[]).includes(me.uid)||tms(d)<=dl())return;const b=mk("div","m "+(mine?"u":"bt"));const tt=tms(d);if(!pv||tt-pv>900000){m.append(mk("div","tsp",tf(d)));pi=null}pv=tt;lastD=d;b.onclick=()=>b.classList.toggle("sel");
    if(!mine&&room=="general"){const ow=isV(d.uid),nb=mk("b",null,d.name+(ow?" ":"\n"));if(ow){nb.append(VB(14));nb.append(document.createTextNode("\n"))}nb.style.cursor="pointer";nb.onclick=()=>openU(d.uid);b.append(nb)};if(d.text.startsWith("§call|")){const q=d.text.split("|");b.append(K_callCard(q[1],+q[2]||0,mine,tf(d),q[3]=="1"))}else if(d.text.startsWith("§stk|")&&SLM[d.text.slice(5)]){b.classList.add("stk");b.append(slimeEl(d.text.slice(5)))}else if(d.att&&d.att.fid){b.classList.add("att");if(d.att.k=="img")b.classList.add("ai");b.append(K_attCard(d,mine,tf(d),room))}else b.append(document.createTextNode(d.text));b.append(mk("span","lb",tf(d)));
    if(!mine){const f=mk("button","chip");f.innerHTML=ico("flag");f.style.cssText="font-size:11px;padding:2px 8px";f.onclick=()=>{addDoc(collection(db,"reports"),{chat:room,msg:x.id,by:me.uid,txt:String(d.text).slice(0,500),from:d.uid,fn:String(d.name||"").slice(0,30),ts:serverTimestamp()});f.textContent="✓";f.disabled=true};b.append(f)}
    if(room!="general"){const z=mk("button","chip");z.innerHTML=ico("trash");z.style.cssText="font-size:11px;padding:2px 8px;margin-left:6px";z.onclick=()=>updateDoc(doc(db,"chats",room,"msgs",x.id),{hid:arrayUnion(me.uid)}).catch(e=>alert(e.message));b.append(z)}
-   if(mine){m.append(b);pi=null}else{const w=mk("div","mr"),a=av(UM[d.uid]||{name:d.name,photo:d.photo},36);a.style.cursor="pointer";a.onclick=()=>openU(d.uid);if(pi&&pi.uid==d.uid)pi.a.style.visibility="hidden";pi={uid:d.uid,a};w.append(a,b);m.append(w)}});seenEl=null;if(lastD&&lastD.uid==me.uid&&room!="general"){seenEl=mk("div","seen");m.append(seenEl);lastMine={t:tms(lastD)};paintSeen()}window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()},e=>{m.textContent=e.code})}
+   if(mine){m.append(b);pi=null}else{const w=mk("div","mr"),a=av(UM[d.uid]||{name:d.name,photo:d.photo},36);a.style.cursor="pointer";a.onclick=()=>openU(d.uid);if(pi&&pi.uid==d.uid)pi.a.style.visibility="hidden";pi={uid:d.uid,a};w.append(a,b);m.append(w)}});seenEl=null;if(lastD&&lastD.uid==me.uid&&room!="general"){seenEl=mk("div","seen");m.append(seenEl);lastMine={t:tms(lastD)};paintSeen()}window.scrollTo(0,document.body.scrollHeight);if(!s.metadata.hasPendingWrites)mr()};
+ const c0=TC[room],rk=room;if(c0)rend(c0);else m.innerHTML='<div class="kdm"><i class="kdsp"></i></div>';
+ un=onSnapshot(query(collection(db,"chats",rk,"msgs"),orderBy("ts","desc"),limit(100)),s=>{TC[rk]=s;const ks=Object.keys(TC);if(ks.length>10)delete TC[ks[0]];if(room==rk)rend(s)},e=>{if(!c0)m.textContent=e.code})}
 async function send(){const i=E("ci"),t=i.value.trim();if(!t||!me||Date.now()-lt<1000)return;lt=Date.now();i.value="";const id=room;
  try{const mref=await addDoc(collection(db,"chats",id,"msgs"),{uid:me.uid,name:MY.username||me.displayName||"User",photo:MY.photo||"",text:t.slice(0,500),ts:serverTimestamp()});
   if(id!="general"&&PUSH_URL)fetch(PUSH_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({chatId:id,msgId:mref.id}),keepalive:true}).catch(()=>{});
@@ -2410,7 +2414,7 @@ onAuthStateChanged(auth,async u=>{me=u;setTimeout(()=>{syncDr();supWatch()},300)
    const okU=await askUsername(u,r,dn);if(!okU)return}
   um=onSnapshot(r,d=>{MY=d.data()||{};navAv();if(window.curV=="me")window.R.me()});
   getDocs(query(collection(db,"users"),limit(30))).then(sn=>{US=sn.docs.map(d=>({id:d.id,...d.data()}));US.forEach(x=>UM[x.id]=x);const v=window.curV;if(v=="find"&&E("fq"))fl2();if(v=="chat"&&room==null)inb()}).catch(e=>toast(e.code||e.message,0));
-  ntFirst=true;ntSeen={};im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{ntIn(s,u);inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen()},()=>{});
+  ntFirst=true;ntSeen={};im=onSnapshot(query(collection(db,"chats"),where("members","array-contains",u.uid)),s=>{ntIn(s,u);inbox=s.docs.map(d=>({id:d.id,...d.data()}));inbox.forEach(c=>{const o=c.members.find(x=>x!=u.uid);if(o&&!UM[o])getDoc(doc(db,"users",o)).then(d=>{if(d.exists()){UM[o]={id:o,...d.data()};if(window.curV=="chat"&&room==null)inb()}}).catch(()=>{})});if(window.curV=="chat"&&room==null)inb();else if(window.curV=="chat")paintSeen();kdPre()},()=>{});
  }else{proWatch(null);MY={};US=[];UM={};inbox=[];room=null;navAv()}
  window.RV();const q=new URLSearchParams(location.search).get("u");if(u&&q&&!deep){deep=true;openU(q)}});
 navAv();window.show("home");
@@ -3812,52 +3816,10 @@ var d=document,ok=function(t){return !!(t&&t.closest&&t.closest("input,textarea,
 }catch(e){}})();
 </script>
 <style>
-/* v142: зелёная загрузка (кольцо из пульсирующих точек, как в видео) */
-#kdLd{position:fixed;left:0;right:0;top:0;bottom:0;z-index:24;display:flex;align-items:center;justify-content:center;background:rgba(5,8,5,.94);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility 0s linear .28s}
-#kdLd.on{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .2s ease,visibility 0s}
-#kdLd .kdl{position:relative;width:112px;height:112px;transform:scale(.55);opacity:0;transition:transform .45s cubic-bezier(.3,1.5,.5,1),opacity .3s ease}
-#kdLd.on .kdl{transform:scale(1);opacity:1}
-#kdLd .kdr{position:absolute;left:0;top:0;width:100%;height:100%;animation:kdlRot 5.2s linear infinite}
-#kdLd .kdr i{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#7dff3a;background:var(--nbA,#7dff3a);box-shadow:0 0 14px rgba(125,255,58,.6);transform:rotate(var(--a)) translateY(-42px) scale(.3);animation:kdlPulse 1.75s ease-in-out infinite;animation-delay:calc(var(--n)*-.25s)}
-@keyframes kdlRot{0%{transform:rotate(0)}50%{transform:rotate(200deg)}100%{transform:rotate(360deg)}}
-@keyframes kdlPulse{0%,100%{transform:rotate(var(--a)) translateY(-42px) scale(.28)}50%{transform:rotate(var(--a)) translateY(-42px) scale(1)}}
-@media (prefers-reduced-motion:reduce){#kdLd .kdr{animation:none}#kdLd .kdr i{animation-duration:3s}}
+/* v143: маленький скромный спиннер (как в TikTok): тонкая зелёная дуга, без затемнения экрана */
+.kdm{display:flex;justify-content:center;padding:22px 0}
+.kdsp{display:block;width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(125,255,58,.18);border-top-color:#7dff3a;animation:kdsp .7s linear infinite}
+@keyframes kdsp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.kdsp{animation-duration:1.6s}}
 </style>
-<script>
-/* v142: показываем зелёную загрузку вместо чёрного экрана при входе в чат / профиль / поиск и т.д. */
-(function(){try{
-var D=document,ov=null,shownAt=0,tm=0,chk=0,token=0;
-function build(){if(ov||!D.body)return;
- ov=D.createElement("div");ov.id="kdLd";ov.setAttribute("aria-hidden","true");
- var h='<div class="kdl"><div class="kdr">';
- for(var n=0;n<7;n++)h+='<i style="--a:'+(n*360/7)+'deg;--n:'+n+'"></i>';
- h+='</div></div>';ov.innerHTML=h;D.body.appendChild(ov)}
-function showL(){build();if(!ov)return;shownAt=Date.now();ov.classList.add("on")}
-function hideL(){if(!ov)return;var d=Date.now()-shownAt;
- clearTimeout(tm);tm=setTimeout(function(){ov.classList.remove("on")},Math.max(0,420-d))}
-/* ждём, пока контент появится; если он уже есть — загрузку вообще не показываем */
-function watch(ready,delay,max){var my=++token,t0=Date.now(),shown=false;clearInterval(chk);
- function tick(){if(my!==token){return}
-  var ok=false;try{ok=ready()}catch(e){ok=true}
-  var el=Date.now()-t0;
-  if(ok||el>max){clearInterval(chk);if(shown)hideL();return}
-  if(!shown&&el>=delay){shown=true;showL()}}
- chk=setInterval(tick,90);tick()}
-function has(id){var e=D.getElementById(id);return !!(e&&e.children.length)}
-var VIEWS={chat:function(){var th=D.getElementById("th");
-  if(th&&!th.hidden)return has("cm");return has("ib")},
- find:function(){return has("c-find")},me:function(){return has("c-me")},user:function(){return has("c-user")},
- edit:function(){return has("c-edit")},owner:function(){return has("c-owner")},support:function(){return has("c-support")}};
-function wrap(){var s=window.show;if(typeof s!=="function"||s.__kdl)return;
- var w=function(v){var r=s.apply(this,arguments);
-  try{if(VIEWS[v])setTimeout(function(){watch(VIEWS[v],140,6000)},0);else{token++;clearInterval(chk);hideL()}}catch(e){}
-  return r};w.__kdl=1;window.show=w}
-wrap();window.addEventListener("load",function(){setTimeout(wrap,300);setTimeout(wrap,1500)});
-/* открытие переписки: чёрная область сообщений -> загрузка, пока не придут сообщения */
-new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var t=ms[i].target;
- if(t&&t.id==="th"&&!t.hidden){watch(function(){return has("cm")},120,1600);return}}
-}).observe(D,{subtree:true,attributes:true,attributeFilter:["hidden"]});
-window.KdLoad={show:showL,hide:hideL};
-}catch(e){}})();
-</script>
 </body></html>
