@@ -1,0 +1,56 @@
+name: Build iOS IPA
+
+# Запуск вручную: вкладка Actions -> Build iOS IPA -> Run workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Создать iOS-проект (Capacitor)
+        run: |
+          mkdir kodyol-app && cd kodyol-app
+          npm init -y
+          npm i @capacitor/core@7 @capacitor/cli@7 @capacitor/ios@7
+          mkdir www
+          echo '<!doctype html><title>KodYol</title>' > www/index.html
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "uz.kodyol.app",
+            "appName": "KodYol",
+            "webDir": "www",
+            "server": { "url": "https://smshoxa-ops.github.io/kodyol/", "cleartext": false }
+          }
+          EOF
+          npx cap add ios
+          # иконка приложения из icon-512.png
+          ICON="ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png"
+          if [ -f "$ICON" ]; then sips -z 1024 1024 ../icon-512.png --out "$ICON"; fi
+
+      - name: Собрать неподписанный архив
+        working-directory: kodyol-app
+        run: |
+          if [ -d ios/App/App.xcworkspace ]; then BUILD="-workspace ios/App/App.xcworkspace"; else BUILD="-project ios/App/App.xcodeproj"; fi
+          xcodebuild $BUILD -scheme App -configuration Release -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$PWD/build/App.xcarchive" archive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+      - name: Упаковать в kodyol.ipa
+        working-directory: kodyol-app
+        run: |
+          mkdir Payload
+          cp -R build/App.xcarchive/Products/Applications/App.app Payload/
+          zip -qry kodyol.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kodyol-ipa
+          path: kodyol-app/kodyol.ipa
