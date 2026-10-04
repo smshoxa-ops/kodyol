@@ -61,8 +61,5 @@ Google Cloud Console → Credentials → API key проекта → **HTTP refer
 Баннер идёт от края до края и под статус-баром, верхняя шапка KodYol на странице профиля скрыта, кнопки «+» и меню лежат поверх баннера. Аватар наполовину на баннере.
 
 
-## Страница скачивания (v132)
-`download.html`: две карточки, **Android** (`kodyol.apk`) и **iPhone** (`kodyol.ipa`), телефон определяется автоматически. Ссылка «Download app» стоит внизу главной. Файл `kodyol.ipa` положить рядом с `index.html` (пока его нет, кнопка показывает «IPA скоро будет», а для iPhone есть запасной путь «На экран Домой»). Service worker не кэширует `.apk`/`.ipa` и не подменяет кэш главной при открытии других страниц.
-
-## iOS .ipa без Mac (v133)
-GitHub Actions собирает kodyol.ipa: вкладка Actions -> Build iOS IPA -> Run workflow. Файл workflow: `.github/workflows/ios.yml`. Приложение открывает живой сайт (server.url), поэтому обновления сайта доходят без пересборки.
+## Меню скачивания (v136)
+Кнопка в шапке главной открывает меню: Android (`kodyol.apk`) и iPhone (`kodyol.ipa`) + подсказка «На экран Домой». Положите `kodyol.ipa` рядом с `index.html`; пока его нет, пункт iPhone неактивен. Сборка .ipa без Mac: GitHub Actions, `.github/workflows/ios.yml`.
