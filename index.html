@@ -1338,7 +1338,7 @@ window.kdPickLang=function(){return new Promise(function(resolve){
 var HW={"ru": {"b": "ЧТО ТАКОЕ KodYol?", "i": "KodYol — сайт, где программирование изучают шаг за шагом: от первых строк кода до профессии. Работает на телефоне и компьютере.", "f": ["Уроки: Full Stack, Frontend, Backend, Cybersecurity и Data Science", "Тесты после каждого урока, звёзды за результат", "Карточки для быстрого повторения", "Задания с готовыми решениями", "Практика кода: пиши и запускай код прямо на сайте", "AI-учитель отвечает на вопросы по темам", "Чат с другими учениками и уведомления", "Прогресс, серия дней и избранное; 6 языков, светлая и тёмная тема"], "l": "Уроки", "t": "Тесты", "c": "Карточки", "k": "Задания", "z": "заданий"}, "uz": {"b": "KodYol NIMA?", "i": "KodYol — dasturlashni bosqichma-bosqich o'rganish uchun sayt: birinchi kod qatoridan kasbgacha. Telefon va kompyuterda ishlaydi.", "f": ["Darslar: Full Stack, Frontend, Backend, Cybersecurity va Data Science", "Har bir darsdan keyin testlar, natijaga yulduzcha", "Tez takrorlash uchun kartochkalar", "Tayyor yechimli topshiriqlar", "Kod maydoni: kodni saytning o'zida yozing va ishga tushiring", "AI ustoz mavzular bo'yicha savollarga javob beradi", "Boshqa o'quvchilar bilan chat va bildirishnomalar", "Progress, kunlik seriya va sevimlilar; 6 til, och va to'q mavzu"], "l": "Darslar", "t": "Testlar", "c": "Kartochkalar", "k": "Topshiriqlar", "z": "topshiriq"}, "en": {"b": "WHAT IS KodYol?", "i": "KodYol is a site for learning programming step by step, from your first lines of code to a career. It works on phone and computer.", "f": ["Lessons: Full Stack, Frontend, Backend, Cybersecurity and Data Science", "Quizzes after every lesson, with stars for your score", "Flashcards for quick review", "Tasks with ready solutions", "Code playground: write and run code right on the site", "AI tutor that answers questions about the topics", "Chat with other learners and notifications", "Progress, day streak and favorites; 6 languages, light or dark theme"], "l": "Lessons", "t": "Quizzes", "c": "Flashcards", "k": "Tasks", "z": "tasks"}, "zh": {"b": "KodYol 是什么？", "i": "KodYol 是一个循序渐进学习编程的网站，从第一行代码到职业发展。手机和电脑都能使用。", "f": ["课程：Full Stack、Frontend、Backend、Cybersecurity 和 Data Science", "每节课后有测验，按成绩获得星星", "用于快速复习的记忆卡片", "附带参考答案的练习任务", "代码练习：直接在网站上编写并运行代码", "AI 老师解答各个主题的问题", "与其他学习者聊天并接收通知", "学习进度、连续天数和收藏；6 种语言，浅色或深色主题"], "l": "课程", "t": "测验", "c": "卡片", "k": "任务", "z": "个任务"}, "es": {"b": "¿QUÉ ES KodYol?", "i": "KodYol es un sitio para aprender programación paso a paso, desde las primeras líneas de código hasta una profesión. Funciona en móvil y ordenador.", "f": ["Lecciones: Full Stack, Frontend, Backend, Cybersecurity y Data Science", "Pruebas tras cada lección, con estrellas según tu resultado", "Tarjetas para repasar rápido", "Tareas con soluciones listas", "Práctica de código: escribe y ejecuta código en el propio sitio", "Tutor IA que responde preguntas sobre los temas", "Chat con otros estudiantes y notificaciones", "Progreso, racha de días y favoritos; 6 idiomas, tema claro u oscuro"], "l": "Lecciones", "t": "Pruebas", "c": "Tarjetas", "k": "Tareas", "z": "tareas"}, "de": {"b": "WAS IST KodYol?", "i": "KodYol ist eine Seite zum schrittweisen Programmierenlernen, von den ersten Codezeilen bis zum Beruf. Sie läuft auf Handy und Computer.", "f": ["Lektionen: Full Stack, Frontend, Backend, Cybersecurity und Data Science", "Tests nach jeder Lektion, mit Sternen für dein Ergebnis", "Lernkarten zum schnellen Wiederholen", "Aufgaben mit fertigen Lösungen", "Code-Labor: Code direkt auf der Seite schreiben und ausführen", "KI-Tutor, der Fragen zu den Themen beantwortet", "Chat mit anderen Lernenden und Benachrichtigungen", "Fortschritt, Tage-Serie und Favoriten; 6 Sprachen, helles oder dunkles Design"], "l": "Lektionen", "t": "Tests", "c": "Lernkarten", "k": "Aufgaben", "z": "Aufgaben"}},fcc=null,tcc=null;
 function hw(){return HW[lang]||HW.en}
 VS.push("what","fold");
-function pickF(c,sub,fn){Object.keys(CR).forEach(function(k){var b=document.createElement("button");b.className="ls";b.style.margin="10px 0";b.innerHTML='<span class="n">'+ico("folder")+'</span><span class="tx"><b>'+esc(CR[k].n)+'</b><span>'+sub(k)+'</span></span><i class="ar">'+ico("next")+'</i>';b.onclick=function(){fn(k)};c.appendChild(b)})}
+function pickF(c,sub,fn){var PL=[["#5cc23f","#8a6cf0"],["#35b6e8","#5cc23f"],["#ff5fa8","#8a6cf0"],["#f5c542","#ff5fa8"],["#8a6cf0","#35b6e8"]];Object.keys(CR).forEach(function(k,i){var b=document.createElement("button");b.className="ls fpk";b.style.setProperty("--i",i);b.style.setProperty("--s1",PL[i%5][0]);b.style.setProperty("--s2",PL[i%5][1]);b.innerHTML='<span class="n">'+ico("folder")+'</span><span class="tx"><b>'+esc(CR[k].n)+'</b><span>'+sub(k)+'</span></span><i class="ar">'+ico("next")+'</i>';b.onclick=function(){fn(k)};c.appendChild(b)})}
 var _rh=R.home;R.home=function(){_rh();var h=hw();$("whatT").textContent=h.b;$("whatI").innerHTML=gi("ai");$("hg").innerHTML=[["fold","books",h.l],["quiz","quiz",h.t],["flash","flash",h.c],["task","task",h.k],["play","play",T.play],["fav","fav",T.fav],["gloss","gloss",T.gloss],["prog","prog",T.prog],["ai","ai",T.ai]].map(function(a){return '<button class="hb" data-h="'+a[0]+'" aria-label="'+esc(a[2])+'">'+gi(a[1])+'<span>'+esc(a[2])+'</span></button>'}).join("")};
 
 /* ===== Барабан-меню: прокрутка вверх/вниз, выбранный пункт увеличивается ===== */
@@ -2953,6 +2953,40 @@ body:has(#v-fold:not([hidden]) .kd-ch) #bn{display:none}
  75%{transform:translateY(0) scale(.985,.98);filter:blur(0)}
  100%{opacity:1;filter:none;transform:none}}
 
+/* ===== Список папок (Задания и др.): появление как в видео — карточка вылетает из точки с наклоном, из-под неё выезжают «листы» ===== */
+.ls.fpk{--s1:#5cc23f;--s2:#8a6cf0;margin:20px 0 6px;transform-origin:10% 50%;
+ --sh:0 -10px 0 -4px var(--s1),0 -20px 0 -8px var(--s2);
+ box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.07);
+ animation:fpkIn .9s cubic-bezier(.2,.9,.3,1) calc(var(--i,0)*.12s) backwards,fpkSheets .75s cubic-bezier(.3,1.5,.5,1) calc(.55s + var(--i,0)*.12s) backwards}
+.ls.fpk:hover{box-shadow:var(--sh),0 12px 30px rgba(110,255,0,.14)}
+.ls.fpk .n{animation:fpkIc .7s cubic-bezier(.3,1.8,.5,1) calc(.32s + var(--i,0)*.12s) backwards}
+.ls.fpk .tx{animation:fpkTx .6s ease calc(.4s + var(--i,0)*.12s) backwards}
+@keyframes fpkIn{
+ 0%{opacity:0;transform:translate(-4%,30px) scale(.03,.12) rotate(-16deg);filter:blur(10px)}
+ 38%{opacity:1;transform:translate(0,-5px) scale(1.04) rotate(4deg);filter:blur(2px)}
+ 62%{transform:translate(0,1px) scale(.992) rotate(-1.4deg);filter:blur(0)}
+ 100%{opacity:1;transform:none;filter:none}}
+@keyframes fpkSheets{
+ from{box-shadow:0 0 0 -4px var(--s1),0 0 0 -8px var(--s2),inset 0 1px 0 rgba(255,255,255,.07)}}
+@keyframes fpkIc{from{transform:scale(0) rotate(-45deg)}}
+@keyframes fpkTx{from{opacity:0;filter:blur(6px);transform:translateX(-10px)}}
+@media (prefers-reduced-motion:reduce){.ls.fpk,.ls.fpk .n,.ls.fpk .tx{animation:none}}
+
+/* ===== Страницы (Карточки, Тесты, Избранное, Словарь, Прогресс, Практика): открытие — «вырастает из точки», закрытие — «схлопывается в точку» ===== */
+main .kdg{animation:kdGrow .66s cubic-bezier(.2,.85,.25,1) calc(var(--gi,0)*.045s) backwards}
+main .kdo{animation:kdShrink .34s cubic-bezier(.55,0,.85,.4) calc(var(--gi,0)*.022s) both;pointer-events:none}
+@keyframes kdGrow{
+ 0%{opacity:0;transform:scale(.03);filter:blur(8px);border-radius:42px;box-shadow:0 0 0 2px rgba(205,255,165,.95),0 0 30px 6px rgba(120,255,60,.8)}
+ 14%{opacity:1}
+ 55%{transform:scale(1.035);filter:blur(1px);box-shadow:0 0 0 2px rgba(205,255,165,.5),0 0 22px 3px rgba(120,255,60,.4)}
+ 78%{transform:scale(.992);filter:blur(0)}
+ 100%{transform:none;filter:none}}
+@keyframes kdShrink{
+ 0%{opacity:1;transform:none;filter:none}
+ 55%{opacity:1;filter:blur(1px);box-shadow:0 0 0 2px rgba(205,255,165,.6),0 0 22px 3px rgba(120,255,60,.5)}
+ 100%{opacity:0;transform:scale(.03);filter:blur(7px);border-radius:42px;box-shadow:0 0 0 2px rgba(205,255,165,.95),0 0 30px 6px rgba(120,255,60,.8)}}
+@media (prefers-reduced-motion:reduce){main .kdg,main .kdo{animation:none}}
+
 /* ===== Вступительная анимация (неоновый контур кнопки НАЧАТЬ → проявление интерфейса) ===== */
 html.kdi-hold{overflow:hidden}
 html.kdi-hold .tb,html.kdi-hold .hero,html.kdi-hold #whatBtn,html.kdi-hold #bn,html.kdi-hold .wh .wi:not(.on){opacity:0!important}
@@ -3556,5 +3590,34 @@ onAuthStateChanged(auth,async u=>{
 (function(){function pl(){document.querySelectorAll("video.pl").forEach(function(v){if(v.paused){v.muted=true;var r=v.play();if(r&&r.catch)r.catch(function(){})}})}
 var q=0;new MutationObserver(function(){if(q)return;q=1;setTimeout(function(){q=0;pl()},250)}).observe(document.documentElement,{childList:true,subtree:true});
 ["touchstart","click","scroll"].forEach(function(e){addEventListener(e,pl,{passive:true})});setInterval(pl,3000)})();
+
+(function(){
+var ANI={flash:1,quiz:1,play:1,prog:1,fav:1,gloss:1};
+var RM=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+function targets(v){
+ var main=document.getElementById("v-"+v);if(!main)return[];
+ var wrap=main.querySelector(".wrap")||main,out=[];
+ function push(el){if(!el||el.tagName=="SCRIPT"||el.tagName=="STYLE"||el.classList.contains("fpk"))return;out.push(el)}
+ function flat(c){Array.prototype.forEach.call(c.children,function(ch){
+  if(ch.classList.contains("lg")&&ch.children.length>1&&ch.children.length<=45)Array.prototype.forEach.call(ch.children,push);else push(ch)})}
+ Array.prototype.forEach.call(wrap.children,function(ch){if(ch.id=="c-"+v)flat(ch);else push(ch)});
+ return out.filter(function(e){return e.offsetParent!==null})}
+function mark(list,cls){list.forEach(function(e,i){e.style.setProperty("--gi",Math.min(i,16));e.classList.add(cls)})}
+function clear(list,cls){list.forEach(function(e){e.classList.remove(cls);e.style.removeProperty("--gi")})}
+function grow(v){if(RM||!ANI[v])return;var t=targets(v);if(!t.length)return;mark(t,"kdg");setTimeout(function(){clear(t,"kdg")},1700)}
+function install(){
+ var o=window.show;if(typeof o!="function"||o.__kdw)return;
+ var busy=false,pend=null;
+ var w=function(v){
+  var f=window.curV;
+  if(busy){pend=v;return}
+  if(!RM&&f&&f!==v&&ANI[f]){
+   var t=targets(f);
+   if(t.length){busy=true;mark(t,"kdo");
+    setTimeout(function(){clear(t,"kdo");busy=false;var n=pend||v;pend=null;o(n);grow(n)},t.length>10?420:360);return}}
+  o(v);grow(v)};
+ w.__kdw=1;window.show=w}
+window.addEventListener("load",function(){setTimeout(install,60)});
+})();
 </script>
 </body></html>
