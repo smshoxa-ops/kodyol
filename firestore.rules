@@ -198,6 +198,74 @@ service cloud.firestore {
       }
     }
 
+    // Reels: видео хранится кусками в rchunks, метаданные и счётчики в reels
+    function rlStep(k) {
+      return request.resource.data[k] is number
+        && request.resource.data[k] >= 0
+        && request.resource.data[k] - resource.data[k] in [-1, 0, 1];
+    }
+    match /reels/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid','cap','dur','sz','n','mime','th','lk','cm','rp','ts'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.cap is string && request.resource.data.cap.size() <= 150
+        && request.resource.data.dur is number && request.resource.data.dur <= 31
+        && request.resource.data.sz is number && request.resource.data.sz <= 2900000
+        && request.resource.data.n is number && request.resource.data.n >= 1 && request.resource.data.n <= 6
+        && request.resource.data.mime is string && request.resource.data.mime.size() <= 60
+        && request.resource.data.th is string && request.resource.data.th.size() <= 30000
+        && request.resource.data.lk == 0 && request.resource.data.cm == 0 && request.resource.data.rp == 0
+        && request.resource.data.ts == request.time;
+      // счётчики лайков, комментариев и репостов: любой вошедший, только на ±1
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lk','cm','rp'])
+        && rlStep('lk') && rlStep('cm') && rlStep('rp');
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isOwner());
+
+      match /likes/{uid} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['ts']) && request.resource.data.ts == request.time;
+        allow delete: if signedIn() && request.auth.uid == uid;
+        allow update: if false;
+      }
+      match /rps/{uid} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['ts']) && request.resource.data.ts == request.time;
+        allow delete: if signedIn() && request.auth.uid == uid;
+        allow update: if false;
+      }
+      match /cm/{cid} {
+        allow read: if signedIn();
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['uid','text','ts'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 300
+          && request.resource.data.ts == request.time;
+        allow update: if false;
+        allow delete: if signedIn() && (resource.data.uid == request.auth.uid
+          || get(/databases/$(database)/documents/reels/$(id)).data.uid == request.auth.uid
+          || isOwner());
+      }
+    }
+    // куски видео (до ~640 КБ в base64 каждый)
+    match /rchunks/{cid} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['rid','i','uid','d','ts'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.rid is string && request.resource.data.rid.size() <= 40
+        && request.resource.data.i is number && request.resource.data.i >= 0 && request.resource.data.i < 6
+        && cid == request.resource.data.rid + '_' + string(request.resource.data.i)
+        && request.resource.data.d is string && request.resource.data.d.size() <= 800000
+        && request.resource.data.ts == request.time;
+      allow update: if false;
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isOwner());
+    }
+
     // Жалобы: создаёт любой вошедший, читает и закрывает только владелец
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.by == request.auth.uid
