@@ -2873,6 +2873,39 @@ body:has(#v-fold:not([hidden]) .kd-ch) #bn{display:none}
  .kd-btn,.kd-btn::before,.kd-btn::after,.wi .bg,.wi .bg::before,.wi .bg::after,.kd-ban::before,.kd-ban::after,.kd-bk::before,.kd-tk::before,.apk::before,
  .pr button.pri::before,.bar button::before,#c-chat .bar button::before,.pr button.pri::after,.bar button::after,#c-chat .bar button::after,.gbr{animation:none!important}}
 
+/* ===== БОЛЬШОЙ КРУГ СО ЗВЕЗДОЙ: розовый плазменный шар (настоящее видео) ===== */
+.kd-n.cur{--kdc:#ff4fa8;background:transparent;box-shadow:none;overflow:visible}
+.kd-n.cur:active{box-shadow:none}
+.kd-n.cur:before{display:none}
+.kd-n.cur:after{border-color:#c2336f;opacity:.35}
+.kd-n.cur .pl{position:absolute;left:50%;top:50%;width:112px;height:112px;margin:-56px 0 0 -56px;object-fit:cover;pointer-events:none;z-index:0;
+ mix-blend-mode:screen;filter:brightness(.7) saturate(.88);-webkit-mask-image:radial-gradient(circle,#000 62%,transparent 72%);mask-image:radial-gradient(circle,#000 62%,transparent 72%)}
+:root[data-theme="light"] .kd-n.cur .pl{mix-blend-mode:normal;filter:brightness(.8) saturate(.85);-webkit-mask-image:radial-gradient(circle,#000 40%,transparent 41.5%);mask-image:radial-gradient(circle,#000 40%,transparent 41.5%)}
+.kd-n.cur svg{position:relative;z-index:1;filter:drop-shadow(0 0 5px rgba(130,0,70,.85)) drop-shadow(0 1px 1px rgba(90,0,50,.4))}
+
+/* ===== Неоновая анимация кнопок НАЧАТЬ (4 сек, с загрузкой) и ПОНЯТНО (короткая) ===== */
+#kdNeon{position:fixed;inset:0;z-index:2147483000;touch-action:none;-webkit-user-select:none;user-select:none;cursor:wait}
+#kdNeon.out{opacity:0;pointer-events:none;transition:opacity .6s ease}
+#kdNeon .kdh{position:absolute;box-shadow:0 0 0 160vmax rgba(0,0,0,0);transition:box-shadow .35s ease}
+#kdNeon.dim .kdh{box-shadow:0 0 0 160vmax rgba(2,6,3,.9)}
+#kdNeon .kdg{position:absolute;border-radius:50%;pointer-events:none;opacity:0;background:radial-gradient(closest-side,rgba(168,60,255,.5),rgba(240,51,143,.22) 45%,transparent 72%)}
+#kdNeon .kdsv{position:absolute;overflow:visible;pointer-events:none}
+#kdNeon .kdw{position:absolute;pointer-events:none;border:2px solid rgba(255,110,185,.85);box-shadow:0 0 16px rgba(240,51,143,.7),inset 0 0 14px rgba(240,51,143,.35);opacity:0}
+#kdNeon .kdw.go{animation:kdiWave 1s cubic-bezier(.15,.7,.25,1) forwards}
+#kdNeon .kdw.w2.go{animation-delay:.14s}
+.kdn-ld{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:none;opacity:0;animation:kdnIn .5s ease .45s forwards}
+.kdn-row{display:flex;align-items:flex-end;gap:6px}
+.kdn-t{font-weight:800;font-size:16px;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(90deg,#ff8fcb,#fff,#c58bff,#ff8fcb);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:kdnShine 1.8s linear infinite}
+.kdn-dots{display:flex;gap:4px;padding-bottom:5px}
+.kdn-dots i{width:5px;height:5px;border-radius:50%;background:#ff8fcb;box-shadow:0 0 8px #ff3fa4;animation:kdnDot 1.2s ease-in-out infinite}
+.kdn-dots i:nth-child(2){animation-delay:.15s}.kdn-dots i:nth-child(3){animation-delay:.3s}
+.kdn-bar{width:min(220px,60vw);height:5px;border-radius:5px;background:rgba(255,255,255,.12);overflow:hidden;box-shadow:0 0 12px rgba(240,51,143,.35)}
+.kdn-bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#a43cff,#ff3fa4,#ffd0ea);box-shadow:0 0 10px #ff3fa4;animation:kdnFill var(--kdn-d,3.35s) cubic-bezier(.35,.1,.3,1) .35s forwards}
+@keyframes kdnIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes kdnShine{to{background-position:-250% 0}}
+@keyframes kdnDot{0%,80%,100%{transform:translateY(0);opacity:.35}40%{transform:translateY(-6px);opacity:1}}
+@keyframes kdnFill{to{width:100%}}
+
 /* ===== Вступительная анимация (неоновый контур кнопки НАЧАТЬ → проявление интерфейса) ===== */
 html.kdi-hold{overflow:hidden}
 html.kdi-hold .tb,html.kdi-hold .hero,html.kdi-hold #whatBtn,html.kdi-hold #bn,html.kdi-hold .wh .wi:not(.on){opacity:0!important}
@@ -2915,9 +2948,9 @@ html.kdi-go .wh .wi:not(.on){animation:kdiWi .85s cubic-bezier(.2,.9,.3,1) calc(
 var $=function(i){return document.getElementById(i)};
 /* ---------- переводы (ru / en / uz; остальные языки → English) ---------- */
 var I={
-ru:{ask:"Что хочешь изучать?",ask2:"Выбери направление. Его можно сменить в любой момент.",cont:"ПРОДОЛЖИТЬ",prep:"Готовим твой путь…",sec:"Раздел",mod:"Модуль",topics:"тем",lesson:"Урок",start:"НАЧАТЬ",go:"НАЧАТЬ: +{n} XP",again:"ПОВТОРИТЬ: +{n} XP",read:"ЧИТАТЬ КОНСПЕКТ",lockT:"Сначала пройди предыдущий урок",soon:"Скоро будет",chest:"Сундук с наградой",chestOpen:"Нажми, чтобы открыть",chestLock:"Пройди уроки выше, чтобы открыть",chestDone:"Награда уже получена",trophy:"Направление пройдено!",trophyT:"Ты прошёл все уроки. Так держать!",newT:"НОВАЯ ТЕМА",got:"ПОНЯТНО",chk:"ПРОВЕРИТЬ",nx:"ДАЛЕЕ",what:"Что такое «{x}»?",codeQ:"К какой теме относится этот код?",asm:"Соберите код",pairs:"Найдите пары",ok:["Верно!","Отлично!","Супер!","Так держать!","Блестяще!"],no:"Неверно",right:"Правильный ответ:",done:"Урок пройден!",doneS:"Ещё один шаг к профессии",xp:"Опыт",acc:"Точность",hearts:"Сердца",quitT:"Выйти из урока?",quitP:"Весь прогресс этого урока будет потерян.",stay:"ОСТАТЬСЯ",quit:"ВЫЙТИ",dead:"Сердца закончились",deadP:"Ничего страшного — повтори тему и попробуй снова.",retry:"ПОПРОБОВАТЬ СНОВА",hello:"Привет! Я KodBot.",helloP:"Давай начнём твой путь в IT.",streak:"дн. подряд",chg:"Сменить направление",lessons:"уроков",bonus:"Бонус",tracks:{fs:["Full Stack","Сайт целиком: и то, что видно, и то, что внутри"],fe:["Frontend","Всё, что видит пользователь: HTML, CSS, JavaScript, React"],be:["Backend","Серверы, API, базы данных и безопасность"],cy:["Cybersecurity","Защита, пароли, фишинг, сети, шифрование"],ds:["Data Science","Python, данные, графики и машинное обучение"]}},
-en:{ask:"What do you want to learn?",ask2:"Pick a path. You can change it any time.",cont:"CONTINUE",prep:"Preparing your path…",sec:"Section",mod:"Module",topics:"topics",lesson:"Lesson",start:"START",go:"START: +{n} XP",again:"REPEAT: +{n} XP",read:"READ THE NOTES",lockT:"Finish the previous lesson first",soon:"Coming soon",chest:"Reward chest",chestOpen:"Tap to open",chestLock:"Finish the lessons above to unlock",chestDone:"Reward already claimed",trophy:"Path complete!",trophyT:"You finished every lesson. Keep it up!",newT:"NEW TOPIC",got:"GOT IT",chk:"CHECK",nx:"NEXT",what:"What is “{x}”?",codeQ:"Which topic does this code show?",asm:"Build the code",pairs:"Match the pairs",ok:["Correct!","Great!","Awesome!","Nice one!","Brilliant!"],no:"Wrong",right:"Correct answer:",done:"Lesson complete!",doneS:"One more step toward your career",xp:"XP",acc:"Accuracy",hearts:"Hearts",quitT:"Quit the lesson?",quitP:"All progress in this lesson will be lost.",stay:"STAY",quit:"QUIT",dead:"Out of hearts",deadP:"No worries — review the topic and try again.",retry:"TRY AGAIN",hello:"Hi! I'm KodBot.",helloP:"Let's start your journey into IT.",streak:"day streak",chg:"Change path",lessons:"lessons",bonus:"Bonus",tracks:{fs:["Full Stack","The whole site: what users see and what's behind it"],fe:["Frontend","Everything users see: HTML, CSS, JavaScript, React"],be:["Backend","Servers, APIs, databases and security"],cy:["Cybersecurity","Protection, passwords, phishing, networks, crypto"],ds:["Data Science","Python, data, charts and machine learning"]}},
-uz:{ask:"Nimani o'rganmoqchisiz?",ask2:"Yo'nalishni tanlang. Uni istalgan vaqt almashtirish mumkin.",cont:"DAVOM ETISH",prep:"Yo'lingiz tayyorlanmoqda…",sec:"Bo'lim",mod:"Modul",topics:"mavzu",lesson:"Dars",start:"BOSHLASH",go:"BOSHLASH: +{n} XP",again:"TAKRORLASH: +{n} XP",read:"KONSPEKTNI O'QISH",lockT:"Avval oldingi darsni tugating",soon:"Tez orada",chest:"Sovg'a sandig'i",chestOpen:"Ochish uchun bosing",chestLock:"Ochish uchun yuqoridagi darslarni tugating",chestDone:"Sovg'a olingan",trophy:"Yo'nalish tugadi!",trophyT:"Barcha darslarni tugatdingiz. Ofarin!",newT:"YANGI MAVZU",got:"TUSHUNDIM",chk:"TEKSHIRISH",nx:"KEYINGI",what:"«{x}» nima?",codeQ:"Bu kod qaysi mavzuga tegishli?",asm:"Kodni yig'ing",pairs:"Juftliklarni toping",ok:["To'g'ri!","Zo'r!","Ajoyib!","Barakalla!","Alo!"],no:"Noto'g'ri",right:"To'g'ri javob:",done:"Dars tugadi!",doneS:"Kasbga yana bir qadam",xp:"XP",acc:"Aniqlik",hearts:"Yuraklar",quitT:"Darsdan chiqasizmi?",quitP:"Bu darsdagi barcha natija yo'qoladi.",stay:"QOLISH",quit:"CHIQISH",dead:"Yuraklar tugadi",deadP:"Hechqisi yo'q — mavzuni takrorlab, qayta urinib ko'ring.",retry:"QAYTA URINISH",hello:"Salom! Men KodBotman.",helloP:"IT dagi yo'lingizni boshlaymiz.",streak:"kun ketma-ket",chg:"Yo'nalishni almashtirish",lessons:"dars",bonus:"Bonus",tracks:{fs:["Full Stack","Butun sayt: ko'rinadigan va ichki qismi"],fe:["Frontend","Foydalanuvchi ko'radigan hamma narsa: HTML, CSS, JS, React"],be:["Backend","Serverlar, API, ma'lumotlar bazasi va xavfsizlik"],cy:["Cybersecurity","Himoya, parollar, fishing, tarmoq, kriptografiya"],ds:["Data Science","Python, ma'lumotlar, grafiklar va mashinali o'rganish"]}}};
+ru:{ld:"Загрузка",ask:"Что хочешь изучать?",ask2:"Выбери направление. Его можно сменить в любой момент.",cont:"ПРОДОЛЖИТЬ",prep:"Готовим твой путь…",sec:"Раздел",mod:"Модуль",topics:"тем",lesson:"Урок",start:"НАЧАТЬ",go:"НАЧАТЬ: +{n} XP",again:"ПОВТОРИТЬ: +{n} XP",read:"ЧИТАТЬ КОНСПЕКТ",lockT:"Сначала пройди предыдущий урок",soon:"Скоро будет",chest:"Сундук с наградой",chestOpen:"Нажми, чтобы открыть",chestLock:"Пройди уроки выше, чтобы открыть",chestDone:"Награда уже получена",trophy:"Направление пройдено!",trophyT:"Ты прошёл все уроки. Так держать!",newT:"НОВАЯ ТЕМА",got:"ПОНЯТНО",chk:"ПРОВЕРИТЬ",nx:"ДАЛЕЕ",what:"Что такое «{x}»?",codeQ:"К какой теме относится этот код?",asm:"Соберите код",pairs:"Найдите пары",ok:["Верно!","Отлично!","Супер!","Так держать!","Блестяще!"],no:"Неверно",right:"Правильный ответ:",done:"Урок пройден!",doneS:"Ещё один шаг к профессии",xp:"Опыт",acc:"Точность",hearts:"Сердца",quitT:"Выйти из урока?",quitP:"Весь прогресс этого урока будет потерян.",stay:"ОСТАТЬСЯ",quit:"ВЫЙТИ",dead:"Сердца закончились",deadP:"Ничего страшного — повтори тему и попробуй снова.",retry:"ПОПРОБОВАТЬ СНОВА",hello:"Привет! Я KodBot.",helloP:"Давай начнём твой путь в IT.",streak:"дн. подряд",chg:"Сменить направление",lessons:"уроков",bonus:"Бонус",tracks:{fs:["Full Stack","Сайт целиком: и то, что видно, и то, что внутри"],fe:["Frontend","Всё, что видит пользователь: HTML, CSS, JavaScript, React"],be:["Backend","Серверы, API, базы данных и безопасность"],cy:["Cybersecurity","Защита, пароли, фишинг, сети, шифрование"],ds:["Data Science","Python, данные, графики и машинное обучение"]}},
+en:{ld:"Loading",ask:"What do you want to learn?",ask2:"Pick a path. You can change it any time.",cont:"CONTINUE",prep:"Preparing your path…",sec:"Section",mod:"Module",topics:"topics",lesson:"Lesson",start:"START",go:"START: +{n} XP",again:"REPEAT: +{n} XP",read:"READ THE NOTES",lockT:"Finish the previous lesson first",soon:"Coming soon",chest:"Reward chest",chestOpen:"Tap to open",chestLock:"Finish the lessons above to unlock",chestDone:"Reward already claimed",trophy:"Path complete!",trophyT:"You finished every lesson. Keep it up!",newT:"NEW TOPIC",got:"GOT IT",chk:"CHECK",nx:"NEXT",what:"What is “{x}”?",codeQ:"Which topic does this code show?",asm:"Build the code",pairs:"Match the pairs",ok:["Correct!","Great!","Awesome!","Nice one!","Brilliant!"],no:"Wrong",right:"Correct answer:",done:"Lesson complete!",doneS:"One more step toward your career",xp:"XP",acc:"Accuracy",hearts:"Hearts",quitT:"Quit the lesson?",quitP:"All progress in this lesson will be lost.",stay:"STAY",quit:"QUIT",dead:"Out of hearts",deadP:"No worries — review the topic and try again.",retry:"TRY AGAIN",hello:"Hi! I'm KodBot.",helloP:"Let's start your journey into IT.",streak:"day streak",chg:"Change path",lessons:"lessons",bonus:"Bonus",tracks:{fs:["Full Stack","The whole site: what users see and what's behind it"],fe:["Frontend","Everything users see: HTML, CSS, JavaScript, React"],be:["Backend","Servers, APIs, databases and security"],cy:["Cybersecurity","Protection, passwords, phishing, networks, crypto"],ds:["Data Science","Python, data, charts and machine learning"]}},
+uz:{ld:"Yuklanmoqda",ask:"Nimani o'rganmoqchisiz?",ask2:"Yo'nalishni tanlang. Uni istalgan vaqt almashtirish mumkin.",cont:"DAVOM ETISH",prep:"Yo'lingiz tayyorlanmoqda…",sec:"Bo'lim",mod:"Modul",topics:"mavzu",lesson:"Dars",start:"BOSHLASH",go:"BOSHLASH: +{n} XP",again:"TAKRORLASH: +{n} XP",read:"KONSPEKTNI O'QISH",lockT:"Avval oldingi darsni tugating",soon:"Tez orada",chest:"Sovg'a sandig'i",chestOpen:"Ochish uchun bosing",chestLock:"Ochish uchun yuqoridagi darslarni tugating",chestDone:"Sovg'a olingan",trophy:"Yo'nalish tugadi!",trophyT:"Barcha darslarni tugatdingiz. Ofarin!",newT:"YANGI MAVZU",got:"TUSHUNDIM",chk:"TEKSHIRISH",nx:"KEYINGI",what:"«{x}» nima?",codeQ:"Bu kod qaysi mavzuga tegishli?",asm:"Kodni yig'ing",pairs:"Juftliklarni toping",ok:["To'g'ri!","Zo'r!","Ajoyib!","Barakalla!","Alo!"],no:"Noto'g'ri",right:"To'g'ri javob:",done:"Dars tugadi!",doneS:"Kasbga yana bir qadam",xp:"XP",acc:"Aniqlik",hearts:"Yuraklar",quitT:"Darsdan chiqasizmi?",quitP:"Bu darsdagi barcha natija yo'qoladi.",stay:"QOLISH",quit:"CHIQISH",dead:"Yuraklar tugadi",deadP:"Hechqisi yo'q — mavzuni takrorlab, qayta urinib ko'ring.",retry:"QAYTA URINISH",hello:"Salom! Men KodBotman.",helloP:"IT dagi yo'lingizni boshlaymiz.",streak:"kun ketma-ket",chg:"Yo'nalishni almashtirish",lessons:"dars",bonus:"Bonus",tracks:{fs:["Full Stack","Butun sayt: ko'rinadigan va ichki qismi"],fe:["Frontend","Foydalanuvchi ko'radigan hamma narsa: HTML, CSS, JS, React"],be:["Backend","Serverlar, API, ma'lumotlar bazasi va xavfsizlik"],cy:["Cybersecurity","Himoya, parollar, fishing, tarmoq, kriptografiya"],ds:["Data Science","Python, ma'lumotlar, grafiklar va mashinali o'rganish"]}}};
 function t(){return I[window.lang]||I.en}
 function f(s,o){return s.replace(/\{(\w+)\}/g,function(_,k){return o[k]})}
 /* ---------- данные направлений ---------- */
@@ -3061,7 +3094,7 @@ function renderPath(){
    var l=x.l,n=cards(l).length,dn=isDone(l),isCur=l===curL,lock=!n||(!dn&&!isCur),rw=reward(l);
    var ttl=esc(LL[l-1]||"");
    cls=dn?"done":isCur?"cur":"lock";
-   inner='<button class="kd-n '+cls+'" data-l="'+l+'" aria-label="'+ttl+'">'+(dn?SVG_CHECK:lock?SVG_LOCK:SVG_STAR)+'</button>'+(isCur?'<div class="kd-go">'+esc(L.start)+'</div>':"");
+   inner='<button class="kd-n '+cls+'" data-l="'+l+'" aria-label="'+ttl+'">'+(isCur?'<video class="pl" src="plasma.mp4" poster="plasma.jpg" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>':(dn?SVG_CHECK:lock?SVG_LOCK:SVG_STAR))+'</button>';
    if(lock){pop='<div class="kd-pop lk"><h4>'+esc(L.lesson)+' '+(x.i+1)+'</h4><p>'+esc(!n?L.soon:L.lockT)+'</p></div>'}
    else{pop='<div class="kd-pop"><h4>'+esc(L.lesson)+' '+(x.i+1)+' · '+n+' '+esc(L.topics)+'</h4><p>'+ttl+'</p><button class="kd-btn" data-play="'+l+'">'+esc(f(dn?L.again:L.go,{n:dn?Math.max(5,Math.round(rw/2)):rw}))+'</button><button class="kd-btn sec" data-read="'+l+'">'+esc(L.read)+'</button></div>'}
    if(isCur&&!allDone){mas='<div class="kd-mas '+(off>0?"l":"r")+'">'+mascot(86)+'</div>'}
@@ -3094,7 +3127,7 @@ function renderPath(){
    setTimeout(function(){var p=row.querySelector(".kd-pop");if(p){var r=p.getBoundingClientRect();if(r.bottom>innerHeight-100)window.scrollBy({top:r.bottom-innerHeight+120,behavior:"smooth"})}},60)}});
  h.onclick=function(e){
   var b=e.target.closest("[data-play]");
-  if(b){startLesson(+b.dataset.play);return}
+  if(b){var lid=+b.dataset.play;kdNeon(b,{load:true},function(){startLesson(lid)});return}
   b=e.target.closest("[data-read]");
   if(b){cur=+b.dataset.read;openLesson(cur);return}
   b=e.target.closest("[data-claim]");
@@ -3129,6 +3162,72 @@ function build(l){
  return S_}
 /* ---------- плеер урока ---------- */
 var P=null;
+var neonBusy=false;
+function kdNeon(btn,o,done){
+ o=o||{};
+ var rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+ if(neonBusy)return;
+ if(rm||!btn||!btn.getBoundingClientRect){done();return}
+ var rc=btn.getBoundingClientRect();
+ if(rc.width<40||rc.height<20){done();return}
+ neonBusy=true;
+ var NS="http://www.w3.org/2000/svg",P=48,w=rc.width,h=rc.height,W=w+P*2,H=h+P*2;
+ var cs=getComputedStyle(btn),r=Math.min(parseFloat(cs.borderTopLeftRadius)||h/2,h/2);
+ var LD=o.load,DUR=LD?4000:650,TA0=LD?250:0,TA1=LD?1500:450,TW=LD?DUR-450:330;
+ function ease(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
+ function sm(a,b,x){x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)}
+ function lerp(a,b,x){return a+(b-a)*x}
+ var ov=document.createElement("div");ov.id="kdNeon";
+ var hole=document.createElement("div");hole.className="kdh";
+ hole.style.cssText="left:"+rc.left+"px;top:"+rc.top+"px;width:"+w+"px;height:"+h+"px;border-radius:"+r+"px";
+ var gl=document.createElement("div");gl.className="kdg";
+ var gw=w*1.5,gh=h*5.2;gl.style.cssText="left:"+(rc.left+w/2-gw/2)+"px;top:"+(rc.top+h/2-gh/2)+"px;width:"+gw+"px;height:"+gh+"px";
+ var sv=document.createElementNS(NS,"svg");sv.setAttribute("class","kdsv");sv.setAttribute("width",W);sv.setAttribute("height",H);sv.setAttribute("viewBox","0 0 "+W+" "+H);
+ sv.style.cssText="left:"+(rc.left-P)+"px;top:"+(rc.top-P)+"px";
+ var defs=document.createElementNS(NS,"defs");
+ defs.innerHTML='<filter id="kdnb1" filterUnits="userSpaceOnUse" x="0" y="0" width="'+W+'" height="'+H+'"><feGaussianBlur stdDeviation="9"/></filter><filter id="kdnb2" filterUnits="userSpaceOnUse" x="0" y="0" width="'+W+'" height="'+H+'"><feGaussianBlur stdDeviation="3.2"/></filter>';
+ sv.appendChild(defs);
+ var x0=P,y0=P;
+ var d="M"+(x0+w)+" "+(y0+h/2)+" L"+(x0+w)+" "+(y0+h-r)+" A"+r+" "+r+" 0 0 1 "+(x0+w-r)+" "+(y0+h)+" L"+(x0+r)+" "+(y0+h)+" A"+r+" "+r+" 0 0 1 "+x0+" "+(y0+h-r)+" L"+x0+" "+(y0+r)+" A"+r+" "+r+" 0 0 1 "+(x0+r)+" "+y0+" L"+(x0+w-r)+" "+y0+" A"+r+" "+r+" 0 0 1 "+(x0+w)+" "+(y0+r)+" L"+(x0+w)+" "+(y0+h/2);
+ function group(st){var a=[];st.forEach(function(q){var pa=document.createElementNS(NS,"path");pa.setAttribute("d",d);pa.setAttribute("fill","none");pa.setAttribute("stroke",q.c);pa.setAttribute("stroke-width",q.w);pa.setAttribute("stroke-linecap","round");if(q.f)pa.setAttribute("filter","url(#"+q.f+")");pa.setAttribute("data-o",q.o);pa.style.opacity=0;sv.appendChild(pa);a.push(pa)});return a}
+ var A=group([{c:"#a43cff",w:10,o:.7,f:"kdnb1"},{c:"#ff3fa4",w:5,o:.9,f:"kdnb2"},{c:"#ffd0ea",w:2.1,o:1}]);
+ var B=group([{c:"#ff5cb8",w:12,o:.9,f:"kdnb1"},{c:"#ff8fcb",w:5.5,o:1,f:"kdnb2"},{c:"#fff1f9",w:2.6,o:1}]);
+ var Lt=A[0].getTotalLength();
+ function win(g,st,en,op){var len=Math.max(0,Math.min(Lt,en)-Math.max(0,st)),s0=Math.max(0,st);
+  g.forEach(function(pa){if(len<.5||op<=.001){pa.style.opacity=0;return}pa.style.opacity=(op*(+pa.getAttribute("data-o"))).toFixed(3);pa.setAttribute("stroke-dasharray",len.toFixed(1)+" "+(Lt*3));pa.setAttribute("stroke-dashoffset",(-s0).toFixed(1))})}
+ function orbit(g,pos,len,op){g.forEach(function(pa){pa.style.opacity=(op*(+pa.getAttribute("data-o"))).toFixed(3);pa.setAttribute("stroke-dasharray",len.toFixed(1)+" "+(Lt-len).toFixed(1));pa.setAttribute("stroke-dashoffset",(len-pos).toFixed(1))})}
+ var wv1=document.createElement("div"),wv2=document.createElement("div");wv1.className="kdw";wv2.className="kdw w2";
+ [wv1,wv2].forEach(function(e){e.style.cssText="left:"+rc.left+"px;top:"+rc.top+"px;width:"+w+"px;height:"+h+"px;border-radius:"+r+"px;--ws:"+(1+110/w*2).toFixed(2)+";--wy:"+(1+90/h*2).toFixed(2)});
+ ov.appendChild(hole);ov.appendChild(gl);ov.appendChild(sv);ov.appendChild(wv1);ov.appendChild(wv2);
+ if(LD){
+  var ld=document.createElement("div");ld.className="kdn-ld";
+  var below=rc.bottom+34,top=below+60>innerHeight?rc.top-84:below;
+  ld.style.top=top+"px";ld.style.setProperty("--kdn-d",((DUR-650)/1000)+"s");
+  ld.innerHTML='<div class="kdn-row"><span class="kdn-t">'+esc(t().ld||"Загрузка")+'</span><span class="kdn-dots"><i></i><i></i><i></i></span></div><div class="kdn-bar"><i></i></div>';
+  ov.appendChild(ld);ov.classList.add("dim")}
+ ["pointerdown","pointerup","click","touchmove","wheel"].forEach(function(ev){ov.addEventListener(ev,function(e){e.preventDefault();e.stopPropagation()},{passive:false})});
+ document.body.appendChild(ov);
+ snd("pop");
+ var T0=0,fin=false,waved=false;
+ function finish(){if(fin)return;fin=true;
+  try{done()}catch(e){}
+  ov.classList.add("out");setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov);neonBusy=false},LD?800:450)}
+ setTimeout(finish,DUR+700);
+ function frame(now){
+  if(fin)return;
+  if(!T0)T0=now;var tm=now-T0;
+  gl.style.opacity=(.95*sm(TA0,TA0+500,tm)).toFixed(3);
+  var pa=ease(Math.max(0,Math.min(1,(tm-TA0)/(TA1-TA0))));
+  var head=pa*Lt,tail=lerp(.34,1.05,sm(.5,1,pa))*Lt;
+  var dim=LD?(1-.35*sm(TA1,TA1+300,tm)+.35*sm(TW-100,TW+150,tm)):1;
+  if(tm<TA0)win(A,0,0,0);else win(A,head-tail,head,dim);
+  if(LD){
+   if(tm>=TA1-150&&tm<TW+200){var pos=(((tm-(TA1-150))/1100)%1)*Lt;orbit(B,pos,Lt*.24,1)}else win(B,0,0,0)
+  }else if(tm>=TA0+200&&tm<=TA1+250){var pb=ease((tm-TA0-200)/(TA1+50-TA0)),hb=pb*(Lt*1.22),lb=Lt*.22;win(B,hb-lb,hb,1)}else win(B,0,0,0);
+  if(!waved&&tm>=TW){waved=true;wv1.classList.add("go");wv2.classList.add("go")}
+  if(tm>=DUR){finish();return}
+  requestAnimationFrame(frame)}
+ requestAnimationFrame(frame)}
 function startLesson(l){
  if(openRow){openRow.classList.remove("open");openRow=null}
  P={l:l,q:build(l),i:0,hearts:5,ok:0,wrong:0,total:0,sel:null,lock:false,answered:0};
@@ -3146,7 +3245,7 @@ function showStep(){
  var h='<div class="kp-step">';
  if(s.t=="intro"){
   h+='<div class="kp-tag">'+ico("books")+esc(L.newT)+'</div><div class="kp-say">'+mascot(76)+'<div class="bub"><b>'+esc(s.x.t)+'</b>'+esc(s.x.d)+'</div></div>'+(s.x.c?'<div class="kp-card"><pre>'+esc(s.x.c)+'</pre></div>':'');
-  B.innerHTML=h+'</div>';mainBtn(L.got,"g",function(){P.i++;next()});
+  B.innerHTML=h+'</div>';mainBtn(L.got,"g",function(){kdNeon(this,{},function(){P.i++;next()})});
  }else if(s.t=="pick"||s.t=="code"){
   h+='<div class="kp-tag q">'+ico("quiz")+'</div><div class="kp-q">'+esc(s.t=="pick"?f(L.what,{x:s.x.t}):L.codeQ)+'</div>'+(s.t=="code"?'<pre class="kp-code">'+esc(s.x.c)+'</pre>':'');
   s.o.forEach(function(o,i){h+='<div class="kp-o" data-i="'+i+'"><span class="n">'+(i+1)+'</span><span>'+esc(o.s)+'</span></div>'});
@@ -3406,5 +3505,9 @@ onAuthStateChanged(auth,async u=>{
   requestAnimationFrame(frame);
  }
 })();
+
+(function(){function pl(){document.querySelectorAll("video.pl").forEach(function(v){if(v.paused){v.muted=true;var r=v.play();if(r&&r.catch)r.catch(function(){})}})}
+var q=0;new MutationObserver(function(){if(q)return;q=1;setTimeout(function(){q=0;pl()},250)}).observe(document.documentElement,{childList:true,subtree:true});
+["touchstart","click","scroll"].forEach(function(e){addEventListener(e,pl,{passive:true})});setInterval(pl,3000)})();
 </script>
 </body></html>

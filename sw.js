@@ -1,5 +1,5 @@
 // KodYol service worker: офлайн-режим для статических файлов сайта
-const CACHE = "kodyol-v121";
+const CACHE = "kodyol-v127";
 const ASSETS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "logo.png", "favicon.png", "ring-out.mp3", "ring-in.mp3"];
 
 self.addEventListener("install", (e) => {
@@ -22,6 +22,7 @@ self.addEventListener("fetch", (e) => {
   const url = new URL(req.url);
   // Firebase, Google и любые сторонние запросы не трогаем (данные и вход всегда живые)
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.endsWith(".mp4")) return; // видео: Safari требует Range-запросы, отдаём напрямую
 
   // Страницы: сначала сеть (свежая версия), при отсутствии интернета — из кэша
   if (req.mode === "navigate") {
