@@ -1784,18 +1784,30 @@ function rlEncode(v,dur,onp){return new Promise((res,rej)=>{
  v.muted=false;v.volume=1;v.currentTime=0;rec.start(250);
  const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{done=true;try{rec.stop()}catch(e){}rej(new Error("bad"))});
  raf=requestAnimationFrame(draw)})}
-function rlSbPut(blob,mime,path,onp){return new Promise((res,rej)=>{
- const x=new XMLHttpRequest();x.open("POST",SB_URL+"/storage/v1/object/"+SB_BKT+"/"+path);
- x.setRequestHeader("apikey",SB_KEY);x.setRequestHeader("Authorization","Bearer "+SB_KEY);x.setRequestHeader("x-upsert","false");x.setRequestHeader("Content-Type",mime);x.setRequestHeader("cache-control","max-age=31536000");
- x.upload.onprogress=e=>{if(e.lengthComputable)onp(e.loaded/e.total)};
- x.onload=()=>x.status>=200&&x.status<300?res():rej(new Error("sb"+x.status));
- x.onerror=()=>rej(new Error("net"));x.ontimeout=()=>rej(new Error("net"));x.timeout=300000;x.send(blob)})}
+function rlSbPut(blob,mime,path,onp){
+ const go=bearer=>new Promise((res,rej)=>{
+  const x=new XMLHttpRequest();x.open("POST",SB_URL+"/storage/v1/object/"+SB_BKT+"/"+path);
+  x.setRequestHeader("apikey",SB_KEY);if(bearer)x.setRequestHeader("Authorization","Bearer "+SB_KEY);x.setRequestHeader("Content-Type",mime);
+  x.upload.onprogress=e=>{if(e.lengthComputable)onp(e.loaded/e.total)};
+  x.onload=()=>x.status>=200&&x.status<300?res():rej(new Error("sb"+x.status+" "+String(x.responseText||"").slice(0,140)));
+  x.onerror=()=>rej(new Error("sb-net (сеть/CORS)"));x.ontimeout=()=>rej(new Error("sb-timeout"));x.timeout=300000;x.send(blob)});
+ return go(false).catch(e=>/^sb(400|401|403)/.test(e.message)?go(true):Promise.reject(e))}
+async function rlPublishChunks(blob,mime,dur,cap,th,onp){
+ const id=doc(collection(db,"reels")).id,n=Math.max(1,Math.ceil(blob.size/RL_CH));if(n>6||blob.size>2900000)throw new Error("big");
+ for(let i=0;i<n;i++){const d=await K_b64(blob.slice(i*RL_CH,(i+1)*RL_CH));
+  await setDoc(doc(db,"rchunks",id+"_"+i),{rid:id,i,uid:me.uid,d,ts:serverTimestamp()});onp((i+1)/(n+1))}
+ await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.min(30,Math.round(dur*10)/10),sz:blob.size,n,mime,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id}
 async function rlPublish(blob,mime,dur,cap,th,onp){
- const id=doc(collection(db,"reels")).id;if(blob.size>RL_MAXSZ)throw new Error("big");
- const ext=/webm/.test(mime)?"webm":"mp4",path=me.uid+"/"+id+"."+ext;
- await rlSbPut(blob,mime,path,onp);
- const url=SB_URL+"/storage/v1/object/public/"+SB_BKT+"/"+path;
- await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.round(dur*10)/10,sz:blob.size,n:0,mime,url,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id}
+ if(blob.size>RL_MAXSZ)throw new Error("big");
+ const id=doc(collection(db,"reels")).id,ext=/webm/.test(mime)?"webm":"mp4",path=me.uid+"/"+id+"."+ext;
+ try{
+  await rlSbPut(blob,mime,path,onp);
+  const url=SB_URL+"/storage/v1/object/public/"+SB_BKT+"/"+path;
+  await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.round(dur*10)/10,sz:blob.size,n:0,mime,url,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id
+ }catch(e){
+  /* запасной путь: маленькое видео (до 2.9 МБ, до 30 с) храним в Firestore, Supabase не нужен */
+  if(blob.size<=2900000&&dur<=30.5){try{return await rlPublishChunks(blob,mime,dur,cap,th,onp)}catch(e2){e2.message="Supabase: "+String(e.message||e.code||e).slice(0,60)+" | Firestore: "+String(e2.code||e2.message||e2).slice(0,60);throw e2}}
+  throw e}}
 function rlUpload(){
  if(E("rlup")||!me)return;rlPauseAll();
  const o=mk("div","rl-ov up"),p=mk("div","rl-us"),h=mk("div","rl-ch"),x=mk("button");x.type="button";x.innerHTML=RLI.x;o.id="rlup";h.append(mk("b",null,RX("up")),x);
@@ -1817,14 +1829,18 @@ function rlUpload(){
   try{let blob,mime;const total=pv.duration||dur;
    const okRaw=file.size<=RL_RAW&&/^video\/(mp4|webm)$/.test(file.type)&&total<=RL_MAXDUR+.5;
    if(okRaw){blob=file;mime=file.type}
-   else{st.textContent=RX("p1");const r=await rlEncode(pv,dur,q=>{bi.style.width=Math.round(q*50)+"%"});blob=r.blob;mime=r.mime}
+   else{st.textContent=RX("p1");let r=null;
+    try{r=await rlEncode(pv,dur,q=>{bi.style.width=Math.round(q*50)+"%"});if(!r.blob||!r.blob.size)r=null}catch(ee){r=null}
+    if(r){blob=r.blob;mime=r.mime}
+    else if(file.size<=RL_RAW&&/^video\//.test(file.type||"video/mp4")){blob=file;mime=/webm/.test(file.type)?"video/webm":"video/mp4"}
+    else throw new Error("uns")}
    if(!blob.size||blob.size>RL_MAXSZ)throw new Error("big");
    st.textContent=RX("p2");
    const id=await rlPublish(blob,mime,dur,ta.value.trim().slice(0,150),th,q=>{bi.style.width=Math.round(50+q*50)+"%"});
    busy=false;toast(RX("ok"),1);try{pv.pause();URL.revokeObjectURL(pv.src)}catch(e){}o.remove();RL.tab="new";RL.first=id;
    RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}
   catch(e){busy=false;go.disabled=false;ta.disabled=false;pb.hidden=true;try{pv.pause()}catch(_){}
-   pk.hidden=false;go.hidden=true;ta.hidden=true;pv.hidden=true;st.textContent=e.message=="big"?RX("big"):e.message=="uns"?RX("uns"):e.message=="bad"?RX("bad"):/^sb4(01|03)$/.test(e.message)?"Supabase: нет прав. Выполни SQL-политику (см. инструкцию)":(e.code=="permission-denied"?RX("nof"):RX("fail"))}};
+   pk.hidden=false;go.hidden=true;ta.hidden=true;pv.hidden=true;st.textContent=e.message=="big"?RX("big"):e.message=="uns"?RX("uns"):e.message=="bad"?RX("bad"):(e.code=="permission-denied"?RX("nof"):RX("fail")+" ["+String(e.message||e.code||e).slice(0,160)+"]")}};
  o.onclick=e=>{if(e.target==o)close()}}
 /* показ/скрытие экрана */
 window.R.reels=()=>{
