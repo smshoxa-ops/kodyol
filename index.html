@@ -864,7 +864,25 @@ html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
  img,a{-webkit-user-drag:none}
 }
 .is-app .apk,.is-app #dlm{display:none!important}
-</style><style id="kd-ptb">
+</style><style id="kd-pv">
+.pv-t{text-align:center;line-height:1.2}.pv-t small{display:block;opacity:.6;font-size:12px}.pv-t b{font-size:16px}
+.pv-sc{flex:1;overflow-y:auto;padding-bottom:40px}.pva{display:flex;align-items:center;gap:10px;padding:12px 14px}.pva .rl-ca{width:34px;height:34px}
+.pvm{margin-left:auto;border:0;background:none;color:#fff}.pvm svg{width:22px;height:22px;fill:currentColor}
+.pvw2{position:relative}.pvs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.pvs::-webkit-scrollbar{display:none}
+.pvs img{flex:none;width:100%;scroll-snap-align:center;object-fit:cover;max-height:78vh;background:#000;display:block}
+.pvn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border-radius:12px;padding:3px 9px;font-size:12px}
+.pvd{display:flex;justify-content:center;gap:5px;padding:8px 0 0}.pvd i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3)}.pvd i.on{background:#4d7cff}
+.pvb{display:flex;align-items:center;gap:20px;padding:10px 14px}.pvb button{border:0;background:none;color:#fff;display:flex;align-items:center;gap:6px;font:600 14px/1 inherit;padding:4px 0}
+.pvb svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.pvb .lk.on svg{fill:#ff3b5c;stroke:#ff3b5c}.pvb .rp.on{color:#7dff3a}
+.pvcp{padding:2px 14px;line-height:1.4;white-space:pre-wrap}.pvt2{display:block;padding:4px 14px;opacity:.5}
+.pvt{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);z-index:10002;background:#2b2f2a;color:#fff;border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.pvt button{border:0;background:none;color:#7dff3a;font:700 14px/1 inherit}
+.rl-ov.pc{z-index:10001}.pcr{display:flex;gap:10px;padding:10px 0}.pcr .rl-cb{flex:1;min-width:0}.pca button{border:0;background:none;color:rgba(255,255,255,.55);font-size:12px;padding:4px 0}
+.pch{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;font-size:11px;gap:2px;min-width:30px}.pch svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}.pch.on svg{fill:#ff3b5c;stroke:#ff3b5c}
+.pem{display:flex;justify-content:space-around;padding:8px 12px}.pem button{border:0;background:none;font-size:22px}
+.pcth{display:flex;gap:8px;overflow-x:auto;margin:6px 0 14px}.pcth img{height:200px;border-radius:12px;flex:none}
+</style>
+<style id="kd-ptb">
 .ptb{display:flex;margin-top:6px;border-bottom:1px solid rgba(255,255,255,.1)}
 .ptb button{flex:1;border:0;background:none;color:rgba(255,255,255,.5);padding:12px 0;border-bottom:2px solid transparent;display:grid;place-items:center}
 .ptb button.on{color:#fff;border-bottom-color:#fff}
@@ -1879,46 +1897,85 @@ async function rlRun(file,pv,dur,cap,th){
  finally{try{pv.pause();URL.revokeObjectURL(pv.src)}catch(_){}pv.remove()}}
 const tsm=t=>t&&t.toMillis?t.toMillis():0,byTs=(x,y)=>tsm(y.ts)-tsm(x.ts);
 function rlOpen(id){RL.first=id;RL.tab="new";if(RL.el){RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}window.show("reels")}
-function pImg(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);let m=1080,d;for(;;){const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext("2d").drawImage(i,0,0,c.width,c.height);d=c.toDataURL("image/jpeg",.8);if(d.length<=850000||m<400)break;m*=.8}ok(d)};i.onerror=()=>{URL.revokeObjectURL(u);no(new Error("bad"))};i.src=u})}
-function postView(p){const o=mk("div","rlc"),hd=mk("div","rlc-h"),bx=mk("button"),ti=mk("b",null,"");bx.type="button";bx.innerHTML='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';bx.onclick=()=>o.remove();hd.append(bx,ti);
- getDoc(doc(db,"users",p.uid)).then(d=>{if(d.exists())ti.textContent=nm(d.data())}).catch(()=>{});
- const im=mk("img","pv-i");im.src=p.img;const bar=mk("div","pv-b"),rb=mk("button"),ref=doc(db,"reposts",me.uid+"_post_"+p.id);let on=false;rb.type="button";rb.innerHTML=RLI.rp;
- getDoc(ref).then(d=>{on=d.exists();rb.classList.toggle("on",on)}).catch(()=>{});
- rb.onclick=()=>{on=!on;rb.classList.toggle("on",on);(on?setDoc(ref,{uid:me.uid,k:"post",t:p.id,ts:serverTimestamp()}):deleteDoc(ref)).catch(()=>{on=!on;rb.classList.toggle("on",on)})};bar.append(rb);
- if(p.uid==me.uid){const dl=mk("button",null,RC("Удалить","Delete"));dl.type="button";dl.onclick=()=>{if(confirm(RC("Удалить публикацию?","Delete post?")))deleteDoc(doc(db,"posts",p.id)).then(()=>{o.remove();if(window.curV=="me")window.R.me()}).catch(()=>toast(RX("fail"),0))};bar.append(dl)}
- const dt=mk("div","rlc-d");dt.append(im,bar,mk("p","pv-c",p.cap||""));o.append(hd,dt);document.body.append(o)}
+const pimgs=p=>p.imgs&&p.imgs.length?p.imgs:[p.img],BK='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';
+const pAgo=t=>{const m=tsm(t);if(!m)return RC("только что","just now");const s=(Date.now()-m)/1000;return s<60?RC("только что","just now"):s<3600?Math.floor(s/60)+RC(" мин. назад","m ago"):s<86400?Math.floor(s/3600)+RC(" ч. назад","h ago"):Math.floor(s/86400)+RC(" дн. назад","d ago")};
+function pImg(f,m){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext("2d").drawImage(i,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.78))};i.onerror=()=>{URL.revokeObjectURL(u);no(new Error("bad"))};i.src=u})}
+async function pImgs(fs){fs=[...fs].slice(0,5);let m=1080;for(;;){const a=[];for(const f of fs)a.push(await pImg(f,m));if(a.reduce((n,x)=>n+x.length,0)<=880000||m<360)return a;m=Math.round(m*.78)}}
+function pCm(p,cnt){
+ if(E("pcm"))return;const o=mk("div","rl-ov cmo pc"),pn=mk("div","rl-cs"),h=mk("div","rl-ch"),x=mk("button"),ls=mk("div","rl-cl"),em=mk("div","pem"),f=mk("div","rl-cf"),inp=mk("input"),sb=mk("button",null,"➤");
+ o.id="pcm";x.type=sb.type="button";x.innerHTML=RLI.x;h.append(mk("b",null,RC("Комментарии","Comments")),x);inp.maxLength=300;inp.placeholder=RC("Оставьте комментарий…","Add a comment…");
+ ["❤️","🙌","🔥","👏","😢","😍","😮","😂"].forEach(e=>{const b=mk("button",null,e);b.type="button";b.onclick=()=>{inp.value+=e;inp.focus()};em.append(b)});
+ f.append(av(MY,32),inp,sb);pn.append(h,ls,em,f);o.append(pn);document.body.append(o);
+ const close=()=>o.remove();x.onclick=close;o.onclick=e=>{if(e.target==o)close()};
+ const row=(id,c,liked)=>{const r=mk("div","pcr"),ab=mk("div","rl-ca"),bd=mk("div","rl-cb"),hd=mk("div","rl-cn"),sl=mk("span",null,"…"),tx=mk("div","rl-ct",c.text||""),ac=mk("div","pca"),rp=mk("button",null,RC("Ответить","Reply")),hb=mk("button","pch"),hn=mk("small");
+  let n=c.lk||0,on=liked;const pt=()=>{hb.classList.toggle("on",on);hn.textContent=n>0?rlN(n):""};hb.type=rp.type="button";hb.innerHTML=RLI.heart;hb.append(hn);pt();
+  hb.onclick=async()=>{on=!on;n=Math.max(0,n+(on?1:-1));pt();try{const w=writeBatch(db),ref=doc(db,"posts",p.id,"cm",id,"cl",me.uid);if(on)w.set(ref,{ts:serverTimestamp()});else w.delete(ref);w.update(doc(db,"posts",p.id,"cm",id),{lk:increment(on?1:-1)});await w.commit()}catch(e){on=!on;n=Math.max(0,n+(on?1:-1));pt();toast(RX("fail"),0)}};
+  rp.onclick=()=>{inp.value="@"+sl.textContent+" ";inp.focus()};
+  hd.append(sl,mk("small",null," "+pAgo(c.ts)));ac.append(rp);bd.append(hd,tx,ac);r.append(ab,bd,hb);ls.append(r);
+  rlUser(c.uid).then(u=>{ab.append(av(u,32));sl.textContent=nm(u)})};
+ const load=async()=>{ls.innerHTML="";try{const s=await getDocs(query(collection(db,"posts",p.id,"cm"),orderBy("ts","desc"),limit(60)));
+  if(!s.docs.length){ls.append(mk("p","rl-no",RC("Комментариев пока нет","No comments yet")));return}
+  const ms=await Promise.all(s.docs.map(d=>getDoc(doc(db,"posts",p.id,"cm",d.id,"cl",me.uid)).then(l=>l.exists()).catch(()=>false)));
+  s.docs.forEach((d,i)=>row(d.id,d.data(),ms[i]))}catch(e){ls.append(mk("p","rl-no",RX("fail")))}};
+ sb.onclick=async()=>{const t=inp.value.trim();if(!t)return;inp.value="";sb.disabled=true;
+  try{const w=writeBatch(db);w.set(doc(collection(db,"posts",p.id,"cm")),{uid:me.uid,text:t.slice(0,300),lk:0,ts:serverTimestamp()});w.update(doc(db,"posts",p.id),{cm:increment(1)});await w.commit();p.cm=(p.cm||0)+1;cnt(p.cm);await load()}
+  catch(e){toast(e.code=="permission-denied"?RX("nof"):RX("fail"),0)}sb.disabled=false};
+ inp.onkeydown=e=>{if(e.key=="Enter")sb.click()};load()}
+function postView(list,idx){
+ const o=mk("div","rlc"),hd=mk("div","rlc-h"),bx=mk("button"),ti=mk("div","pv-t"),sub=mk("small");bx.type="button";bx.innerHTML=BK;bx.onclick=()=>o.remove();ti.append(mk("b",null,RC("Публикации","Posts")),sub);hd.append(bx,ti);
+ rlUser(list[0].uid).then(u=>{sub.textContent=nm(u)});const sc=mk("div","pv-sc");o.append(hd,sc);document.body.append(o);
+ const card=p=>{const c=mk("div","pvc"),au=mk("div","pva"),ab=mk("div","rl-ca"),an=mk("b",null,"…"),im=pimgs(p),car=mk("div","pvs"),wr=mk("div","pvw2");
+  rlUser(p.uid).then(u=>{ab.append(av(u,34));an.textContent=nm(u);cpn.textContent=nm(u)+" ";ab.onclick=an.onclick=()=>{o.remove();openU(p.uid)}});
+  au.append(ab,an);
+  if(p.uid==me.uid){const mn=mk("button","pvm");mn.type="button";mn.innerHTML=RLI.dots;mn.onclick=()=>{if(confirm(RC("Удалить публикацию?","Delete post?")))deleteDoc(doc(db,"posts",p.id)).then(()=>{c.remove();if(!sc.children.length){o.remove()}if(window.curV=="me")window.R.me()}).catch(()=>toast(RX("fail"),0))};au.append(mn)}
+  im.forEach(s=>{const i=mk("img");i.src=s;i.draggable=false;car.append(i)});wr.append(car);c.append(au,wr);
+  if(im.length>1){const cn=mk("span","pvn","1/"+im.length),dd=mk("div","pvd");im.forEach((_,k)=>dd.append(mk("i",k?"":"on")));wr.append(cn);
+   car.onscroll=()=>{const k=Math.round(car.scrollLeft/car.clientWidth);cn.textContent=(k+1)+"/"+im.length;[...dd.children].forEach((d,j)=>d.classList.toggle("on",j==k))};c.append(dd)}
+  const ac=mk("div","pvb"),bt=(ic,cl)=>{const b=mk("button",cl);b.type="button";b.innerHTML=ic;const s=mk("span");b.append(s);ac.append(b);return[b,s]};
+  const[lb,ls]=bt(RLI.heart,"lk"),[cb,cs]=bt(RLI.cm,"cm"),[rb,rs]=bt(RLI.rp,"rp"),[sb]=bt(RLI.snd,"sn");
+  let lk=false,rp=false;const refL=doc(db,"posts",p.id,"likes",me.uid),refR=doc(db,"reposts",me.uid+"_post_"+p.id),n0=v=>v>0?rlN(v):"";
+  const pt=()=>{lb.classList.toggle("on",lk);rb.classList.toggle("on",rp);ls.textContent=n0(p.lk);cs.textContent=n0(p.cm);rs.textContent=n0(p.rp)};pt();
+  Promise.all([getDoc(refL),getDoc(refR)]).then(([a,b])=>{lk=a.exists();rp=b.exists();pt()}).catch(()=>{});
+  const undo=()=>{const t=mk("div","pvt");t.append(mk("span",null,RC("Репост сделан","Reposted")));const b=mk("button",null,RC("Отменить","Undo"));b.type="button";b.onclick=()=>{t.remove();tog("rp")};t.append(b);document.body.append(t);setTimeout(()=>t.remove(),4000)};
+  const tog=async k=>{const L=k=="lk",on=!(L?lk:rp),d=on?1:-1;if(L)lk=on;else rp=on;p[k]=Math.max(0,(p[k]||0)+d);pt();
+   try{const w=writeBatch(db),ref=L?refL:refR;if(on)w.set(ref,L?{ts:serverTimestamp()}:{uid:me.uid,k:"post",t:p.id,ts:serverTimestamp()});else w.delete(ref);w.update(doc(db,"posts",p.id),{[k]:increment(d)});await w.commit();if(!L&&on)undo()}
+   catch(e){if(L)lk=!on;else rp=!on;p[k]=Math.max(0,p[k]-d);pt();toast(e.code=="permission-denied"?RX("nof"):RX("fail"),0)}};
+  lb.onclick=()=>tog("lk");rb.onclick=()=>tog("rp");wr.ondblclick=()=>{if(!lk)tog("lk")};cb.onclick=()=>pCm(p,v=>{p.cm=v;pt()});
+  sb.onclick=()=>{const u=location.origin+location.pathname;if(navigator.share)navigator.share({title:"KodYol",text:p.cap||"",url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}toast(RX("cp"),1)}};
+  const cp=mk("div","pvcp"),cpn=mk("b",null,"");cp.append(cpn,document.createTextNode(p.cap||""));c.append(ac,cp,mk("small","pvt2",pAgo(p.ts)));return c};
+ const cards=list.map(card);sc.append(...cards);requestAnimationFrame(()=>cards[idx]&&cards[idx].scrollIntoView())}
 function pTabs(box,uid,own){
  const bar=mk("div","ptb"),body=mk("div","ptc"),S='<svg viewBox="0 0 24 24">',ic=[S+'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',S+'<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg>',RLI.rp];
- const tile=(bg,fn,txt,sq)=>{const t=mk("button","rlg-i"+(sq?" sq":""));t.type="button";if(bg)t.style.backgroundImage='url("'+bg+'")';if(txt)t.append(mk("span",null,txt));t.onclick=fn;return t};
+ const tile=(bg,fn,txt,sq,multi)=>{const t=mk("button","rlg-i"+(sq?" sq":""));t.type="button";if(bg)t.style.backgroundImage='url("'+bg+'")';if(txt)t.append(mk("span",null,txt));if(multi)t.append(mk("em",null,"❐"));t.onclick=fn;return t};
  const grid=()=>{const g=mk("div","rlg");body.append(g);return g},empty=()=>body.append(mk("div","pte",RC("Пока пусто","Nothing yet")));
  const load=async i=>{window.PTAB=i;[...bar.children].forEach((b,k)=>b.classList.toggle("on",k==i));body.innerHTML="";const tk=++pTabs.k;
   try{
    if(i==0){const s=await getDocs(query(collection(db,"posts"),where("uid","==",uid),limit(30)));if(tk!=pTabs.k)return;
-    const a=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(p=>own||p.aud!="me").sort(byTs);if(!a.length)return empty();const g=grid();a.forEach(p=>g.append(tile(p.img,()=>postView(p),"",1)))}
+    const a=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(p=>own||p.aud!="me").sort(byTs);if(!a.length)return empty();const g=grid();a.forEach((p,k)=>g.append(tile(pimgs(p)[0],()=>postView(a,k),"",1,pimgs(p).length>1)))}
    else if(i==1){await rlGrid(body,uid,own);if(tk==pTabs.k&&!body.children.length)empty()}
    else{const s=await getDocs(query(collection(db,"reposts"),where("uid","==",uid),limit(30))),rs=s.docs.map(d=>d.data()).sort(byTs);
     const ts=await Promise.all(rs.map(r=>getDoc(doc(db,r.k=="post"?"posts":"reels",r.t)).then(d=>d.exists()?Object.assign({id:d.id,k:r.k},d.data()):null).catch(()=>null)));
     if(tk!=pTabs.k)return;const a=ts.filter(x=>x&&(x.aud!="me"||x.uid==me.uid));if(!a.length)return empty();const g=grid();
-    a.forEach(x=>g.append(x.k=="post"?tile(x.img,()=>postView(x),"",1):tile(x.th,()=>rlOpen(x.id),"▶")))}
+    a.forEach(x=>g.append(x.k=="post"?tile(pimgs(x)[0],()=>postView([x],0),"",1,pimgs(x).length>1):tile(x.th,()=>rlOpen(x.id),"▶")))}
   }catch(e){if(tk==pTabs.k){body.innerHTML="";empty()}}};
  ic.forEach((s,i)=>{const b=mk("button");b.type="button";b.innerHTML=s;b.onclick=()=>load(i);bar.append(b)});box.append(bar,body);load(window.PTAB||0)}
 pTabs.k=0;
 function postCreate(){
  if(E("rlup")||!me)return;if(RL.upl&&!RL.upl.err){toast(RC("Идёт публикация…","Posting in progress…"),0);return}
  const o=mk("div","rlc");o.id="rlup";const hd=mk("div","rlc-h"),bx=mk("button");bx.type="button";bx.innerHTML=RLI.x;bx.onclick=()=>o.remove();hd.append(bx,mk("b",null,RC("Новая публикация","New post")));
- const fi=mk("input");fi.type="file";fi.accept="image/*";fi.hidden=true;
- const pk=mk("button","rlc-pk");pk.type="button";pk.innerHTML=RLI.cam+"<b>"+RC("Выбрать фото","Choose photo")+"</b>";pk.onclick=()=>fi.click();
- const dt=mk("div","rlc-d"),im=mk("img","pv-i"),ta=mk("textarea");im.style.cssText="max-height:42vh;object-fit:contain;margin:6px auto 14px";ta.maxLength=150;ta.rows=3;ta.placeholder=RC("Добавьте подпись…","Add a caption…");
+ const fi=mk("input");fi.type="file";fi.accept="image/*";fi.multiple=true;fi.hidden=true;
+ const pk=mk("button","rlc-pk");pk.type="button";pk.innerHTML=RLI.cam+"<b>"+RC("Выбрать фото","Choose photos")+"</b><span>"+RC("до 5 фото","up to 5 photos")+"</span>";pk.onclick=()=>fi.click();
+ const dt=mk("div","rlc-d"),th=mk("div","pcth"),ta=mk("textarea");ta.maxLength=150;ta.rows=3;ta.placeholder=RC("Добавьте подпись…","Add a caption…");
  const hb=mk("button","rlc-chip","# "+RC("Хэштеги","Hashtags"));hb.type="button";hb.onclick=()=>{ta.value=(ta.value+(ta.value&&!/\s$/.test(ta.value)?" ":"")+"#").slice(0,150);ta.focus()};
  const au=mk("div","rlc-au"),seg=mk("div","rlc-seg");let aud="all";au.append(mk("span",null,RC("Аудитория","Audience")));
  [["all",RC("Все","Everyone")],["me",RC("Только я","Only me")]].forEach(([k,l])=>{const b=mk("button",k=="all"?"on":"",l);b.type="button";b.onclick=()=>{aud=k;seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x==b))};seg.append(b)});au.append(seg);
- const st=mk("p","rl-st"),sh=mk("button","rlc-sh",RC("Поделиться","Share")),ft=mk("div","rlc-f");sh.type="button";ft.append(sh);dt.append(im,ta,hb,au,st);dt.hidden=ft.hidden=true;
+ const sh=mk("button","rlc-sh",RC("Поделиться","Share")),ft=mk("div","rlc-f");sh.type="button";ft.append(sh);dt.append(th,ta,hb,au);dt.hidden=ft.hidden=true;
  const md=mk("div","rlc-md"),mp=mk("button","on",RC("ПУБЛИКАЦИЯ","POST")),m1=mk("button",null,RC("ИСТОРИЯ","STORY")),m2=mk("button",null,"REELS");mp.type=m1.type=m2.type="button";m1.onclick=()=>{o.remove();storyCam()};m2.onclick=()=>{o.remove();rlUpload()};md.append(mp,m1,m2);
- o.append(hd,pk,dt,md,ft,fi);document.body.append(o);let img="";
- fi.onchange=async()=>{const f=fi.files[0];fi.value="";if(!f)return;try{img=await pImg(f);im.src=img;pk.hidden=md.hidden=true;dt.hidden=ft.hidden=false;st.textContent=""}catch(e){toast(RX("bad"),0)}};
- sh.onclick=async()=>{if(!img)return;const cap=ta.value.trim().slice(0,150),x={uid:me.uid,cap,img,ts:serverTimestamp()};if(aud=="me")x.aud="me";o.remove();RL.upl={th:img,p:.4};window.show("me");rlProgPaint();
+ o.append(hd,pk,dt,md,ft,fi);document.body.append(o);let imgs=[];
+ fi.onchange=async()=>{const fs=fi.files;if(!fs.length)return;pk.disabled=true;try{imgs=await pImgs(fs);th.innerHTML="";imgs.forEach(s=>{const i=mk("img");i.src=s;th.append(i)});pk.hidden=md.hidden=true;dt.hidden=ft.hidden=false}catch(e){toast(RX("bad"),0)}pk.disabled=false;fi.value=""};
+ sh.onclick=async()=>{if(!imgs.length)return;const x={uid:me.uid,cap:ta.value.trim().slice(0,150),img:imgs[0],lk:0,cm:0,rp:0,ts:serverTimestamp()},tb=imgs[0];if(imgs.length>1)x.imgs=imgs;if(aud=="me")x.aud="me";o.remove();RL.upl={th:tb,p:.4};window.show("me");rlProgPaint();
   try{await setDoc(doc(collection(db,"posts")),x);RL.upl=null;window.PTAB=0;toast(RC("Опубликовано","Posted"),1);if(window.curV=="me")window.R.me();else rlProgPaint()}
-  catch(e){RL.upl={th:img,err:e.code=="permission-denied"?RX("nof"):RX("fail")+" ["+String(e.code||e.message).slice(0,100)+"]"};rlProgPaint()}}}
+  catch(e){RL.upl={th:tb,err:e.code=="permission-denied"?RX("nof"):RX("fail")+" ["+String(e.code||e.message).slice(0,100)+"]"};rlProgPaint()}}}
 function rlRepost(r,it){rlToggleSub(r,it,"rps","rp","rp");setTimeout(()=>{const ref=doc(db,"reposts",me.uid+"_reel_"+r.id);(rlSt(r.id).rp?setDoc(ref,{uid:me.uid,k:"reel",t:r.id,ts:serverTimestamp()}):deleteDoc(ref)).catch(()=>{})},400)}
 /* v148: «+» в профиле → выбор видео → подпись, хештеги, аудитория → «Поделиться» → загрузка видна в профиле */
 function rlUpload(){

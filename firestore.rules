@@ -199,6 +199,11 @@ service cloud.firestore {
     }
 
     // Reels: видео хранится кусками в rchunks, метаданные и счётчики в reels
+    function pStep(k) {
+      return !(k in request.resource.data) || (request.resource.data[k] is number
+        && request.resource.data[k] >= 0
+        && request.resource.data[k] - resource.data.get(k, 0) in [-1, 0, 1]);
+    }
     function rlStep(k) {
       return request.resource.data[k] is number
         && request.resource.data[k] >= 0
@@ -207,13 +212,51 @@ service cloud.firestore {
     match /posts/{id} {
       allow read: if signedIn();
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['uid','cap','img','ts','aud'])
+        && request.resource.data.keys().hasOnly(['uid','cap','img','imgs','lk','cm','rp','ts','aud'])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.cap is string && request.resource.data.cap.size() <= 150
         && request.resource.data.img is string && request.resource.data.img.size() <= 900000
+        && (!('imgs' in request.resource.data) || (request.resource.data.imgs is list && request.resource.data.imgs.size() >= 1 && request.resource.data.imgs.size() <= 5))
         && (!('aud' in request.resource.data) || request.resource.data.aud == 'me')
+        && (!('lk' in request.resource.data) || request.resource.data.lk == 0)
+        && (!('cm' in request.resource.data) || request.resource.data.cm == 0)
+        && (!('rp' in request.resource.data) || request.resource.data.rp == 0)
         && request.resource.data.ts == request.time;
-      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lk','cm','rp'])
+        && pStep('lk') && pStep('cm') && pStep('rp');
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isOwner());
+
+      match /likes/{u} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.auth.uid == u
+          && request.resource.data.keys().hasOnly(['ts']) && request.resource.data.ts == request.time;
+        allow delete: if signedIn() && request.auth.uid == u;
+        allow update: if false;
+      }
+      match /cm/{cid} {
+        allow read: if signedIn();
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['uid','text','lk','ts'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 300
+          && (!('lk' in request.resource.data) || request.resource.data.lk == 0)
+          && request.resource.data.ts == request.time;
+        allow update: if signedIn()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lk'])
+          && pStep('lk');
+        allow delete: if signedIn() && (resource.data.uid == request.auth.uid
+          || get(/databases/$(database)/documents/posts/$(id)).data.uid == request.auth.uid
+          || isOwner());
+        match /cl/{u} {
+          allow read: if signedIn();
+          allow create: if signedIn() && request.auth.uid == u
+            && request.resource.data.keys().hasOnly(['ts']) && request.resource.data.ts == request.time;
+          allow delete: if signedIn() && request.auth.uid == u;
+          allow update: if false;
+        }
+      }
     }
     match /reposts/{id} {
       allow read: if signedIn();
