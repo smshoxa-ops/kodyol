@@ -864,7 +864,38 @@ html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
  img,a{-webkit-user-drag:none}
 }
 .is-app .apk,.is-app #dlm{display:none!important}
-</style></head><body><div id="kdIntro" style="position:fixed;inset:0;z-index:2147483000;background:#000;touch-action:none"></div>
+</style><style id="kd-rlc">
+.rlc{position:fixed;inset:0;z-index:9999;background:#0b0f0a;color:#fff;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.rlc-h{display:flex;align-items:center;justify-content:center;position:relative;height:56px;font-size:17px;flex:none}
+.rlc-h button{position:absolute;left:12px;top:8px;width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center}
+.rlc-h svg,.rlc-pk svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rlc-pk{margin:24px 18px;flex:1;max-height:340px;border:1.5px dashed rgba(255,255,255,.3);border-radius:18px;background:rgba(255,255,255,.05);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font:inherit}
+.rlc-pk svg{width:42px;height:42px}.rlc-pk b{font-size:17px}.rlc-pk span{font-size:13px;opacity:.6}
+.rlc-md{margin-top:auto;display:flex;justify-content:center;gap:10px;padding:14px 0 calc(env(safe-area-inset-bottom,0px) + 18px)}
+.rlc-md button{border:0;background:none;color:rgba(255,255,255,.55);font:600 13px/1 inherit;letter-spacing:.06em;padding:9px 16px;border-radius:99px}
+.rlc-md button.on{background:rgba(255,255,255,.16);color:#fff}
+.rlc [hidden]{display:none!important}
+.rlc-d{flex:1;overflow:auto;padding:4px 18px}
+.rlc-pv{display:block;margin:6px auto 14px;width:150px;aspect-ratio:9/16;object-fit:cover;border-radius:16px;background:#000}
+.rlc-hid{position:fixed;right:0;bottom:0;width:2px;height:2px;opacity:.01;pointer-events:none}
+.rlc-d textarea{width:100%;box-sizing:border-box;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.14);color:#fff;font:400 16px/1.4 inherit;resize:none;outline:none;padding:6px 0 12px}
+.rlc-chip{margin:14px 0;border:0;border-radius:12px;background:rgba(255,255,255,.1);color:#fff;font:600 14px/1 inherit;padding:11px 16px}
+.rlc-au{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid rgba(255,255,255,.1);font-size:16px}
+.rlc-seg{display:flex;background:rgba(255,255,255,.1);border-radius:99px;padding:3px}
+.rlc-seg button{border:0;background:none;color:#fff;padding:8px 14px;border-radius:99px;font:600 13px/1 inherit}.rlc-seg .on{background:#3d5afe}
+.rlc-f{flex:none;padding:10px 18px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.rlc-sh{width:100%;border:0;border-radius:14px;background:#3d5afe;color:#fff;font:700 16px/1 inherit;padding:16px}
+.rlp{display:flex;align-items:center;gap:12px;margin:12px 16px;padding:4px 0}.rlp[hidden]{display:none}
+.rlp img{width:40px;height:60px;border-radius:8px;object-fit:cover;background:#222}
+.rlp-c{flex:1;font-size:14px;color:rgba(255,255,255,.7)}.rlp-b{height:3px;margin-top:9px;background:rgba(255,255,255,.14);border-radius:3px;overflow:hidden}
+.rlp-b i{display:block;height:100%;background:linear-gradient(90deg,#7b2ff7,#e1306c,#fd8d32);transition:width .25s}
+.rlp.er .rlp-c{color:#ff6b6b}.rlp button{border:0;background:none;color:#fff;font-size:18px}
+.rlg-h{margin:14px 16px 8px;font:700 15px/1 inherit}
+.rlg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:0 0 90px}
+.rlg-i{position:relative;aspect-ratio:9/14;border:0;background:#1a2018 center/cover;color:#fff}
+.rlg-i span{position:absolute;left:6px;bottom:5px;font-size:12px;text-shadow:0 1px 3px #000}.rlg-i em{position:absolute;right:6px;top:5px;font-style:normal;font-size:12px}
+</style>
+</head><body><div id="kdIntro" style="position:fixed;inset:0;z-index:2147483000;background:#000;touch-action:none"></div>
 <header class="tb"><b><span data-gi="logo sm"></span>KodYol</b><a class="apk" id="apk" href="kodyol.apk" download="KodYol.apk" aria-label="Android uchun yuklab olish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.6 9.5a5.6 5.6 0 0 0-11.2 0h11.2zM9 7.6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zM6.4 10.4v7.2c0 .7.6 1.3 1.3 1.3H9v2.6a1.2 1.2 0 0 0 2.4 0V18.9h1.2v2.6a1.2 1.2 0 0 0 2.4 0v-2.6h1.3c.7 0 1.3-.6 1.3-1.3v-7.2H6.4zM4.2 10.4a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2zm15.6 0a1.2 1.2 0 0 0-1.2 1.2v4.8a1.2 1.2 0 0 0 2.4 0v-4.8a1.2 1.2 0 0 0-1.2-1.2z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11.2m0 0l-4.2-4.2M12 14.2l4.2-4.2M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></header>
 <div id="ov"></div>
 <nav id="dr"><div class="dh"><span data-gi="logo sm"></span>KodYol</div>
@@ -1647,7 +1678,7 @@ function rlMount(){
  const act=mk("div","rl-act"),mt=mk("button","rl-ib");mt.type="button";mt.id="rlmt";mt.innerHTML=RLI.on;
  mt.onclick=()=>{RL.muted=!RL.muted;feed.querySelectorAll("video").forEach(v=>v.muted=RL.muted);mt.innerHTML=RL.muted?RLI.off:RLI.on;if(RL.cur){const v=RL.cur.querySelector("video");if(v&&v.paused&&!RL.cur.classList.contains("hold"))v.play().catch(()=>{})}};
  const up=mk("button","rl-ib");up.type="button";up.innerHTML=RLI.cam;up.setAttribute("aria-label",RX("up"));up.onclick=rlUpload;
- act.append(mt,up);top.append(tabs,act);root.append(feed,top);document.body.append(root);
+ mt.style.display="none";top.append(tabs,mt);root.append(feed,top);document.body.append(root);
  RL.io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>=.65)rlActivate(e.target);else if(!e.isIntersecting||e.intersectionRatio<.3)rlPause(e.target)})},{root:feed,threshold:[0,.3,.65,.9]});
  document.addEventListener("visibilitychange",()=>{if(document.hidden)rlPauseAll();else if(window.curV=="reels")rlResume()})}
 function rlReset(){RL.items=[];RL.last=null;RL.more=true;RL.cur=null;RL.feed.innerHTML="";RL.feed.scrollTop=0}
@@ -1657,7 +1688,7 @@ async function rlLoad(reset){
   let q=query(collection(db,"reels"),orderBy("ts","desc"),limit(pop?60:12));
   if(!reset&&RL.last)q=query(collection(db,"reels"),orderBy("ts","desc"),startAfter(RL.last),limit(12));
   const s=await getDocs(q);if(s.docs.length)RL.last=s.docs[s.docs.length-1];RL.more=!pop&&s.docs.length>=12;
-  let arr=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>r.uid&&(r.n||r.url)&&!RL.items.some(x=>x.id==r.id));
+  let arr=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>r.uid&&(r.n||r.url)&&r.aud!="me"&&!RL.items.some(x=>x.id==r.id));
   if(reset&&RL.first&&RL.tab=="new"){const f=RL.first;RL.first=null;let r=arr.find(x=>x.id==f);if(r)arr=arr.filter(x=>x!==r);else{try{const g=await getDoc(doc(db,"reels",f));if(g.exists())r=Object.assign({id:g.id},g.data())}catch(e){}}if(r)arr.unshift(r)}
   if(pop){const now=Date.now();const sc=r=>((r.lk||0)+2*(r.cm||0)+3*(r.rp||0)+1)/Math.pow((now-(tms(r)||now))/36e5+2,1.2);arr.sort((a,b)=>sc(b)-sc(a))}
   arr.forEach(r=>{RL.items.push(r);RL.feed.append(rlItem(r))});
@@ -1796,52 +1827,76 @@ async function rlPublishChunks(blob,mime,dur,cap,th,onp){
  const id=doc(collection(db,"reels")).id,n=Math.max(1,Math.ceil(blob.size/RL_CH));if(n>6||blob.size>2900000)throw new Error("big");
  for(let i=0;i<n;i++){const d=await K_b64(blob.slice(i*RL_CH,(i+1)*RL_CH));
   await setDoc(doc(db,"rchunks",id+"_"+i),{rid:id,i,uid:me.uid,d,ts:serverTimestamp()});onp((i+1)/(n+1))}
- await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.min(30,Math.round(dur*10)/10),sz:blob.size,n,mime,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id}
+ await setDoc(doc(db,"reels",id),Object.assign({uid:me.uid,cap,dur:Math.min(30,Math.round(dur*10)/10),sz:blob.size,n,mime,th,lk:0,cm:0,rp:0,ts:serverTimestamp()},RL.aud=="me"?{aud:"me"}:{}));return id}
 async function rlPublish(blob,mime,dur,cap,th,onp){
  if(blob.size>RL_MAXSZ)throw new Error("big");
  const id=doc(collection(db,"reels")).id,ext=/webm/.test(mime)?"webm":"mp4",path=me.uid+"/"+id+"."+ext;
  try{
   await rlSbPut(blob,mime,path,onp);
   const url=SB_URL+"/storage/v1/object/public/"+SB_BKT+"/"+path;
-  await setDoc(doc(db,"reels",id),{uid:me.uid,cap,dur:Math.round(dur*10)/10,sz:blob.size,n:0,mime,url,th,lk:0,cm:0,rp:0,ts:serverTimestamp()});return id
+  await setDoc(doc(db,"reels",id),Object.assign({uid:me.uid,cap,dur:Math.round(dur*10)/10,sz:blob.size,n:0,mime,url,th,lk:0,cm:0,rp:0,ts:serverTimestamp()},RL.aud=="me"?{aud:"me"}:{}));return id
  }catch(e){
   /* запасной путь: маленькое видео (до 2.9 МБ, до 30 с) храним в Firestore, Supabase не нужен */
   if(blob.size<=2900000&&dur<=30.5){try{return await rlPublishChunks(blob,mime,dur,cap,th,onp)}catch(e2){e2.message="Supabase: "+String(e.message||e.code||e).slice(0,60)+" | Firestore: "+String(e2.code||e2.message||e2).slice(0,60);throw e2}}
   throw e}}
+const RC=(a,b)=>window.lang=="ru"?a:b;
+function rlProgPaint(){const e=E("rlprog");if(!e)return;const u=RL.upl;e.hidden=!u;if(!u)return;e.innerHTML="";e.className="rlp"+(u.err?" er":"");
+ const t=mk("img");if(u.th)t.src=u.th;const c=mk("div","rlp-c");c.append(mk("span",null,u.err||RC("Публикуется в ваш профиль…","Posting to your profile…")));
+ if(!u.err){const b=mk("div","rlp-b"),i=mk("i");i.style.width=Math.round((u.p||0)*100)+"%";b.append(i);c.append(b)}
+ e.append(t,c);if(u.err){const x=mk("button",null,"✕");x.onclick=()=>{RL.upl=null;rlProgPaint()};e.append(x)}}
+async function rlGrid(box,uid,own){const g=mk("div","rlg");box.append(g);
+ try{const s=await getDocs(query(collection(db,"reels"),where("uid","==",uid),limit(40)));
+  const a=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>(r.n||r.url)&&(own||r.aud!="me")).sort((x,y)=>(tms(y.ts)||0)-(tms(x.ts)||0));
+  if(!a.length)return g.remove();g.before(mk("div","rlg-h","Reels"));
+  a.forEach(r=>{const t=mk("button","rlg-i");t.type="button";if(r.th)t.style.backgroundImage="url("+r.th+")";if(r.aud=="me")t.append(mk("em",null,"🔒"));t.append(mk("span",null,"▶ "+rlN(r.lk)));
+   t.onclick=()=>{RL.first=r.id;RL.tab="new";if(RL.el){RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}window.show("reels")};g.append(t)})}catch(e){g.remove()}}
+async function rlRun(file,pv,dur,cap,th){
+ const up=p=>{if(RL.upl&&!RL.upl.err){RL.upl.p=p;rlProgPaint()}};
+ try{let blob,mime;const total=pv.duration||dur;
+  const okRaw=file.size<=RL_RAW&&/^video\/(mp4|webm)$/.test(file.type)&&total<=RL_MAXDUR+.5;
+  if(okRaw){blob=file;mime=file.type}
+  else{let r=null;try{r=await rlEncode(pv,dur,q=>up(q*.5));if(!r.blob||!r.blob.size)r=null}catch(ee){r=null}
+   if(r){blob=r.blob;mime=r.mime}
+   else if(file.size<=RL_RAW&&/^video\//.test(file.type||"video/mp4")){blob=file;mime=/webm/.test(file.type)?"video/webm":"video/mp4"}
+   else throw new Error("uns")}
+  if(!blob.size||blob.size>RL_MAXSZ)throw new Error("big");
+  const id=await rlPublish(blob,mime,dur,cap,th,q=>up(.5+q*.5));
+  RL.upl=null;rlProgPaint();toast(RX("ok"),1);
+  if(RL.aud!="me"){RL.first=id;RL.tab="new"}
+  if(RL.el){RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}
+  if(window.curV=="me")window.R.me()}
+ catch(e){const m=e.message;RL.upl={th,err:m=="big"?RX("big"):m=="uns"?RX("uns"):m=="bad"?RX("bad"):(e.code=="permission-denied"?RX("nof"):RX("fail")+" ["+String(m||e.code||e).slice(0,140)+"]")};rlProgPaint()}
+ finally{try{pv.pause();URL.revokeObjectURL(pv.src)}catch(_){}pv.remove()}}
+/* v148: «+» в профиле → выбор видео → подпись, хештеги, аудитория → «Поделиться» → загрузка видна в профиле */
 function rlUpload(){
- if(E("rlup")||!me)return;rlPauseAll();
- const o=mk("div","rl-ov up"),p=mk("div","rl-us"),h=mk("div","rl-ch"),x=mk("button");x.type="button";x.innerHTML=RLI.x;o.id="rlup";h.append(mk("b",null,RX("up")),x);
+ if(E("rlup")||!me)return;
+ if(RL.upl&&!RL.upl.err){toast(RC("Идёт публикация…","Posting in progress…"),0);return}
+ rlPauseAll();
+ const o=mk("div","rlc");o.id="rlup";
+ const hd=mk("div","rlc-h"),bx=mk("button");bx.type="button";hd.append(bx,mk("b",null,RX("up")));
  const fi=mk("input");fi.type="file";fi.accept="video/*";fi.hidden=true;
- const pk=mk("button","rl-pick",RX("pick"));pk.type="button";pk.onclick=()=>fi.click();
- const newPv=()=>{const e=mk("video","rl-pvv");e.playsInline=true;e.setAttribute("playsinline","");e.muted=true;e.controls=false;e.hidden=true;return e};let pv=newPv();
- const nt=mk("p","rl-nt",RX("max")),ta=mk("textarea");ta.maxLength=150;ta.rows=2;ta.placeholder=RX("cap");ta.hidden=true;
- const pb=mk("div","rl-bar"),bi=mk("i");pb.append(bi);pb.hidden=true;const st=mk("p","rl-st"),go=mk("button","rl-pub",RX("pub"));go.type="button";go.hidden=true;
- p.append(h,pk,pv,nt,ta,pb,st,go,fi);o.append(p);document.body.append(o);
- let file=null,dur=0,th="",busy=false;
- const close=()=>{if(busy&&!confirm(RX("cls")+"?"))return;try{pv.pause();URL.revokeObjectURL(pv.src)}catch(e){}o.remove()};x.onclick=close;
- fi.onchange=()=>{const f=fi.files[0];fi.value="";if(!f)return;file=f;st.textContent="";
-  try{URL.revokeObjectURL(pv.src)}catch(e){}{const np=newPv();p.replaceChild(np,pv);pv=np}pv.src=URL.createObjectURL(f);pv.hidden=false;
-  pv.onerror=()=>{st.textContent=RX("bad");go.hidden=true};
-  pv.onloadedmetadata=()=>{dur=Math.min(pv.duration||0,RL_MAXDUR);if(!dur){st.textContent=RX("bad");return}
-   const sk=()=>{pv.onseeked=()=>{pv.onseeked=null;th=rlThumb(pv);pv.currentTime=0};pv.currentTime=Math.min(.4,dur/2)};try{sk()}catch(e){}
-   pk.hidden=true;ta.hidden=false;go.hidden=false;nt.hidden=true}};
- go.onclick=async()=>{if(busy||!file)return;busy=true;go.disabled=true;ta.disabled=true;pb.hidden=false;bi.style.width="0%";
-  try{let blob,mime;const total=pv.duration||dur;
-   const okRaw=file.size<=RL_RAW&&/^video\/(mp4|webm)$/.test(file.type)&&total<=RL_MAXDUR+.5;
-   if(okRaw){blob=file;mime=file.type}
-   else{st.textContent=RX("p1");let r=null;
-    try{r=await rlEncode(pv,dur,q=>{bi.style.width=Math.round(q*50)+"%"});if(!r.blob||!r.blob.size)r=null}catch(ee){r=null}
-    if(r){blob=r.blob;mime=r.mime}
-    else if(file.size<=RL_RAW&&/^video\//.test(file.type||"video/mp4")){blob=file;mime=/webm/.test(file.type)?"video/webm":"video/mp4"}
-    else throw new Error("uns")}
-   if(!blob.size||blob.size>RL_MAXSZ)throw new Error("big");
-   st.textContent=RX("p2");
-   const id=await rlPublish(blob,mime,dur,ta.value.trim().slice(0,150),th,q=>{bi.style.width=Math.round(50+q*50)+"%"});
-   busy=false;toast(RX("ok"),1);try{pv.pause();URL.revokeObjectURL(pv.src)}catch(e){}o.remove();RL.tab="new";RL.first=id;
-   RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}
-  catch(e){busy=false;go.disabled=false;ta.disabled=false;pb.hidden=true;try{pv.pause()}catch(_){}
-   pk.hidden=false;go.hidden=true;ta.hidden=true;pv.hidden=true;st.textContent=e.message=="big"?RX("big"):e.message=="uns"?RX("uns"):e.message=="bad"?RX("bad"):(e.code=="permission-denied"?RX("nof"):RX("fail")+" ["+String(e.message||e.code||e).slice(0,160)+"]")}};
- o.onclick=e=>{if(e.target==o)close()}}
+ const pk=mk("button","rlc-pk");pk.type="button";pk.innerHTML=RLI.cam+"<b>"+RX("pick")+"</b><span>"+RX("max")+"</span>";pk.onclick=()=>fi.click();
+ const dt=mk("div","rlc-d");
+ const pv=mk("video","rlc-pv");pv.playsInline=true;pv.setAttribute("playsinline","");pv.muted=true;pv.loop=true;pv.controls=false;
+ const ta=mk("textarea");ta.maxLength=150;ta.rows=3;ta.placeholder=RC("Добавьте подпись…","Add a caption…");
+ const hb=mk("button","rlc-chip","# "+RC("Хэштеги","Hashtags"));hb.type="button";hb.onclick=()=>{ta.value=(ta.value+(ta.value&&!/\s$/.test(ta.value)?" ":"")+"#").slice(0,150);ta.focus()};
+ const au=mk("div","rlc-au");au.append(mk("span",null,RC("Аудитория","Audience")));
+ let aud="all";const seg=mk("div","rlc-seg");[["all",RC("Все","Everyone")],["me",RC("Только я","Only me")]].forEach(([k,l])=>{const b=mk("button",k=="all"?"on":"",l);b.type="button";b.onclick=()=>{aud=k;seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x==b))};seg.append(b)});au.append(seg);
+ const st=mk("p","rl-st"),sh=mk("button","rlc-sh",RC("Поделиться","Share"));sh.type="button";
+ dt.append(pv,ta,hb,au,st);
+ const md=mk("div","rlc-md"),m1=mk("button",null,RC("ИСТОРИЯ","STORY")),m2=mk("button","on","REELS");m1.type=m2.type="button";m1.onclick=()=>{o.remove();storyCam()};md.append(m1,m2);
+ const ft=mk("div","rlc-f");ft.append(sh);
+ o.append(hd,pk,dt,md,ft,fi);document.body.append(o);
+ let file=null,dur=0,th="";
+ const step=n=>{pk.hidden=md.hidden=n==2;dt.hidden=ft.hidden=n==1;bx.dataset.s=n;bx.innerHTML=n==1?RLI.x:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>'};step(1);
+ bx.onclick=()=>{if(bx.dataset.s=="2"){pv.pause();step(1)}else{try{URL.revokeObjectURL(pv.src)}catch(e){}o.remove()}};
+ fi.onchange=()=>{const f=fi.files[0];fi.value="";if(!f)return;file=f;st.textContent="";try{URL.revokeObjectURL(pv.src)}catch(e){}pv.src=URL.createObjectURL(f);
+  pv.onerror=()=>{st.textContent=RX("bad");sh.hidden=true;step(2)};
+  pv.onloadedmetadata=()=>{dur=Math.min(pv.duration||0,RL_MAXDUR);if(!dur){st.textContent=RX("bad");return}sh.hidden=false;
+   pv.onseeked=()=>{pv.onseeked=null;th=rlThumb(pv);pv.currentTime=0;pv.play().catch(()=>{})};try{pv.currentTime=Math.min(.4,dur/2)}catch(e){}step(2)}};
+ sh.onclick=()=>{if(!file)return;RL.aud=aud;const cap=ta.value.trim().slice(0,150),f=file;pv.loop=false;pv.pause();pv.className="rlc-hid";document.body.append(pv);o.remove();
+  RL.upl={th,p:0};window.show("me");rlProgPaint();rlRun(f,pv,dur,cap,th)};
+ setTimeout(()=>{try{fi.click()}catch(e){}},0)}
 /* показ/скрытие экрана */
 window.R.reels=()=>{
  const b=E("c-reels");
@@ -1858,7 +1913,7 @@ function counts(uid,cb){cs.forEach(f=>f());cs=[];let a=[],b=[];const g=()=>cb(b.
 function share(){const u=location.origin+location.pathname+"?u="+me.uid;if(navigator.share)navigator.share({title:"KodYol",url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}alert(T.cpy)}}
 function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  if(!own){const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>window.show(prev||"find");top.append(bk)}
- if(own){const pb=mk("button","stpb");pb.innerHTML=ico("stplus");pb.onclick=storyCam;top.append(pb)}{const sp=mk("span",null,nm(u));if(isV(uid))sp.append(VB(18));top.append(sp)}if(own){const mb=mk("button","mb");mb.id="mb";mb.type="button";mb.setAttribute("aria-label","menu");mb.innerHTML=ico("menu");mb.style.marginLeft="auto";mb.onclick=()=>window.menu(!dr.classList.contains("o"));top.append(mb)}box.append(top);
+ if(own){const pb=mk("button","stpb");pb.innerHTML=ico("stplus");pb.onclick=rlUpload;top.append(pb)}{const sp=mk("span",null,nm(u));if(isV(uid))sp.append(VB(18));top.append(sp)}if(own){const mb=mk("button","mb");mb.id="mb";mb.type="button";mb.setAttribute("aria-label","menu");mb.innerHTML=ico("menu");mb.style.marginLeft="auto";mb.onclick=()=>window.menu(!dr.classList.contains("o"));top.append(mb)}box.append(top);
  const card=mk("div","pcard"),ban=mk("div","pban");
  if(u.banner){const bm=mk("img");bm.src=u.banner;bm.alt="";bm.draggable=false;ban.append(bm)}
  if(own){const cb=mk("button","pbc");cb.type="button";cb.setAttribute("aria-label",X("pcb"));cb.innerHTML=ico("stgal")+" <span>"+X("pcb")+"</span>";const bf=mk("input");bf.type="file";bf.accept="image/*";bf.hidden=true;cb.onclick=()=>bf.click();
@@ -1867,7 +1922,7 @@ function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  const p=mk("div","pf");const aw=mk("div","stw");aw.append(av(u,92));p.append(aw);stBind(aw,uid,own);const st=mk("div","st");
  st.innerHTML='<div><b>'+(u.learned||0)+'</b><span>'+T.done+'</span></div><div><b class="s1">0</b><span>'+T.fol+'</span></div><div><b class="s2">0</b><span>'+T.fng+'</span></div>';p.append(st);
  const idr=mk("div","prow"),idn=mk("div","pid"),nmb=mk("b",null,nm(u));if(isV(uid))nmb.append(VB(16));idn.append(nmb);if(u.username)idn.append(mk("span",null,"@"+u.username));
- const pr=mk("div","pr");idr.append(idn,pr);bd.append(p,idr);if(u.bio&&!own)bd.append(mk("div","pbio",u.bio));card.append(ban,bd);box.append(card);
+ const pr=mk("div","pr");idr.append(idn,pr);bd.append(p,idr);if(u.bio&&!own)bd.append(mk("div","pbio",u.bio));card.append(ban,bd);box.append(card);if(own){const pg=mk("div");pg.id="rlprog";pg.hidden=true;box.append(pg);rlProgPaint()}rlGrid(box,uid,own);
  counts(uid,(f1,f2,isf)=>{box.querySelector(".s1").textContent=(OWNER_FAKE&&isV(uid))?vFol(uid):f1;box.querySelector(".s2").textContent=f2;pr.innerHTML="";
   if(own){const e=mk("button",null,T.edt);e.onclick=()=>window.show("edit");const h=mk("button",null,T.shr);h.onclick=share;pr.append(e,h);}
   else{const f=mk("button",isf?"":"pri",isf?T.fwd:T.flw),r=doc(db,"follows",me.uid+"_"+uid);f.onclick=()=>(isf?deleteDoc(r):setDoc(r,{a:me.uid,b:uid,ts:serverTimestamp()})).catch(e=>alert(e.message));

@@ -207,7 +207,7 @@ service cloud.firestore {
     match /reels/{id} {
       allow read: if signedIn();
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['uid','cap','dur','sz','n','mime','th','lk','cm','rp','ts','url'])
+        && request.resource.data.keys().hasOnly(['uid','cap','dur','sz','n','mime','th','lk','cm','rp','ts','url','aud'])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.cap is string && request.resource.data.cap.size() <= 150
         && request.resource.data.dur is number && request.resource.data.dur <= 61
@@ -219,6 +219,7 @@ service cloud.firestore {
             || (request.resource.data.n == 0 && request.resource.data.url is string
                 && request.resource.data.url.matches('https://[a-z0-9]+\\.supabase\\.co/storage/v1/object/public/.*')))
         && ('url' in request.resource.data || (request.resource.data.n >= 1 && request.resource.data.sz <= 2900000 && request.resource.data.dur <= 31))
+        && (!('aud' in request.resource.data) || request.resource.data.aud == 'me')
         && request.resource.data.lk == 0 && request.resource.data.cm == 0 && request.resource.data.rp == 0
         && request.resource.data.ts == request.time;
       // счётчики лайков, комментариев и репостов: любой вошедший, только на ±1
