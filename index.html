@@ -1936,6 +1936,17 @@ function rlCloseProf(instant,how){
  if(how=="slide"){el.style.transform="translateX(100%)";el.style.opacity="0"}
  else if(rc)el.style.clipPath=rlClip(rc);else el.style.opacity="0";
  setTimeout(()=>{if(!RL.pf)fin()},how=="slide"?210:270)}
+/* v154: общий свайп вправо = назад (публикации, чат) */
+function swipeBack(host,targets,close,skip){
+ let x0=0,y0=0,t0=0,dx=0,lock=0,on=false;const set=f=>targets().forEach(el=>el&&f(el)),de=document.documentElement;
+ host.addEventListener("touchstart",e=>{on=false;if(e.touches.length!=1||(skip&&skip(e)))return;const t=e.touches[0];x0=t.clientX;y0=t.clientY;t0=Date.now();dx=0;lock=0;on=true},{passive:true});
+ host.addEventListener("touchmove",e=>{if(!on)return;const t=e.touches[0],mx=t.clientX-x0,my=t.clientY-y0;
+  if(!lock){if(Math.abs(mx)<8&&Math.abs(my)<8)return;lock=(mx>0&&Math.abs(mx)>Math.abs(my)*1.3)?1:2;if(lock==1)de.style.overflowX="hidden"}
+  if(lock!=1)return;e.preventDefault();dx=Math.max(0,mx);set(el=>{el.style.transition="none";el.style.transform="translateX("+dx+"px)"})},{passive:false});
+ const end=()=>{if(!on)return;on=false;if(lock!=1)return;const v=dx/((Date.now()-t0)||1);
+  if(dx>innerWidth*.28||v>.55){set(el=>{el.style.transition="transform .18s ease-out";el.style.transform="translateX(100%)"});setTimeout(()=>{close();set(el=>{el.style.transition="";el.style.transform=""});de.style.overflowX=""},185)}
+  else{set(el=>{el.style.transition="transform .2s";el.style.transform=""});setTimeout(()=>{set(el=>{el.style.transition=""});de.style.overflowX=""},210)}};
+ host.addEventListener("touchend",end);host.addEventListener("touchcancel",end)}
 function rlSwipe(el){
  let x0=0,y0=0,t0=0,dx=0,lock=0,on=false;
  el.addEventListener("touchstart",e=>{if(!RL.pf||e.touches.length!=1){on=false;return}const t=e.touches[0];x0=t.clientX;y0=t.clientY;t0=Date.now();dx=0;lock=0;on=true},{passive:true});
@@ -1975,7 +1986,7 @@ function pCm(p,cnt){
  inp.onkeydown=e=>{if(e.key=="Enter")sb.click()};load()}
 function postView(list,idx){
  const o=mk("div","rlc"),hd=mk("div","rlc-h"),bx=mk("button"),ti=mk("div","pv-t"),sub=mk("small");bx.type="button";bx.innerHTML=BK;bx.onclick=()=>o.remove();ti.append(mk("b",null,RC("Публикации","Posts")),sub);hd.append(bx,ti);
- rlUser(list[0].uid).then(u=>{sub.textContent=nm(u)});const sc=mk("div","pv-sc");o.append(hd,sc);document.body.append(o);
+ rlUser(list[0].uid).then(u=>{sub.textContent=nm(u)});const sc=mk("div","pv-sc");o.append(hd,sc);document.body.append(o);swipeBack(o,()=>[o],()=>o.remove(),e=>{const c=e.target.closest(".pvs");return !!(c&&c.scrollLeft>2)});
  const card=p=>{const c=mk("div","pvc"),au=mk("div","pva"),ab=mk("div","rl-ca"),an=mk("b",null,"…"),im=pimgs(p),car=mk("div","pvs"),wr=mk("div","pvw2");
   rlUser(p.uid).then(u=>{ab.append(av(u,34));an.textContent=nm(u);cpn.textContent=nm(u)+" ";ab.onclick=an.onclick=()=>{o.remove();openU(p.uid)}});
   au.append(ab,an);
@@ -2595,7 +2606,7 @@ function K_attCard(d,mine,tm,rid){
  const go=async e=>{e.stopPropagation();if(c.classList.contains("ld"))return;c.classList.add("ld");try{await K_attSave(a,rid);c.innerHTML=AT_FILE}catch(er){toast(AX("fail"),0)}c.classList.remove("ld")};
  c.onclick=go;n.onclick=go;return w}
 window.R.chat=()=>{const b=E("c-chat");if(!me){login(b);return}
- if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><button id="ca" type="button"></button><div class="cw"><input id="ci" maxlength="500" autocomplete="off"><button id="ce" type="button"></button></div><button id="cs"></button></div><input type="file" id="cf1" accept="image/*" hidden><input type="file" id="cf2" hidden><input type="file" id="cf3" accept="image/*" capture="environment" hidden></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()};E("ca").onclick=K_attMenu;["cf1","cf2","cf3"].forEach(k=>E(k).onchange=e=>{const f=e.target.files[0];e.target.value="";K_attSend(f)});E("ci").onpaste=e=>{const f=e.clipboardData&&e.clipboardData.files&&e.clipboardData.files[0];if(f){e.preventDefault();K_attSend(f)}}}
+ if(!E("ib")){b.innerHTML='<div id="ib"></div><div id="th" hidden><div class="hd" id="thh"></div><div id="cm"></div><div class="bar"><button id="ca" type="button"></button><div class="cw"><input id="ci" maxlength="500" autocomplete="off"><button id="ce" type="button"></button></div><button id="cs"></button></div><input type="file" id="cf1" accept="image/*" hidden><input type="file" id="cf2" hidden><input type="file" id="cf3" accept="image/*" capture="environment" hidden></div>';E("cs").onclick=send;E("ci").onkeydown=e=>{if(e.key=="Enter")send()};E("ca").onclick=K_attMenu;swipeBack(E("th"),()=>[E("thh"),E("cm"),E("th").querySelector(".bar")],()=>{const b=E("thh").querySelector("button");if(b)b.click()},e=>!!e.target.closest("input,textarea,video,audio"));["cf1","cf2","cf3"].forEach(k=>E(k).onchange=e=>{const f=e.target.files[0];e.target.value="";K_attSend(f)});E("ci").onpaste=e=>{const f=e.clipboardData&&e.clipboardData.files&&e.clipboardData.files[0];if(f){e.preventDefault();K_attSend(f)}}}
  stkInit();E("ci").placeholder=T.cph;E("cs").innerHTML=SEND;E("ca").innerHTML=AT_CLIP;E("ca").setAttribute("aria-label",AX("att"));E("cs").setAttribute("aria-label",T.ask);const th=room!=null;E("ib").hidden=th;E("th").hidden=!th;nav();if(th)openTh();else{K_pstop();inb()}};
 const UNT={
  ru:{t:"Придумайте имя пользователя",h:"Минимум 6 символов: маленькие латинские буквы, цифры, точка или _. По нему вас будут находить другие.",ph:"например: dilshod2026",b:"Продолжить",c:"Выйти",k:"Это имя уже занято, выберите другое",s:"Минимум 6 символов",x:"Только латинские буквы, цифры, . и _"},
