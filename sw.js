@@ -1,5 +1,5 @@
 // KodYol service worker: офлайн-режим для статических файлов сайта
-const CACHE = "kodyol-v150";
+const CACHE = "kodyol-v152";
 const ASSETS = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "logo.png", "favicon.png", "ring-out.mp3", "ring-in.mp3"];
 
 self.addEventListener("install", (e) => {
@@ -60,7 +60,7 @@ self.addEventListener("push", (e) => {
   try { j = e.data ? e.data.json() : {}; } catch (_) {}
   const d = j.data || j.notification || j;
   e.waitUntil(
-    self.registration.showNotification(d.title || "KodYol", {
+    self.registration.showNotification(d.title || "FION", {
       body: d.body || "",
       icon: "icon-192.png",
       badge: "favicon.png",
