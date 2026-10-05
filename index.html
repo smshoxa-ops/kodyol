@@ -1714,16 +1714,16 @@ function rlMount(){
  const act=mk("div","rl-act"),mt=mk("button","rl-ib");mt.type="button";mt.id="rlmt";mt.innerHTML=RLI.on;
  mt.onclick=()=>{RL.muted=!RL.muted;feed.querySelectorAll("video").forEach(v=>v.muted=RL.muted);mt.innerHTML=RL.muted?RLI.off:RLI.on;if(RL.cur){const v=RL.cur.querySelector("video");if(v&&v.paused&&!RL.cur.classList.contains("hold"))v.play().catch(()=>{})}};
  const up=mk("button","rl-ib");up.type="button";up.innerHTML=RLI.cam;up.setAttribute("aria-label",RX("up"));up.onclick=rlUpload;
- mt.style.display="none";top.append(tabs,mt);root.append(feed,top);document.body.append(root);
+ mt.style.display="none";const bk=mk("button","rl-ib rl-bk");bk.type="button";bk.setAttribute("aria-label","Back");bk.innerHTML='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';bk.onclick=()=>rlCloseProf();top.append(bk,tabs,mt);root.append(feed,top);document.body.append(root);
  RL.io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>=.65)rlActivate(e.target);else if(!e.isIntersecting||e.intersectionRatio<.3)rlPause(e.target)})},{root:feed,threshold:[0,.3,.65,.9]});
- document.addEventListener("visibilitychange",()=>{if(document.hidden)rlPauseAll();else if(window.curV=="reels")rlResume()})}
-function rlReset(){RL.items=[];RL.last=null;RL.more=true;RL.cur=null;RL.feed.innerHTML="";RL.feed.scrollTop=0}
+ document.addEventListener("visibilitychange",()=>{if(document.hidden)rlPauseAll();else if(window.curV=="reels"||RL.pf)rlResume()})}
+function rlReset(){RL.gen=(RL.gen||0)+1;RL.items=[];RL.last=null;RL.more=true;RL.cur=null;RL.feed.innerHTML="";RL.feed.scrollTop=0}
 async function rlLoad(reset){
- if(RL.loading||(!reset&&!RL.more))return;RL.loading=true;const pop=RL.tab=="pop";
+ if(RL.loading||(!reset&&!RL.more))return;RL.loading=true;const pop=RL.tab=="pop",pf0=!!RL.pf;
  try{
   let q=query(collection(db,"reels"),orderBy("ts","desc"),limit(pop?60:12));
   if(!reset&&RL.last)q=query(collection(db,"reels"),orderBy("ts","desc"),startAfter(RL.last),limit(12));
-  const s=await getDocs(q);if(s.docs.length)RL.last=s.docs[s.docs.length-1];RL.more=!pop&&s.docs.length>=12;
+  const s=await getDocs(q);if(!!RL.pf!=pf0)return;if(s.docs.length)RL.last=s.docs[s.docs.length-1];RL.more=!pop&&s.docs.length>=12;
   let arr=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>r.uid&&(r.n||r.url)&&r.aud!="me"&&!RL.items.some(x=>x.id==r.id));
   if(reset&&RL.first&&RL.tab=="new"){const f=RL.first;RL.first=null;let r=arr.find(x=>x.id==f);if(r)arr=arr.filter(x=>x!==r);else{try{const g=await getDoc(doc(db,"reels",f));if(g.exists())r=Object.assign({id:g.id},g.data())}catch(e){}}if(r)arr.unshift(r)}
   if(pop){const now=Date.now();const sc=r=>((r.lk||0)+2*(r.cm||0)+3*(r.rp||0)+1)/Math.pow((now-(tms(r)||now))/36e5+2,1.2);arr.sort((a,b)=>sc(b)-sc(a))}
@@ -1768,7 +1768,7 @@ async function rlActivate(it){
   try{await v.play()}catch(e){if(!RL.muted){RL.muted=true;v.muted=true;E("rlmt").innerHTML=RLI.off;toast(RX("snd"),1);await v.play().catch(()=>{})}}
  }catch(e){it.classList.add("err")}
  const i=RL.items.indexOf(r);
- if(i>=0){const nx=RL.items[i+1];if(nx)rlFetch(nx).catch(()=>{});if(i>=RL.items.length-3)rlLoad(false)}}
+ if(i>=0){const nx=RL.items[i+1];if(nx)rlWarm(nx);const pvr=RL.items[i-1];if(pvr&&pvr.url)rlWarm(pvr);if(i>=RL.items.length-3)rlLoad(false)}}
 async function rlMine(r,it){
  const st=rlSt(r.id);if(st.ld){rlPaint(it,r);return}st.ld=true;
  try{const[a,b]=await Promise.all([getDoc(doc(db,"reels",r.id,"likes",me.uid)),getDoc(doc(db,"reels",r.id,"rps",me.uid))]);st.lk=a.exists();st.rp=b.exists()}catch(e){st.ld=false}
@@ -1804,9 +1804,9 @@ function rlMenu(r,it){
  add(RX("cls"),()=>{},"cn");o.onclick=e=>{if(e.target==o)close()};o.append(p);document.body.append(o)}
 async function rlDelete(r,it){
  if(!confirm(RX("delq")))return;
- try{await deleteDoc(doc(db,"reels",r.id));for(let i=0;i<(r.url?0:(r.n||1));i++)await deleteDoc(doc(db,"rchunks",r.id+"_"+i)).catch(()=>{});
+ try{await deleteDoc(doc(db,"reels",r.id));GC.clear();if(RL.pf)RL.pf.dirty=true;for(let i=0;i<(r.url?0:(r.n||1));i++)await deleteDoc(doc(db,"rchunks",r.id+"_"+i)).catch(()=>{});
   const nx=it.nextElementSibling||it.previousElementSibling;RL.io.unobserve(it);if(RL.cur===it)RL.cur=null;it.remove();RL.items=RL.items.filter(x=>x!==r);if(nx&&nx.scrollIntoView)nx.scrollIntoView();
-  if(!RL.items.length)rlLoad(true)}
+  if(!RL.items.length){if(RL.pf)rlCloseProf();else rlLoad(true)}}
  catch(e){toast(e.code=="permission-denied"?RX("nof"):(e.code||RX("fail")),0)}}
 /* комментарии */
 function rlComments(r,it){
@@ -1881,11 +1881,11 @@ function rlProgPaint(){const e=E("rlprog");if(!e)return;const u=RL.upl;e.hidden=
  if(!u.err){const b=mk("div","rlp-b"),i=mk("i");i.style.width=Math.round((u.p||0)*100)+"%";b.append(i);c.append(b)}
  e.append(t,c);if(u.err){const x=mk("button",null,"✕");x.onclick=()=>{RL.upl=null;rlProgPaint()};e.append(x)}}
 async function rlGrid(box,uid,own){const g=mk("div","rlg");box.append(g);
- try{const s=await getDocs(query(collection(db,"reels"),where("uid","==",uid),limit(40)));
-  const a=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>(r.n||r.url)&&(own||r.aud!="me")).sort((x,y)=>tsm(y.ts)-tsm(x.ts));
+ try{const ck="r"+uid+(own?1:0),cc=GC.get(ck);let s=null;if(!(cc&&Date.now()-cc.t<30000))s=await getDocs(query(collection(db,"reels"),where("uid","==",uid),limit(40)));
+  const a=s?s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(r=>(r.n||r.url)&&(own||r.aud!="me")).sort((x,y)=>tsm(y.ts)-tsm(x.ts)):cc.a;if(s)GC.set(ck,{t:Date.now(),a});
   if(!a.length)return g.remove();
-  a.forEach(r=>{const t=mk("button","rlg-i");t.type="button";if(r.th)t.style.backgroundImage="url("+r.th+")";if(r.aud=="me")t.append(mk("em",null,"🔒"));t.append(mk("span",null,"▶ "+rlN(r.lk)));
-   t.onclick=()=>rlOpen(r.id);g.append(t)})}catch(e){g.remove()}}
+  const ts=[];a.forEach((r,k)=>{const t=mk("button","rlg-i");t.type="button";if(r.th)t.style.backgroundImage="url("+r.th+")";if(r.aud=="me")t.append(mk("em",null,"🔒"));t.append(mk("span",null,"▶ "+rlN(r.lk)));
+   t.onclick=()=>rlOpenList(a,k,ts);t.addEventListener("pointerdown",()=>{rlFetch(r).catch(()=>{})},{passive:true});ts.push(t);g.append(t)})}catch(e){g.remove()}}
 async function rlRun(file,pv,dur,cap,th){
  const up=p=>{if(RL.upl&&!RL.upl.err){RL.upl.p=p;rlProgPaint()}};
  try{let blob,mime;const total=pv.duration||dur;
@@ -1897,7 +1897,7 @@ async function rlRun(file,pv,dur,cap,th){
    else throw new Error("uns")}
   if(!blob.size||blob.size>RL_MAXSZ)throw new Error("big");
   const id=await rlPublish(blob,mime,dur,cap,th,q=>up(.5+q*.5));
-  RL.upl=null;rlProgPaint();toast(RX("ok"),1);
+  GC.clear();RL.upl=null;rlProgPaint();toast(RX("ok"),1);
   if(RL.aud!="me"){RL.first=id;RL.tab="new"}
   if(RL.el){RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}
   window.PTAB=1;if(window.curV=="me")window.R.me()}
@@ -1905,6 +1905,50 @@ async function rlRun(file,pv,dur,cap,th){
  finally{try{pv.pause();URL.revokeObjectURL(pv.src)}catch(_){}pv.remove()}}
 const tsm=t=>t&&t.toMillis?t.toMillis():0,byTs=(x,y)=>tsm(y.ts)-tsm(x.ts);
 function rlOpen(id){RL.first=id;RL.tab="new";if(RL.el){RL.el.querySelectorAll(".rl-tabs button").forEach(b=>b.classList.toggle("on",b.dataset.k=="new"));rlReset();rlLoad(true)}window.show("reels")}
+/* ===== v153: ролик из профиля открывается поверх экрана: мгновенно, закрыть можно стрелкой, свайпом вправо или кнопкой «назад» ===== */
+const GC=new Map();
+function rlWarm(r){const e=RL.feed&&RL.feed.querySelector('.rl-it[data-id="'+r.id+'"] video');if(e&&!e.getAttribute("src"))rlFetch(r).then(u=>{if(!e.getAttribute("src")){e.src=u;e.dataset.ld="1";e.preload="auto"}}).catch(()=>{})}
+const rlRect=t=>{if(!t||!t.isConnected)return null;const r=t.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight&&r.width?r:null};
+const rlClip=r=>"inset("+r.top+"px "+(innerWidth-r.right)+"px "+(innerHeight-r.bottom)+"px "+r.left+"px round 6px)";
+function rlOpenList(list,idx,tiles){
+ if(!list||!list[idx]||!me)return;rlMount();if(RL.pf)rlCloseProf(true);
+ const el=RL.el,rc=rlRect(tiles&&tiles[idx]);
+ rlPauseAll();rlReset();RL.more=false;RL.tab="new";RL.pf={list,tiles,idx,h:false,dirty:false};
+ el.classList.add("pf");list.forEach(r=>{RL.items.push(r);RL.feed.append(rlItem(r))});
+ el.style.transition="none";if(rc)el.style.clipPath=rlClip(rc);else el.style.opacity="0";
+ el.hidden=false;const h=RL.feed.clientHeight;RL.feed.scrollTop=idx*h;
+ const it=RL.feed.children[idx];if(it)rlActivate(it);
+ try{history.pushState({fionRl:1},"");RL.pf.h=true}catch(e){}
+ void el.offsetWidth;
+ el.style.transition="clip-path .3s cubic-bezier(.2,.85,.25,1),opacity .2s";el.style.clipPath="inset(0px 0px 0px 0px round 0px)";el.style.opacity="1";
+ setTimeout(()=>{if(RL.el===el&&RL.pf){el.style.transition="";el.style.clipPath="";el.style.opacity=""}},330);
+ if(!RL.sw){RL.sw=1;rlSwipe(el)}}
+function rlCloseProf(instant,how){
+ const p=RL.pf;if(!p)return;RL.pf=null;const el=RL.el;
+ if(p.h){p.h=false;try{history.back()}catch(e){}}
+ rlPauseAll();
+ const fin=()=>{el.hidden=true;el.classList.remove("pf");el.style.cssText="";rlReset();RL.items=[];RL.more=true;RL.cur=null;if(p.dirty&&window.curV=="me")window.R.me()};
+ if(instant===true){fin();return}
+ const cur=RL.cur&&RL.cur._r?p.list.indexOf(RL.cur._r):p.idx,t=p.tiles&&p.tiles[cur];
+ if(how!="slide"&&t&&t.isConnected)try{t.scrollIntoView({block:"nearest"})}catch(e){}
+ const rc=how=="slide"?null:rlRect(t);
+ el.style.transition=how=="slide"?"transform .2s ease-out,opacity .2s":"clip-path .26s cubic-bezier(.4,0,.6,1),opacity .26s";
+ if(how=="slide"){el.style.transform="translateX(100%)";el.style.opacity="0"}
+ else if(rc)el.style.clipPath=rlClip(rc);else el.style.opacity="0";
+ setTimeout(()=>{if(!RL.pf)fin()},how=="slide"?210:270)}
+function rlSwipe(el){
+ let x0=0,y0=0,t0=0,dx=0,lock=0,on=false;
+ el.addEventListener("touchstart",e=>{if(!RL.pf||e.touches.length!=1){on=false;return}const t=e.touches[0];x0=t.clientX;y0=t.clientY;t0=Date.now();dx=0;lock=0;on=true},{passive:true});
+ el.addEventListener("touchmove",e=>{if(!on||!RL.pf)return;const t=e.touches[0],mx=t.clientX-x0,my=t.clientY-y0;
+  if(!lock){if(Math.abs(mx)<8&&Math.abs(my)<8)return;lock=(mx>0&&Math.abs(mx)>Math.abs(my)*1.3)?1:2}
+  if(lock!=1)return;e.preventDefault();dx=Math.max(0,mx);
+  el.style.transition="none";el.style.transform="translateX("+dx+"px)";el.style.opacity=String(1-Math.min(.5,dx/innerWidth*.6))},{passive:false});
+ const end=()=>{if(!on)return;on=false;if(lock!=1)return;const v=dx/((Date.now()-t0)||1);
+  if(dx>innerWidth*.28||v>.55)rlCloseProf(false,"slide");
+  else{el.style.transition="transform .2s,opacity .2s";el.style.transform="";el.style.opacity="";setTimeout(()=>{if(RL.pf)el.style.transition=""},210)}};
+ el.addEventListener("touchend",end);el.addEventListener("touchcancel",end)}
+window.addEventListener("popstate",()=>{if(RL.pf){RL.pf.h=false;rlCloseProf()}});
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&RL.pf&&!document.querySelector(".rl-ov"))rlCloseProf()});
 const pimgs=p=>p.imgs&&p.imgs.length?p.imgs:[p.img],BK='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';
 const pAgo=t=>{const m=tsm(t);if(!m)return RC("только что","just now");const s=(Date.now()-m)/1000;return s<60?RC("только что","just now"):s<3600?Math.floor(s/60)+RC(" мин. назад","m ago"):s<86400?Math.floor(s/3600)+RC(" ч. назад","h ago"):Math.floor(s/86400)+RC(" дн. назад","d ago")};
 function pImg(f,m){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext("2d").drawImage(i,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.78))};i.onerror=()=>{URL.revokeObjectURL(u);no(new Error("bad"))};i.src=u})}
@@ -1935,7 +1979,7 @@ function postView(list,idx){
  const card=p=>{const c=mk("div","pvc"),au=mk("div","pva"),ab=mk("div","rl-ca"),an=mk("b",null,"…"),im=pimgs(p),car=mk("div","pvs"),wr=mk("div","pvw2");
   rlUser(p.uid).then(u=>{ab.append(av(u,34));an.textContent=nm(u);cpn.textContent=nm(u)+" ";ab.onclick=an.onclick=()=>{o.remove();openU(p.uid)}});
   au.append(ab,an);
-  if(p.uid==me.uid){const mn=mk("button","pvm");mn.type="button";mn.innerHTML=RLI.dots;mn.onclick=()=>{if(confirm(RC("Удалить публикацию?","Delete post?")))deleteDoc(doc(db,"posts",p.id)).then(()=>{c.remove();if(!sc.children.length){o.remove()}if(window.curV=="me")window.R.me()}).catch(()=>toast(RX("fail"),0))};au.append(mn)}
+  if(p.uid==me.uid){const mn=mk("button","pvm");mn.type="button";mn.innerHTML=RLI.dots;mn.onclick=()=>{if(confirm(RC("Удалить публикацию?","Delete post?")))deleteDoc(doc(db,"posts",p.id)).then(()=>{GC.clear();c.remove();if(!sc.children.length){o.remove()}if(window.curV=="me")window.R.me()}).catch(()=>toast(RX("fail"),0))};au.append(mn)}
   im.forEach(s=>{const i=mk("img");i.src=s;i.draggable=false;car.append(i)});wr.append(car);c.append(au,wr);
   if(im.length>1){const cn=mk("span","pvn","1/"+im.length),dd=mk("div","pvd");im.forEach((_,k)=>dd.append(mk("i",k?"":"on")));wr.append(cn);
    car.onscroll=()=>{const k=Math.round(car.scrollLeft/car.clientWidth);cn.textContent=(k+1)+"/"+im.length;[...dd.children].forEach((d,j)=>d.classList.toggle("on",j==k))};c.append(dd)}
@@ -1964,7 +2008,7 @@ function pTabs(box,uid,own){
    else{const s=await getDocs(query(collection(db,"reposts"),where("uid","==",uid),limit(30))),rs=s.docs.map(d=>d.data()).sort(byTs);
     const ts=await Promise.all(rs.map(r=>getDoc(doc(db,r.k=="post"?"posts":"reels",r.t)).then(d=>d.exists()?Object.assign({id:d.id,k:r.k},d.data()):null).catch(()=>null)));
     if(tk!=pTabs.k)return;const a=ts.filter(x=>x&&(x.aud!="me"||x.uid==me.uid));if(!a.length)return empty();const g=grid();
-    a.forEach(x=>g.append(x.k=="post"?tile(pimgs(x)[0],()=>postView([x],0),"",1,pimgs(x).length>1):tile(x.th,()=>rlOpen(x.id),"▶")))}
+    const rls=a.filter(x=>x.k!="post"),rlt=[];a.forEach(x=>{if(x.k=="post")g.append(tile(pimgs(x)[0],()=>postView([x],0),"",1,pimgs(x).length>1));else{const t=tile(x.th,()=>rlOpenList(rls,rls.indexOf(x),rlt),"▶");t.addEventListener("pointerdown",()=>{rlFetch(x).catch(()=>{})},{passive:true});rlt.push(t);g.append(t)}})}
   }catch(e){if(tk==pTabs.k){body.innerHTML="";empty()}}};
  ic.forEach((s,i)=>{const b=mk("button");b.type="button";b.innerHTML=s;b.onclick=()=>load(i);bar.append(b)});box.append(bar,body);load(window.PTAB||0)}
 pTabs.k=0;
@@ -1982,7 +2026,7 @@ function postCreate(){
  o.append(hd,pk,dt,md,ft,fi);document.body.append(o);let imgs=[];
  fi.onchange=async()=>{const fs=fi.files;if(!fs.length)return;pk.disabled=true;try{imgs=await pImgs(fs);th.innerHTML="";imgs.forEach(s=>{const i=mk("img");i.src=s;th.append(i)});pk.hidden=md.hidden=true;dt.hidden=ft.hidden=false}catch(e){toast(RX("bad"),0)}pk.disabled=false;fi.value=""};
  sh.onclick=async()=>{if(!imgs.length)return;const x={uid:me.uid,cap:ta.value.trim().slice(0,150),img:imgs[0],lk:0,cm:0,rp:0,ts:serverTimestamp()},tb=imgs[0];if(imgs.length>1)x.imgs=imgs;if(aud=="me")x.aud="me";o.remove();RL.upl={th:tb,p:.4};window.show("me");rlProgPaint();
-  try{await setDoc(doc(collection(db,"posts")),x);RL.upl=null;window.PTAB=0;toast(RC("Опубликовано","Posted"),1);if(window.curV=="me")window.R.me();else rlProgPaint()}
+  try{await setDoc(doc(collection(db,"posts")),x);GC.clear();RL.upl=null;window.PTAB=0;toast(RC("Опубликовано","Posted"),1);if(window.curV=="me")window.R.me();else rlProgPaint()}
   catch(e){RL.upl={th:tb,err:e.code=="permission-denied"?RX("nof"):RX("fail")+" ["+String(e.code||e.message).slice(0,100)+"]"};rlProgPaint()}}}
 function rlRepost(r,it){rlToggleSub(r,it,"rps","rp","rp");setTimeout(()=>{const ref=doc(db,"reposts",me.uid+"_reel_"+r.id);(rlSt(r.id).rp?setDoc(ref,{uid:me.uid,k:"reel",t:r.id,ts:serverTimestamp()}):deleteDoc(ref)).catch(()=>{})},400)}
 /* v148: «+» в профиле → выбор видео → подпись, хештеги, аудитория → «Поделиться» → загрузка видна в профиле */
@@ -2024,7 +2068,7 @@ window.R.reels=()=>{
  RL.el.hidden=false;
  if(!RL.items.length)rlLoad(true);else rlResume()};
 const _shRL=window.show;window.show=function(v){const f=window.curV;_shRL(v);
- if(v!="reels"){document.body.classList.remove("rl-on");if(RL.el){RL.el.hidden=true;rlPauseAll()}}};
+ if(v!="reels"){document.body.classList.remove("rl-on");if(RL.pf)rlCloseProf(true);else if(RL.el){RL.el.hidden=true;rlPauseAll()}}};
 function counts(uid,cb){cs.forEach(f=>f());cs=[];let a=[],b=[];const g=()=>cb(b.length,a.length,!!me&&b.some(d=>d.a==me.uid));
  cs.push(onSnapshot(query(collection(db,"follows"),where("b","==",uid)),s=>{b=s.docs.map(d=>d.data());g()},()=>{}));
  cs.push(onSnapshot(query(collection(db,"follows"),where("a","==",uid)),s=>{a=s.docs.map(d=>d.data());g()},()=>{}))}
@@ -4210,6 +4254,9 @@ body.rl-on{background:#000}body.rl-on .tb,body.rl-on .apk{display:none!important
 .rl-us .rl-pub{display:block;width:calc(100% - 36px);margin-top:12px;padding:15px}
 .rl [hidden],.rl-ov [hidden]{display:none!important}
 .rl-us>.rl-pvv{margin-left:auto;margin-right:auto}
+.rl-bk{display:none;width:44px;height:44px}
+.rl.pf{z-index:50;--rlb:calc(env(safe-area-inset-bottom,0px) + 26px)}
+.rl.pf .rl-bk{display:grid}.rl.pf .rl-tabs{display:none}.rl.pf .rl-feed{touch-action:pan-y}
 @media (prefers-reduced-motion:reduce){.rl-hb,.rl-b.lk.on svg,.rl-pn,.rl-cs,.rl-us{animation:none}}
 </style>
 <style id="kd-nav">
