@@ -872,6 +872,25 @@ html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 @keyframes fionShine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 @keyframes fionFloat{0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-4px) rotate(.6deg)}}
 @media (prefers-reduced-motion:reduce){.fion,.hero h1 .fion{animation:none}}
+/* v155: сворачивание шапки профиля при прокрутке (баннер -> компактная полоса, аватар/кнопки плавно гаснут) */
+.pcard.pcol{display:contents}
+.pcard.pcol .pban,.pcard.pcol .pbody{width:100vw;margin-left:calc(50% - 50vw);box-sizing:border-box}
+.pcard.pcol .pban{position:sticky;top:calc(var(--pcs,200px)*-1);z-index:4;overflow:hidden;--p:0}
+.pcard.pcol .pban>img{transform:translate3d(0,calc(var(--p)*var(--pcs,200px)*.5),0) scale(calc(1 + var(--p)*.08));will-change:transform}
+.pcard.pcol .pban::before{opacity:calc(1 - var(--p))}
+.pcard.pcol .pban::after{opacity:calc(1 - var(--p))}
+.pcard.pcol .pbshade{position:absolute;inset:0;z-index:2;pointer-events:none;background:rgba(10,6,14,.62);opacity:var(--p);-webkit-backdrop-filter:blur(calc(var(--p)*14px));backdrop-filter:blur(calc(var(--p)*14px))}
+.pcard.pcol .pbn{position:absolute;left:0;right:0;bottom:0;height:56px;z-index:3;display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;font:700 16px Poppins,system-ui,sans-serif;pointer-events:none;opacity:calc((var(--p) - .6)*2.5);transform:translate3d(0,calc((1 - var(--p))*14px),0)}
+.pcard.pcol .pbc{opacity:calc(1 - var(--p)*2.2);transform:translate3d(0,calc(var(--p)*-20px),0) scale(calc(1 - var(--p)*.2));pointer-events:auto}
+.pcard.pcol .pbody{position:relative;z-index:1;--q:0;margin-bottom:6px;background:linear-gradient(transparent 0,transparent 46px,var(--bg) 46px)}
+.pcard.pcol .pf{z-index:5;transform-origin:0 100%;transform:translate3d(0,calc(var(--q)*-24px),0) scale(calc(1 - var(--q)*.35));opacity:calc(1 - var(--q)*1.15);will-change:transform,opacity}
+.pcard.pcol .prow{transform-origin:50% 0;transform:translate3d(0,calc(var(--q)*-16px),0) scale(calc(1 - var(--q)*.1));opacity:calc(1 - var(--q)*1.25);will-change:transform,opacity}
+.pcard.pcol .pbio{opacity:calc(1 - var(--q)*1.4)}
+.pcard.pcol.cl .pf,.pcard.pcol.cl .prow{pointer-events:none}
+#c-me:has(.pcol)>.hd,#c-user:has(.pcol)>.hd{position:fixed;left:0;top:0;width:100%;margin:0}
+#c-me:has(.pcol),#c-user:has(.pcol){min-height:calc(100vh + var(--pcs,200px) + 140px)}
+#c-me:has(.pcol)>.ptb,#c-user:has(.pcol)>.ptb{position:sticky;top:calc(var(--pcb2,58px) + env(safe-area-inset-top,0px) - 1px);z-index:5;background:var(--bg);margin-top:0}
+
 </style><style id="kd-pv">
 .pv-t{text-align:center;line-height:1.2}.pv-t small{display:block;opacity:.6;font-size:12px}.pv-t b{font-size:16px}
 .pv-sc{flex:1;overflow-y:auto;padding-bottom:40px}.pva{display:flex;align-items:center;gap:10px;padding:12px 14px}.pva .rl-ca{width:34px;height:34px}
@@ -2084,10 +2103,31 @@ function counts(uid,cb){cs.forEach(f=>f());cs=[];let a=[],b=[];const g=()=>cb(b.
  cs.push(onSnapshot(query(collection(db,"follows"),where("b","==",uid)),s=>{b=s.docs.map(d=>d.data());g()},()=>{}));
  cs.push(onSnapshot(query(collection(db,"follows"),where("a","==",uid)),s=>{a=s.docs.map(d=>d.data());g()},()=>{}))}
 function share(){const u=location.origin+location.pathname+"?u="+me.uid;if(navigator.share)navigator.share({title:"FION",url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}alert(T.cpy)}}
+
+/* v155: логика сворачивания шапки профиля */
+function pColl(box,card,ban,bd){
+ if(box._pcOff){box._pcOff();box._pcOff=null}
+ let R=200,B=58,raf=0,last=-1;
+ const pr=document.createElement("div");pr.style.cssText="position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)";
+ const measure=()=>{document.body.appendChild(pr);const sa=parseFloat(getComputedStyle(pr).paddingTop)||0;pr.remove();
+  const h=ban.offsetHeight||0;B=56+sa;R=Math.max(80,h-B);box.style.setProperty("--pcs",R+"px");box.style.setProperty("--pcb2",B+"px")};
+ const upd=()=>{raf=0;if(!ban.isConnected){off();return}
+  const y=Math.max(0,window.scrollY||document.documentElement.scrollTop||0);
+  const p=Math.min(1,y/R),q=Math.min(1,y/(R*.7));
+  const k=Math.round(p*200)/200+"|"+Math.round(q*200)/200;if(k===last)return;last=k;
+  ban.style.setProperty("--p",p.toFixed(3));bd.style.setProperty("--q",(q*q*(3-2*q)).toFixed(3));
+  card.classList.toggle("cl",q>.85)};
+ const onS=()=>{if(!raf)raf=requestAnimationFrame(upd)};
+ const onR=()=>{measure();last=-1;onS()};
+ const off=()=>{window.removeEventListener("scroll",onS);window.removeEventListener("resize",onR);if(raf)cancelAnimationFrame(raf)};
+ box._pcOff=off;
+ window.addEventListener("scroll",onS,{passive:true});window.addEventListener("resize",onR);
+ const im=ban.querySelector("img");if(im&&!im.complete)im.addEventListener("load",onR,{once:true});
+ requestAnimationFrame(()=>{measure();last=-1;upd()});setTimeout(onR,400)}
 function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  if(!own){const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>window.show(prev||"find");top.append(bk)}
  if(own){const pb=mk("button","stpb");pb.innerHTML=ico("stplus");pb.onclick=rlUpload;top.append(pb)}{const sp=mk("span",null,nm(u));if(isV(uid))sp.append(VB(18));top.append(sp)}if(own){const mb=mk("button","mb");mb.id="mb";mb.type="button";mb.setAttribute("aria-label","menu");mb.innerHTML=ico("menu");mb.style.marginLeft="auto";mb.onclick=()=>window.menu(!dr.classList.contains("o"));top.append(mb)}box.append(top);
- const card=mk("div","pcard"),ban=mk("div","pban");
+ const card=mk("div","pcard pcol"),ban=mk("div","pban");
  if(u.banner){const bm=mk("img");bm.src=u.banner;bm.alt="";bm.draggable=false;ban.append(bm)}
  if(own){const cb=mk("button","pbc");cb.type="button";cb.setAttribute("aria-label",X("pcb"));cb.innerHTML=ico("stgal")+" <span>"+X("pcb")+"</span>";const bf=mk("input");bf.type="file";bf.accept="image/*";bf.hidden=true;cb.onclick=()=>bf.click();
   bf.onchange=()=>{const f=bf.files[0];if(!f)return;bf.value="";cropPhoto(f,b64=>{setDoc(doc(db,"users",me.uid),{banner:b64},{merge:true}).then(()=>{MY.banner=b64;toast(X("sv"),1);window.R.me()}).catch(e=>toast(e.code=="permission-denied"?X("pd"):(e.code||e.message),0))},Object.assign({hint:X("pbh")},BANNER))};ban.append(cb,bf)}
@@ -2095,7 +2135,7 @@ function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  const p=mk("div","pf");const aw=mk("div","stw");aw.append(av(u,92));p.append(aw);stBind(aw,uid,own);const st=mk("div","st");
  st.innerHTML='<div><b>'+(u.learned||0)+'</b><span>'+T.done+'</span></div><div><b class="s1">0</b><span>'+T.fol+'</span></div><div><b class="s2">0</b><span>'+T.fng+'</span></div>';p.append(st);
  const idr=mk("div","prow"),idn=mk("div","pid"),nmb=mk("b",null,nm(u));if(isV(uid))nmb.append(VB(16));idn.append(nmb);if(u.username)idn.append(mk("span",null,"@"+u.username));
- const pr=mk("div","pr");idr.append(idn,pr);bd.append(p,idr);if(u.bio&&!own)bd.append(mk("div","pbio",u.bio));card.append(ban,bd);box.append(card);if(own){const pg=mk("div");pg.id="rlprog";pg.hidden=true;box.append(pg);rlProgPaint()}pTabs(box,uid,own);
+ const pr=mk("div","pr");idr.append(idn,pr);bd.append(p,idr);if(u.bio&&!own)bd.append(mk("div","pbio",u.bio));{const sh=mk("div","pbshade"),pn=mk("div","pbn");const pnm=mk("span",null,nm(u));pn.append(pnm);if(isV(uid))pn.append(VB(16));ban.append(sh,pn)}card.append(ban,bd);box.append(card);pColl(box,card,ban,bd);if(own){const pg=mk("div");pg.id="rlprog";pg.hidden=true;box.append(pg);rlProgPaint()}pTabs(box,uid,own);
  counts(uid,(f1,f2,isf)=>{box.querySelector(".s1").textContent=(OWNER_FAKE&&isV(uid))?vFol(uid):f1;box.querySelector(".s2").textContent=f2;pr.innerHTML="";
   if(own){const e=mk("button",null,T.edt);e.onclick=()=>window.show("edit");const h=mk("button",null,T.shr);h.onclick=share;pr.append(e,h);}
   else{const f=mk("button",isf?"":"pri",isf?T.fwd:T.flw),r=doc(db,"follows",me.uid+"_"+uid);f.onclick=()=>(isf?deleteDoc(r):setDoc(r,{a:me.uid,b:uid,ts:serverTimestamp()})).catch(e=>alert(e.message));
