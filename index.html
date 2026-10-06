@@ -882,7 +882,7 @@ html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .pcard.pcol .pbshade{position:absolute;inset:0;z-index:2;pointer-events:none;background:rgba(10,6,14,.62);opacity:var(--p);-webkit-backdrop-filter:blur(calc(var(--p)*14px));backdrop-filter:blur(calc(var(--p)*14px))}
 .pcard.pcol .pbn{position:absolute;left:0;right:0;bottom:0;height:56px;z-index:3;display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;font:700 16px Poppins,system-ui,sans-serif;pointer-events:none;opacity:calc((var(--p) - .6)*2.5);transform:translate3d(0,calc((1 - var(--p))*14px),0)}
 .pcard.pcol .pbc{opacity:calc(1 - var(--p)*2.2);transform:translate3d(0,calc(var(--p)*-20px),0) scale(calc(1 - var(--p)*.2));pointer-events:auto}
-.pcard.pcol .pbody{position:relative;z-index:1;--q:0;margin-bottom:6px;background:linear-gradient(transparent 0,transparent 46px,var(--bg) 46px)}
+.pcard.pcol .pbody{position:relative;z-index:auto;--q:0;margin-bottom:6px;background:var(--bg)}
 .pcard.pcol .pf{z-index:5;transform-origin:0 100%;transform:translate3d(0,calc(var(--q)*-24px),0) scale(calc(1 - var(--q)*.35));opacity:calc(1 - var(--q)*1.15);will-change:transform,opacity}
 .pcard.pcol .prow{transform-origin:50% 0;transform:translate3d(0,calc(var(--q)*-16px),0) scale(calc(1 - var(--q)*.1));opacity:calc(1 - var(--q)*1.25);will-change:transform,opacity}
 .pcard.pcol .pbio{opacity:calc(1 - var(--q)*1.4)}
@@ -890,6 +890,15 @@ html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 #c-me:has(.pcol)>.hd,#c-user:has(.pcol)>.hd{position:fixed;left:0;top:0;width:100%;margin:0}
 #c-me:has(.pcol),#c-user:has(.pcol){min-height:calc(100vh + var(--pcs,200px) + 140px)}
 #c-me:has(.pcol)>.ptb,#c-user:has(.pcol)>.ptb{position:sticky;top:calc(var(--pcb2,58px) + env(safe-area-inset-top,0px) - 1px);z-index:5;background:var(--bg);margin-top:0}
+
+/* v157: «Что такое FION?» в меню, крупный центрированный логотип на главной */
+#dr .dwb{width:100%;max-width:none;margin:auto 0 0;flex:none;min-height:56px;padding:8px 16px;gap:10px;border-radius:18px;box-shadow:0 8px 22px rgba(139,0,220,.22),inset 0 1px 0 rgba(255,255,255,.3)}
+#dr .dwb b{font-size:clamp(13px,3.8vw,15px);letter-spacing:1.3px}
+#dr .dwb+.aiL{margin-top:10px}
+#v-home .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px 20px 22px}
+#v-home .hero h1{margin:0 0 8px;display:flex;justify-content:center;width:100%}
+#v-home .hero h1 .fion{height:clamp(64px,19vw,104px);max-width:90vw}
+#v-home .hero p{text-align:center;width:100%}
 
 </style><style id="kd-pv">
 .pv-t{text-align:center;line-height:1.2}.pv-t small{display:block;opacity:.6;font-size:12px}.pv-t b{font-size:16px}
@@ -959,7 +968,7 @@ html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 <a data-v="ai" class="aiL"><span data-t="ai"></span></a></nav>
 <main id="v-home">
 <div class="hero"><h1><span class="fion" role="img" aria-label="FION"></span></h1><p data-t="sub"></p></div>
-<div class="wrap"><button class="wb" id="whatBtn"><span id="whatI"></span><b id="whatT"></b><span class="wa" data-ic="next"></span></button><div class="hg" id="hg"></div></div></main>
+<div class="wrap"><div class="hg" id="hg"></div></div></main>
 <main id="v-fold" hidden><div class="wrap"><div class="hd"><button id="fb" aria-label="back" data-ic="back"></button><span id="ft"></span></div><div class="fw">
 <div class="fg"><button class="fold" id="fold" aria-label="Full Stack"><small id="fcnt"></small>
 <svg viewBox="0 0 64 64" fill="none"><path d="M6 17a5 5 0 0 1 5-5h14l6 7h22a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5z" fill="#fff" fill-opacity=".96"/><path d="M6 27h52" stroke="#670a9d" stroke-opacity=".25" stroke-width="2"/><path d="M27 36l-6 5 6 5M37 36l6 5-6 5" stroke="#670a9d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1270,7 +1279,7 @@ ai:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d
 var LOGO_URI="logo.png";function gi(k,s){if(k=="logo")return '<img class="lgi'+(s?' '+s:'')+'" src="'+LOGO_URI+'" alt="FION" draggable="false">';return '<i class="gi gi-'+k+(s?' '+s:'')+'"><svg viewBox="0 0 24 24">'+IC[k]+'</svg></i>'}
 function ico(k,c){return '<svg class="i'+(c?' '+c:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>'}
 function icons(r){r=r||document;r.querySelectorAll("[data-ic]").forEach(function(e){e.innerHTML=ico(e.dataset.ic)});r.querySelectorAll("[data-gi]").forEach(function(e){var p=e.dataset.gi.split(" ");e.outerHTML=gi(p[0],p[1])})}
-dr.innerHTML='<div class="dh">'+'<span class="fion" role="img" aria-label="FION"></span>'+'</div>'+["home","prog","fav","set","about"].map(function(k){return '<a data-v="'+k+'">'+gi(k)+'<span data-t="'+k+'"></span></a>'}).join("")+'<a data-v="ai" class="aiL">'+gi("ai")+'<span data-t="ai"></span></a>';
+dr.innerHTML='<div class="dh">'+'<span class="fion" role="img" aria-label="FION"></span>'+'</div>'+["home","prog","fav","set","about"].map(function(k){return '<a data-v="'+k+'">'+gi(k)+'<span data-t="'+k+'"></span></a>'}).join("")+'<button class="wb dwb" id="whatBtn" type="button"><span id="whatI"></span><b id="whatT"></b><span class="wa" data-ic="next"></span></button>'+'<a data-v="ai" class="aiL">'+gi("ai")+'<span data-t="ai"></span></a>';
 icons();
 function show(v){curV=v;VS.forEach(function(x){$("v-"+x).hidden=x!=v});menu(false);window.scrollTo(0,0);if(v=="ai"&&!greeted){greeted=true;hello()}RV()}
 function card(x){var i=D.indexOf(x),f=st.fv.indexOf(i)>-1,d=st.dn.indexOf(i)>-1;return '<div class="c"><span class="b">'+T.dars.replace("{n}",cur&&curV=="lessons"?pos(x.l):x.l)+'</span><h3>'+esc(x.t)+'</h3><p>'+esc(x.d)+'</p><pre>'+esc(x.c)+'</pre><div class="ac"><button data-f="'+i+'">'+(f?ico("fav","fl ys"):ico("fav"))+'</button><button data-d="'+i+'" class="'+(d?"on":"")+'">'+(d?ico("check")+" ":"")+T.done+'</button><button data-c="'+i+'">'+T.copy+'</button></div></div>'}
@@ -3002,6 +3011,7 @@ function syncDr(){const d=document.getElementById("dr");if(!d)return;
  if(isAdm()){const b=document.createElement("button");b.className="dro";b.type="button";
   b.innerHTML=gi("crown")+'<span>Владелец</span><em class="bdg" hidden></em>';
   b.onclick=()=>window.show("owner");ai?d.insertBefore(b,ai):d.append(b)}
+ const wbn=document.getElementById("whatBtn");if(wbn&&ai)d.insertBefore(wbn,ai);
  const sp=document.createElement("a");sp.className="aiL sup";sp.dataset.v="support";sp.innerHTML=gi("support")+"<span>"+SX("t")+"</span>";
  ai?ai.after(sp):d.append(sp);
  const o=document.createElement("button");o.className="dlo";o.type="button";
