@@ -3156,14 +3156,14 @@ s.textContent=
 "#G_ui .gcaw .gr{position:absolute;left:50%;top:50%;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;border:2px solid rgba(255,255,255,.55);opacity:0;pointer-events:none;z-index:1}"+
 "#G_ui .gct.ring .gcaw .gr{animation:gWave 2.1s cubic-bezier(.2,.6,.3,1) infinite}"+
 "#G_ui .gct.ring .gcaw .r2{animation-delay:.7s}#G_ui .gct.ring .gcaw .r3{animation-delay:1.4s}"+
-"@keyframes gWave{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}"+
+"@keyframes gWave{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(1.6)}}"+
 "#G_ui .gct.ring .gcaw .av{animation:gBreath 1.6s ease-in-out infinite}"+
 "@keyframes gBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}"+
 "#G_ui .gct.ring{background:#26272c}#G_ui .gct.ring .gcaw .av{opacity:.8}"+
 "#G_ui .gct.bad .gcaw .av{filter:grayscale(1);opacity:.45}"+
 "#G_ui .gct.gjoin .gcaw .gr{border-color:#23a559;border-width:3px;animation:gBurst .95s cubic-bezier(.1,.7,.3,1) both}"+
 "#G_ui .gct.gjoin .gcaw .r2{animation-delay:.12s}#G_ui .gct.gjoin .gcaw .r3{animation-delay:.24s}"+
-"@keyframes gBurst{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(3.1)}}"+
+"@keyframes gBurst{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(2)}}"+
 "#G_ui .gct.gjoin .gcaw .av{animation:gPop .65s cubic-bezier(.2,1.4,.4,1)}"+
 "@keyframes gPop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}"+
 "#G_ui .gct.gjoin::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(35,165,89,.4),transparent 65%);animation:gFlash 1s ease-out both}"+
@@ -3431,7 +3431,7 @@ const G_PLUS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 function G_tiles(c){const a=[],seen={};const add=(id,k)=>{if(seen[id])return;seen[id]=1;a.push({id,k})};
  add(c.uid,"me");Object.keys(c.peers).forEach(id=>add(id,"peer"));Object.keys(c.pd).forEach(id=>add(id,"peer"));
  Object.keys(c.inv).forEach(id=>add(id,"inv"));
- if(a.length<G_MAX)a.push({id:"__add",k:"add"});return a}
+ return a}
 function G_user(c,e){if(e.id==c.uid)return UM[me.uid]||(typeof MY!="undefined"?MY:null)||{};
  const p=c.peers[e.id],i=c.inv[e.id],d=c.pd[e.id],n=(p&&p.name)||(d&&d.name)||(i&&i.name)||"?";
  return UM[e.id]||{name:n,username:n}}
@@ -3447,7 +3447,7 @@ function G_place(c,list,W,H){const pos={},real=list.filter(e=>e.k!="add"),gap=W<
   const rest=list.filter(e=>e.id!==mid),m=rest.length,tw=Math.min(sh*1.5,(W-(m-1)*gap)/m),tot=m*tw+(m-1)*gap;
   rest.forEach((e,i)=>{pos[e.id]={x:(W-tot)/2+i*(tw+gap),y:mh+gap,w:tw,h:sh}});return pos}
  const n=list.length;let b=null;
- for(let cols=(W<600&&n>=3?2:1);cols<=n;cols++){const rows=Math.ceil(n/cols);let tw=(W-(cols-1)*gap)/cols,th=(H-(rows-1)*gap)/rows;
+ for(let cols=(W<600&&n>=4?2:1);cols<=n;cols++){const rows=Math.ceil(n/cols);let tw=(W-(cols-1)*gap)/cols,th=(H-(rows-1)*gap)/rows;
   if(th>tw*1.3)th=tw*1.3;if(tw>th*1.9)tw=th*1.9;if(!b||tw*th>b.a+1)b={cols,rows,tw,th,a:tw*th}}
  const y0=(H-(b.rows*b.th+(b.rows-1)*gap))/2;
  list.forEach((e,i)=>{const r=Math.floor(i/b.cols),cnt=r==b.rows-1?n-b.cols*(b.rows-1):b.cols,x0=(W-(cnt*b.tw+(cnt-1)*gap))/2;
