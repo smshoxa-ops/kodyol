@@ -2845,7 +2845,7 @@ function K_callUI(u){
  const sp0=bt("kdib",I(P.spk,!(c&&c.spk)),K_Cx("sp"),b=>{const k=K_cs;if(!k)return;k.spk=!k.spk;b.innerHTML=I(P.spk,!k.spk);K_spk(k,k.spk)});
  const ch0=bt("kdib",I(P.chat),K_Cx("mn"),()=>K_minimize());
  const sp1=mk("div");sp1.style.flex="1";
- hd.append(bt("kdib",I(P.chev),K_Cx("mn"),()=>K_minimize()),pill,sp1,bt("kdib",I(P.add),G_Lx("inv"),()=>K_toGroup()),sp0,ch0);
+ hd.append(bt("kdib",I(P.chev),K_Cx("mn"),()=>K_minimize()),pill,sp1,bt("kdib",I(P.add),G_Lx("inv"),()=>K_pick()),sp0,ch0);
  /* плитки */
  const tiles=mk("div","kdtiles");
  const tile=(cls,usr,label)=>{const t=mk("div","kdtile "+cls);const a=av(usr,112);a.style.borderRadius="50%";const lb=mk("div","kdlb");const mi=mk("span","kdmi");mi.innerHTML=I(P.mic,1);lb.append(mi,mk("span",null,label));t.append(a,lb);return {t,a}};
@@ -3064,7 +3064,25 @@ async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  catch(e){toast(e.code||e.message,0);K_endCall(true,K_Cx("f"))}}
 function K_callInit(u){K_callStop();
  K_callUn=onSnapshot(query(collection(db,"calls"),where("to","==",u.uid),where("status","==","ringing")),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();if(Date.now()-t>60000)return;K_incoming(ch.doc.id,x)})},()=>{})}
-function K_toGroup(){const c=K_cs;if(!c||!c.peer||G_cs||G_busy||!c.stream)return;const peer=c.peer,v=!!c.video,st=c.stream;c.stream=null;G_noAnim=true;G_start([peer],v,true,st,()=>K_endCall(true,""))}
+function K_toGroup(extra){const c=K_cs;if(!c||!c.peer||G_cs||G_busy||!c.stream)return;const peer=c.peer,v=!!c.video,st=c.stream;c.stream=null;G_noAnim=true;G_start([peer].concat(extra||[]),v,false,st,()=>K_endCall(true,""))}
+/* список «Позвать в звонок» прямо на экране звонка; выбрал человека — он сразу появляется плиткой */
+async function K_pick(){const c=K_cs,o=E("K_callUI");if(!c||!c.peer||G_cs||G_busy||!c.stream||!o||E("G_sh"))return;
+ const ov=mk("div","gsh");ov.id="G_sh";const bx=mk("div","gshb");
+ const hd=mk("div","gsht"),x=mk("button","gshx","✕");x.setAttribute("aria-label","Close");hd.append(mk("b",null,G_Lx("ptitle")),x);
+ const sr=document.createElement("input");sr.className="gshs";sr.placeholder=G_Lx("srch");sr.setAttribute("autocomplete","off");
+ const ls=mk("div","gshl");ls.append(mk("div","gshe",G_Lx("load")));
+ bx.append(hd,sr,ls);ov.append(bx);o.append(ov);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>ov.classList.add("on")));
+ const close=()=>{ov.classList.remove("on");setTimeout(()=>ov.remove(),300)};x.onclick=close;
+ ov.addEventListener("pointerdown",e=>{if(e.target===ov)close()});
+ ["click","pointerdown","pointermove","touchstart","touchmove"].forEach(t=>ov.addEventListener(t,e=>e.stopPropagation()));
+ const ids=await G_follows();if(!ov.isConnected)return;
+ const paint=()=>{if(!ov.isConnected)return;const q=sr.value.trim().toLowerCase();ls.textContent="";
+  const l=ids.filter(v=>v!=c.peer&&(!q||nm(UM[v]).toLowerCase().indexOf(q)>=0)).sort((a,b)=>(K_ponl(b)-K_ponl(a))||nm(UM[a]).localeCompare(nm(UM[b])));
+  if(!l.length){ls.append(mk("div","gshe",G_Lx(ids.length?"allin":"none")));return}
+  l.forEach(v=>{const r=mk("div","gshr"),tx=mk("div","gshn"),on=K_ponl(v),sm=mk("small",on?"on":"",on?G_Lx("on"):"");tx.append(mk("b",null,nm(UM[v])),sm);
+   const b=mk("button","gshg",G_Lx("inv"));b.onclick=()=>{ov.remove();K_toGroup([v])};r.append(av(UM[v],42),tx,b);ls.append(r)})};
+ sr.oninput=paint;paint()}
 function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true);G_stop()}
 /* ===== ГРУППОВЫЕ ЗВОНКИ (v160): до 6 человек, звать можно тех, на кого ты подписан (как в Discord).
    WebRTC «каждый с каждым» (mesh), сигналинг через Firestore: gcalls/{id} (+ p = участники, s = сигналы), ginv/{id_uid} = приглашения ===== */
@@ -3180,21 +3198,37 @@ s.textContent=
 "#G_ui .gct.gadt .gap{width:48px;height:48px;border-radius:50%;background:#2b2d31;display:grid;place-items:center}#G_ui .gct.gadt .gap svg{width:24px;height:24px}"+
 "#G_ui .gct.gadt b{font-size:13px;font-weight:600}"+
 "#G_ui .gsh{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0);display:flex;align-items:flex-end;justify-content:center;transition:background .3s}"+
+"#K_callUI .gsh{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0);display:flex;align-items:flex-end;justify-content:center;transition:background .3s}"+
 "#G_ui .gsh.on{background:rgba(0,0,0,.52)}"+
+"#K_callUI .gsh.on{background:rgba(0,0,0,.52)}"+
 "#G_ui .gshb{width:min(100%,460px);max-height:78%;display:flex;flex-direction:column;background:#2b2d31;border-radius:22px 22px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);box-sizing:border-box;transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.9,.3,1)}"+
+"#K_callUI .gshb{width:min(100%,460px);max-height:78%;display:flex;flex-direction:column;background:#2b2d31;border-radius:22px 22px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);box-sizing:border-box;transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.9,.3,1)}"+
 "#G_ui .gsh.on .gshb{transform:none}"+
+"#K_callUI .gsh.on .gshb{transform:none}"+
 "@media(min-width:760px){#G_ui .gsh{align-items:center}#G_ui .gshb{border-radius:22px;transform:translateY(24px) scale(.96);opacity:0;transition:transform .32s cubic-bezier(.2,.9,.3,1),opacity .25s}#G_ui .gsh.on .gshb{opacity:1}}"+
+"@media(min-width:760px){#K_callUI .gsh{align-items:center}#K_callUI .gshb{border-radius:22px;transform:translateY(24px) scale(.96);opacity:0;transition:transform .32s cubic-bezier(.2,.9,.3,1),opacity .25s}#K_callUI .gsh.on .gshb{opacity:1}}"+
 "#G_ui .gsht{display:flex;align-items:center;justify-content:space-between;font-size:18px;padding:2px 2px 10px}"+
+"#K_callUI .gsht{display:flex;align-items:center;justify-content:space-between;font-size:18px;padding:2px 2px 10px}"+
 "#G_ui .gshx{width:34px;height:34px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer}"+
+"#K_callUI .gshx{width:34px;height:34px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer}"+
 "#G_ui .gshs{width:100%;box-sizing:border-box;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;padding:0 12px;font-size:16px;outline:0;margin-bottom:8px;font-family:inherit}"+
+"#K_callUI .gshs{width:100%;box-sizing:border-box;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;padding:0 12px;font-size:16px;outline:0;margin-bottom:8px;font-family:inherit}"+
 "#G_ui .gshl{flex:1;min-height:120px;overflow:auto;-webkit-overflow-scrolling:touch}"+
+"#K_callUI .gshl{flex:1;min-height:120px;overflow:auto;-webkit-overflow-scrolling:touch}"+
 "#G_ui .gshe{padding:26px 8px;text-align:center;opacity:.65;font-size:14px}"+
+"#K_callUI .gshe{padding:26px 8px;text-align:center;opacity:.65;font-size:14px}"+
 "#G_ui .gshr{display:flex;align-items:center;gap:12px;padding:8px 6px;border-radius:12px}"+
+"#K_callUI .gshr{display:flex;align-items:center;gap:12px;padding:8px 6px;border-radius:12px}"+
 "#G_ui .gshn{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}"+
+"#K_callUI .gshn{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}"+
 "#G_ui .gshn b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"+
+"#K_callUI .gshn b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"+
 "#G_ui .gshn small{font-size:12px;opacity:.6}#G_ui .gshn small.on{color:#23a559;opacity:1}"+
+"#K_callUI .gshn small{font-size:12px;opacity:.6}#K_callUI .gshn small.on{color:#23a559;opacity:1}"+
 "#G_ui .gshg{height:36px;padding:0 16px;border:0;border-radius:18px;background:#23a559;color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;transition:background .2s,transform .12s}"+
+"#K_callUI .gshg{height:36px;padding:0 16px;border:0;border-radius:18px;background:#23a559;color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;transition:background .2s,transform .12s}"+
 "#G_ui .gshg:active{transform:scale(.94)}#G_ui .gshg.wait{background:rgba(255,255,255,.14);color:rgba(255,255,255,.7);cursor:default}"+
+"#K_callUI .gshg:active{transform:scale(.94)}#K_callUI .gshg.wait{background:rgba(255,255,255,.14);color:rgba(255,255,255,.7);cursor:default}"+
 "#G_ui{background:#111214}"+
 "#G_ui .gcg{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 68px);bottom:calc(env(safe-area-inset-bottom,0px) + 118px);margin:0}"+
 "#G_ui .gct{border-radius:22px;background:#526b92}#G_ui .gct.me{background:#b0b3bc}#G_ui .gct.ring,#G_ui .gct.bad{background:#41546f}#G_ui .gct.gadt{background:transparent}"+
@@ -3292,8 +3326,9 @@ function G_invite(c,uids){const n=G_myName();
   if(Object.keys(c.pd).length+pend>=G_MAX-1){toast(G_Lx("lim",{n:G_MAX}),0);return}
   const o=c.inv[u]={name:UM[u]?nm(UM[u]):"",t:Date.now(),st:"",to:null};
   o.to=setTimeout(()=>G_invDone(c,u,"noans"),47000);
-  setDoc(doc(db,"ginv",c.id+"_"+u),{gid:c.id,to:u,from:c.uid,fromName:n,video:c.video,ts:serverTimestamp()})
-   .catch(e=>{toast(e.code=="permission-denied"?G_Lx("nf"):(e.code||e.message),0);G_invDone(c,u,"drop")})});
+  const send=()=>setDoc(doc(db,"ginv",c.id+"_"+u),{gid:c.id,to:u,from:c.uid,fromName:n,video:c.video,ts:serverTimestamp()})
+   .catch(e=>{toast(e.code=="permission-denied"?G_Lx("nf"):(e.code||e.message),0);G_invDone(c,u,"drop")});
+  if(c.ready)send();else(c.q=c.q||[]).push(send)});
  if(!c.joinedOnce&&!c.ringing&&Object.keys(c.inv).some(k=>!c.inv[k].st)){c.ringing=true;K_ring(2)}
  G_render(c);if(c.shPaint&&E("G_sh"))c.shPaint()}
 function G_invDone(c,id,why){const o=c.inv[id];if(!o)return;clearTimeout(o.to);
@@ -3336,6 +3371,7 @@ function G_addPpl(c){G_sheet(c)}
 async function G_enter(gid,stream,video,uids,host){
  const c=G_cs={id:gid,uid:me.uid,stream,video:!!video,peers:{},pd:{},rt:{},un:[],mu:false,cm:false,t0:0,host:!!host,left:false,ringing:false,inv:{},focus:null,pin:null,joinedOnce:false,t00:Date.now()};
  G_ui(c);G_render(c);
+ if(uids&&uids.length)G_invite(c,uids);/* человек появляется сразу */
  try{
   const old=await getDocs(query(collection(db,"gcalls",gid,"s"),where("to","==",me.uid)));
   old.docs.forEach(d=>deleteDoc(d.ref).catch(()=>{}));/* старые сигналы прошлых заходов */
@@ -3347,6 +3383,7 @@ async function G_enter(gid,stream,video,uids,host){
  }catch(e){toast(e.code||e.message,0);G_leave(G_Lx("err"));return}
  if(G_cs!==c)return;
  deleteDoc(doc(db,"ginv",gid+"_"+me.uid)).catch(()=>{});
+ c.ready=true;(c.q||[]).forEach(f=>f());c.q=[];
  c.un.push(onSnapshot(collection(db,"gcalls",gid,"p"),s=>{if(G_cs!==c)return;
   s.docChanges().forEach(ch=>{const id=ch.doc.id;if(id==c.uid)return;
    if(ch.type=="removed"){delete c.pd[id];delete c.rt[id];G_drop(c,id);G_blip(c,1);return}
@@ -3358,7 +3395,7 @@ async function G_enter(gid,stream,video,uids,host){
   if(c.ringing&&Object.keys(c.pd).length){c.ringing=false;K_ring(false);clearTimeout(c.to)}
   G_render(c)},()=>{}));
  G_speak(c);G_watchInv(c);
- if(uids&&uids.length){G_invite(c,uids);
+ if(uids&&uids.length){
   c.to=setTimeout(()=>{if(G_cs===c&&!Object.keys(c.pd).length&&!Object.keys(c.inv).length)G_leave(G_Lx("nobody"))},60000)}}
 function G_peer(c,id,x){let p=c.peers[id];if(p)return p;
  const u=UM[id];
@@ -3429,8 +3466,8 @@ function G_blip(c,down){if(!c||c.deaf)return;
 const G_PLUS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
 /* список плиток: я, участники, те, кого зовём («Звоним…»), плитка «+» */
 function G_tiles(c){const a=[],seen={};const add=(id,k)=>{if(seen[id])return;seen[id]=1;a.push({id,k})};
- add(c.uid,"me");Object.keys(c.peers).forEach(id=>add(id,"peer"));Object.keys(c.pd).forEach(id=>add(id,"peer"));
- Object.keys(c.inv).forEach(id=>add(id,"inv"));
+ Object.keys(c.peers).forEach(id=>add(id,"peer"));Object.keys(c.pd).forEach(id=>add(id,"peer"));
+ Object.keys(c.inv).forEach(id=>add(id,"inv"));add(c.uid,"me");
  return a}
 function G_user(c,e){if(e.id==c.uid)return UM[me.uid]||(typeof MY!="undefined"?MY:null)||{};
  const p=c.peers[e.id],i=c.inv[e.id],d=c.pd[e.id],n=(p&&p.name)||(d&&d.name)||(i&&i.name)||"?";
