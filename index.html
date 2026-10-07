@@ -3228,6 +3228,7 @@ s.textContent=
 "@keyframes gFlash{0%{opacity:1}100%{opacity:0}}"+
 "#G_ui .gcl{left:50%;bottom:10px;transform:translateX(-50%);max-width:calc(100% - 24px);background:rgba(0,0,0,.5)}"+
 "#G_ui .gcm{display:none!important}"+
+"#G_ui .gct{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}"+
 "#G_ui .gcb{position:absolute;right:10px;bottom:10px;z-index:3;width:30px;height:30px;border-radius:50%;background:rgba(24,24,30,.85);color:#ff5a5f;display:none;place-items:center}"+
 "#G_ui .gct.mu .gcb{display:grid;animation:gIn .3s both}#G_ui .gcb svg{width:17px;height:17px}"+
 "#G_ui .gcw{top:10px;right:auto;left:50%;transform:translateX(-50%);padding:3px 10px;border-radius:10px;background:rgba(0,0,0,.4);white-space:nowrap;font-size:12px;opacity:.9}"+
@@ -3626,7 +3627,15 @@ function G_mkTile(c,e){const t=mk("div","gct gin"+(e.k=="me"?" me":"")+(e.k=="ad
  {const v=document.createElement("video");v.autoplay=true;v.muted=true;v.setAttribute("playsinline","");t.append(v)}
  const lb=mk("div","gcl");lb.append(mk("span","gcn",""));const bd=mk("span","gcb");bd.innerHTML=G_MICOFF;
  t.append(lb,bd,mk("div","gcw",""));
- t.onclick=()=>G_menu(c,{id:e.id,k:t.dataset.k});
+ /* долгое нажатие (1 сек) — меню; короткое — закрепить (на ПК в режиме «большая плитка») */
+ {let tm=null,lp=false,sx=0,sy=0;
+  const stop=()=>{clearTimeout(tm);tm=null};
+  t.addEventListener("pointerdown",ev=>{if(ev.button>0)return;lp=false;sx=ev.clientX;sy=ev.clientY;stop();
+   tm=setTimeout(()=>{tm=null;lp=true;try{navigator.vibrate&&navigator.vibrate(15)}catch(x){}G_menu(c,{id:e.id,k:t.dataset.k})},1000)});
+  t.addEventListener("pointermove",ev=>{if(tm&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>10)stop()});
+  ["pointerup","pointercancel","pointerleave"].forEach(n=>t.addEventListener(n,stop));
+  t.addEventListener("contextmenu",ev=>ev.preventDefault());
+  t.onclick=()=>{if(lp){lp=false;return}if(e.k=="me"||!c.stage)return;c.pin=c.pin===e.id?null:e.id;G_render(c)}}
  return t}
 function G_fill(c,t,e){if(e.k=="add")return;const isMe=e.id==c.uid,p=isMe?null:c.peers[e.id],i=c.inv[e.id],d=c.pd[e.id],u=G_user(c,e);
  const ringing=e.k=="inv"&&!!i&&!i.st,bad=e.k=="inv"&&!!i&&!!i.st;
