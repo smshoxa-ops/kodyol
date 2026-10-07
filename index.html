@@ -567,6 +567,40 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 #K_callUI .kmn:active{transform:scale(.88);background:rgba(255,255,255,.3)}
 #K_callUI .kmn svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 #K_callUI .khint{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 22px);text-align:center;font-size:12.5px;opacity:0;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.6);animation:kcHint 3.6s ease .5s both}
+#K_callUI .kgr,#K_callUI .kmn,#K_callUI .khint{display:none!important}
+#K_callUI svg{display:block}
+#K_callUI .kdhd{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 8px;transition:transform .32s cubic-bezier(.2,.9,.3,1),opacity .25s}
+#K_callUI .kdib,#K_callUI .kdpill{height:44px;border:0;border-radius:12px;background:#0a0a0c;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:inherit}
+#K_callUI .kdib{width:44px}#K_callUI .kdib svg{width:22px;height:22px}
+#K_callUI .kdpill{gap:8px;padding:0 12px 0 16px;min-width:0;text-align:left}
+#K_callUI .kdpc{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+#K_callUI .kdpn{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
+#K_callUI .kdps{font-size:11px;opacity:.65;font-variant-numeric:tabular-nums}
+#K_callUI .kdar svg{width:16px;height:16px;stroke-width:2.6}
+#K_callUI .kdtiles{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 68px);bottom:calc(env(safe-area-inset-bottom,0px) + 118px);display:flex;flex-direction:column;gap:12px;transition:top .32s cubic-bezier(.2,.9,.3,1),bottom .32s cubic-bezier(.2,.9,.3,1)}
+#K_callUI .kdtile{flex:1;min-height:0;position:relative;display:grid;place-items:center;border-radius:22px;overflow:hidden}
+#K_callUI .kdpeer{background:#526b92}#K_callUI .kdme{background:#b0b3bc}
+#K_callUI .kdtile .av,#K_callUI .kdtile>[id$=Av]{position:relative;z-index:1}
+#K_callUI .kdtile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#K_callUI .kdtile::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;box-shadow:inset 0 0 0 3px #a63df0,inset 0 0 0 6px #000;opacity:0;transition:opacity .14s}
+#K_callUI .kdtile.sp::after{opacity:1}
+#K_callUI .kdlb{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:2;display:flex;align-items:center;gap:8px;max-width:80%;padding:8px 14px;border-radius:12px;background:rgba(24,24,30,.78);font-size:17px;font-weight:600;white-space:nowrap;transition:opacity .25s}
+#K_callUI .kdlb span:last-child{overflow:hidden;text-overflow:ellipsis}
+#K_callUI .kdmi{display:none}#K_callUI .kdme.mu .kdmi{display:flex}#K_callUI .kdmi svg{width:20px;height:20px}
+#K_callUI .kdbadge{position:absolute;top:14px;right:14px;z-index:2;width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;transition:opacity .25s}
+#K_callUI .kdbadge svg{width:24px;height:24px;fill:none;stroke:#8a2fd0}
+#K_callUI .kdbar{position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);height:92px;z-index:3;display:flex;align-items:center;justify-content:space-around;padding:12px 10px 0;border-radius:30px;border:1.5px solid rgba(255,255,255,.14);background:#0c0c0e;transition:transform .32s cubic-bezier(.2,.9,.3,1),opacity .25s}
+#K_callUI .kdbar::before{content:"";position:absolute;top:8px;left:50%;width:56px;height:5px;margin-left:-28px;border-radius:3px;background:rgba(255,255,255,.35)}
+#K_callUI .kdbb{width:64px;height:58px;border:0;border-radius:16px;background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s}
+#K_callUI .kdbb svg{width:28px;height:28px}
+#K_callUI .kdbb:active,#K_callUI .kdib:active{transform:scale(.92)}
+#K_callUI .kdbb.off{background:rgba(229,72,77,.16);color:#ff5a5f;box-shadow:inset 0 0 0 1px rgba(229,72,77,.35)}
+#K_callUI .kdbb.end{width:80px;background:#e0323d}
+#K_callUI .kdbb.end svg{fill:none;stroke:#fff}
+#K_callUI.kdhide .kdhd{transform:translateY(-90px);opacity:0;pointer-events:none}
+#K_callUI.kdhide .kdbar{transform:translateY(140px);opacity:0;pointer-events:none}
+#K_callUI.kdhide .kdlb,#K_callUI.kdhide .kdbadge{opacity:0}
+#K_callUI.kdhide .kdtiles{top:calc(env(safe-area-inset-top,0px) + 80px);bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}
 .kbub{position:fixed;z-index:280;width:68px;height:68px;border-radius:20px;overflow:hidden;background:#1d062a;color:#fff;touch-action:none;cursor:pointer;user-select:none;-webkit-user-select:none;animation:kbPop .42s cubic-bezier(.2,.9,.3,1.3) both,kbRing 2.2s ease-in-out .5s infinite;will-change:left,top,transform}
 .kbub.drag{transition:none!important;animation:none;box-shadow:0 14px 34px rgba(0,0,0,.55),0 0 0 2px rgba(184,60,255,.8);transform:scale(1.08)}
 .kbub.out{animation:kbOut .25s ease forwards}
@@ -2767,21 +2801,63 @@ function K_island(u){
  try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}return o}
 function K_callUI(u){
  let o=E("K_callUI");const re=!!o;if(o)o.remove();K_bubRm(1);K_min=false;
- o=mk("div");o.id="K_callUI";if(!re)o.style.animation="kcIn .38s cubic-bezier(.2,.9,.3,1) both";
- o.style.cssText="position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 80px) 24px calc(env(safe-area-inset-bottom,0px) + 60px);color:#fff;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#480c6a,#12041a 70%,#000)";
- const top=mk("div");top.style.cssText="display:flex;flex-direction:column;align-items:center;gap:14px";
- const a=av(u,120);a.id="callAv";a.classList.add("kpulse");a.style.borderRadius="50%";a.style.boxShadow="0 0 0 10px rgba(184,60,255,.12),0 0 40px rgba(184,60,255,.35)";
- const n=mk("div",null,nm(u));n.style.cssText="font-size:26px;font-weight:800;text-shadow:0 1px 8px rgba(0,0,0,.6)";
- const st=mk("div",null,"");st.id="callSt";st.style.cssText="font-size:16px;opacity:.85;text-shadow:0 1px 6px rgba(0,0,0,.6)";
- top.append(a,n,st);
- const row=mk("div");const vid=!!(K_cs&&K_cs.video&&!K_cs.inc),sz=vid?58:70;row.style.cssText="display:flex;gap:"+(vid?12:26)+"px;align-items:flex-start;justify-content:center";
- const rb=(bg,ic,lbl,fn,rot)=>{const w=mk("div");w.style.cssText="display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px";const b=mk("button");b.style.cssText="width:"+sz+"px;height:"+sz+"px;border-radius:50%;border:0;display:grid;place-items:center;color:#fff;cursor:pointer;background:"+bg;b.innerHTML=ico(ic);const v=b.querySelector("svg");v.style.cssText="width:"+(sz>60?30:26)+"px;height:"+(sz>60?30:26)+"px;fill:none;stroke:"+(bg=="#fff"?"#000":"#fff")+(rot?";transform:rotate(135deg)":"");b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);const sp=mk("span",null,lbl);sp.style.cssText="max-width:"+(sz+14)+"px;font-size:"+(sz>60?13:11)+"px;line-height:1.1;text-shadow:0 1px 4px rgba(0,0,0,.6)";w.append(b,sp);return w};
- if(K_cs&&K_cs.inc){row.append(rb("#e5484d","phone",K_Cx("d"),()=>K_endCall(true,K_Cx("r")),1),rb("#6f08aa","phone",K_Cx("a"),K_acceptCall))}
- else{row.append(rb("rgba(255,255,255,.2)","mic",K_Cx("mu"),b=>{const t=K_cs&&K_cs.stream&&K_cs.stream.getAudioTracks()[0];if(t){t.enabled=!t.enabled;b.style.background=t.enabled?"rgba(255,255,255,.2)":"#fff";b.querySelector("svg").style.stroke=t.enabled?"#fff":"#000"}}),...(vid?[rb("rgba(255,255,255,.2)","vcam",K_Cx("cam"),b=>{const t=K_cs&&K_cs.stream&&K_cs.stream.getVideoTracks()[0];if(t){t.enabled=!t.enabled;b.style.background=t.enabled?"rgba(255,255,255,.2)":"#fff";b.querySelector("svg").style.stroke=t.enabled?"#fff":"#000"}}),rb("rgba(255,255,255,.2)","vflip",K_Cx("fl"),()=>K_flip(K_cs))]:[]),rb(K_cs&&K_cs.spk?"#fff":"rgba(255,255,255,.2)","spk",K_Cx("sp"),b=>{const c=K_cs;if(!c)return;c.spk=!c.spk;b.style.background=c.spk?"#fff":"rgba(255,255,255,.2)";b.querySelector("svg").style.stroke=c.spk?"#000":"#fff";K_spk(c,c.spk)}),rb("#e5484d","phone",K_Cx("e"),()=>K_endCall(true,K_Cx("f")),1))}
- if(vid){const rv=document.createElement("video");rv.id="callRV";rv.autoplay=true;rv.muted=true;rv.setAttribute("playsinline","");rv.style.cssText="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;display:none";
-  const lv=document.createElement("video");lv.id="callLV";lv.autoplay=true;lv.muted=true;lv.setAttribute("playsinline","");lv.style.cssText="position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 16px);width:104px;height:150px;object-fit:cover;border-radius:16px;border:2px solid rgba(255,255,255,.35);background:#000;transform:scaleX(-1)";
-  o.append(rv,lv);if(K_cs.stream)lv.srcObject=K_cs.stream;if(K_cs.remote){rv.srcObject=K_cs.remote;rv.style.display="block";a.style.display="none"}}
- o.append(top,row);document.body.append(o);K_minSetup(o,u);return o}
+ o=mk("div");o.id="K_callUI";
+ o.style.cssText="position:fixed;inset:0;z-index:300;color:#fff;background:#111214;overflow:hidden;-webkit-user-select:none;user-select:none";
+ if(!re)o.style.animation="kcIn .38s cubic-bezier(.2,.9,.3,1) both";
+ const c=K_cs,vid=!!(c&&c.video),meU=UM[me.uid]||(typeof MY!="undefined"?MY:null)||{};
+ const I=(d,off)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+(off?'<path d="M4 4l16 16"/>':'')+'</svg>';
+ const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',flip:'<path d="M20 7h-9a5 5 0 0 0-5 5M4 17h9a5 5 0 0 0 5-5"/><path d="M17 4l3 3-3 3M7 14l-3 3 3 3"/>',chev:'<path d="M6 9l6 6 6-6"/>',chat:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>',arr:'<path d="M9 6l6 6-6 6"/>'};
+ const bt=(cls,html,lbl,fn)=>{const b=mk("button",cls);b.innerHTML=html;b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);return b};
+ /* шапка */
+ const hd=mk("div","kdhd");
+ const pill=mk("button","kdpill");const pc=mk("span","kdpc");const pn=mk("span","kdpn",nm(u));const st=mk("span","kdps","");st.id="callSt";pc.append(pn,st);
+ const ar=mk("span","kdar");ar.innerHTML=I(P.arr);pill.append(pc,ar);
+ pill.onclick=()=>{const pe=c&&c.peer;K_minimize();try{pe&&openU(pe)}catch(e){}};
+ const sp0=bt("kdib",I(P.spk,!(c&&c.spk)),K_Cx("sp"),b=>{const k=K_cs;if(!k)return;k.spk=!k.spk;b.innerHTML=I(P.spk,!k.spk);K_spk(k,k.spk)});
+ const ch0=bt("kdib",I(P.chat),K_Cx("mn"),()=>K_minimize());
+ const sp1=mk("div");sp1.style.flex="1";
+ hd.append(bt("kdib",I(P.chev),K_Cx("mn"),()=>K_minimize()),pill,sp1,sp0,ch0);
+ /* плитки */
+ const tiles=mk("div","kdtiles");
+ const tile=(cls,usr,label)=>{const t=mk("div","kdtile "+cls);const a=av(usr,112);a.style.borderRadius="50%";const lb=mk("div","kdlb");const mi=mk("span","kdmi");mi.innerHTML=I(P.mic,1);lb.append(mi,mk("span",null,label));t.append(a,lb);return {t,a}};
+ const T1=tile("kdpeer",u,nm(u)),T2=tile("kdme",meU,nm(meU)||(window.lang=="ru"?"Вы":"You"));
+ T1.a.id="callAv";T2.a.id="callMeAv";
+ const bd=mk("div","kdbadge");bd.innerHTML=ico("phone");T1.t.append(bd);
+ if(vid){
+  const rv=document.createElement("video");rv.id="callRV";rv.autoplay=true;rv.muted=true;rv.setAttribute("playsinline","");rv.style.display="none";
+  const lv=document.createElement("video");lv.id="callLV";lv.autoplay=true;lv.muted=true;lv.setAttribute("playsinline","");lv.style.transform="scaleX(-1)";
+  T1.t.prepend(rv);T2.t.prepend(lv);
+  if(c.stream){lv.srcObject=c.stream;T2.a.style.display="none"}
+  if(c.remote){rv.srcObject=c.remote;rv.style.display="block";T1.a.style.display="none"}
+ }
+ tiles.append(T1.t,T2.t);
+ /* нижняя панель */
+ const bar=mk("div","kdbar");
+ const tg=(ic,lbl,kind)=>bt("kdbb",I(P[ic]),lbl,b=>{const k=K_cs;const t=k&&k.stream&&(kind=="a"?k.stream.getAudioTracks()[0]:k.stream.getVideoTracks()[0]);if(!t)return;t.enabled=!t.enabled;const off=!t.enabled;b.classList.toggle("off",off);b.innerHTML=I(P[ic],off);
+  if(kind=="a")T2.t.classList.toggle("mu",off);else{const lv=E("callLV");if(lv)lv.style.visibility=off?"hidden":"visible";T2.a.style.display=off?"":"none"}});
+ if(vid)bar.append(tg("cam",K_Cx("cam"),"v"),bt("kdbb",I(P.flip),K_Cx("fl"),()=>K_flip(K_cs)));
+ bar.append(tg("mic",K_Cx("mu"),"a"));
+ const en=bt("kdbb end",ico("phone"),K_Cx("e"),()=>K_endCall(true,K_Cx("f")));const es=en.querySelector("svg");if(es)es.style.transform="rotate(135deg)";bar.append(en);
+ o.append(hd,tiles,bar);document.body.append(o);K_minSetup(o,u);
+ /* тап по пустому месту — скрыть/показать кнопки */
+ let px=0,py=0;o.addEventListener("pointerdown",e=>{px=e.clientX;py=e.clientY},true);
+ o.addEventListener("click",e=>{if(e.target.closest("button"))return;if(Math.hypot(e.clientX-px,e.clientY-py)>10)return;o.classList.toggle("kdhide")});
+ /* кто говорит — фиолетовая обводка */
+ const AC=window.AudioContext||window.webkitAudioContext;let ctx=null;try{ctx=AC?new AC():null}catch(e){}
+ const an={};
+ const mkAn=(k,s)=>{if(!ctx||!s||(an[k]&&an[k].s===s)||!s.getAudioTracks().length)return;try{const n=ctx.createAnalyser();n.fftSize=512;ctx.createMediaStreamSource(s).connect(n);an[k]={s,n,b:new Uint8Array(n.fftSize),last:0}}catch(e){}};
+ const rms=k=>{const x=an[k];if(!x)return 0;x.n.getByteTimeDomainData(x.b);let q=0;for(let i=0;i<x.b.length;i++){const d=(x.b[i]-128)/128;q+=d*d}return Math.sqrt(q/x.b.length)};
+ const iv=setInterval(()=>{
+  if(!o.isConnected){clearInterval(iv);try{ctx&&ctx.close()}catch(e){}return}
+  const k=K_cs;if(!k)return;if(ctx&&ctx.state=="suspended")ctx.resume().catch(()=>{});
+  mkAn("me",k.stream);mkAn("pe",k.remote);const now=Date.now();
+  const mt=k.stream&&k.stream.getAudioTracks()[0];
+  if(an.me&&mt&&mt.enabled&&rms("me")>.02)an.me.last=now;
+  if(an.pe&&rms("pe")>.02)an.pe.last=now;
+  T2.t.classList.toggle("sp",!!(an.me&&now-an.me.last<350));
+  T1.t.classList.toggle("sp",!!(an.pe&&now-an.pe.last<350));
+ },120);
+ return o}
 
 /* ===== Свёрнутый звонок: свайп вниз → плавающий квадратик ===== */
 let K_min=false,K_bp={r:true,y:null},K_hint=false;
