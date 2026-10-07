@@ -3478,7 +3478,9 @@ function G_main(c,list){const real=list.filter(e=>e.k!="add");
  const o=real.find(e=>e.k=="peer"&&e.id!=c.uid)||real.find(e=>e.k=="inv")||real[0];return o.id}
 /* раскладка: телефон — плитки сеткой (как на первом фото), компьютер — большая плитка + полоска маленьких (как на втором) */
 function G_place(c,list,W,H){const pos={},real=list.filter(e=>e.k!="add"),gap=W<600?10:14;
- const stage=W>=760&&W>H*1.1&&real.length>=2;c.stage=stage;
+ if(list.length<=2){c.stage=false;const g2=12,h2=(H-(list.length-1)*g2)/list.length;
+  list.forEach((e,i)=>{pos[e.id]={x:0,y:i*(h2+g2),w:W,h:h2}});return pos}/* 1–2 плитки: на всю ширину, как в обычном звонке (телефон и ПК) */
+ const stage=W>=760&&W>H*1.1&&real.length>=4;c.stage=stage;
  if(stage){const mid=G_main(c,list),sh=Math.max(100,Math.min(170,H*.26)),mh=H-sh-gap,mw=Math.min(W,mh*1.9);
   pos[mid]={x:(W-mw)/2,y:0,w:mw,h:mh,m:1};
   const rest=list.filter(e=>e.id!==mid),m=rest.length,tw=Math.min(sh*1.5,(W-(m-1)*gap)/m),tot=m*tw+(m-1)*gap;
