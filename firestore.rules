@@ -226,11 +226,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Платный доступ к ИИ: покупатель читает свой документ, писать может только владелец (впиши свой код вместо ADMIN_UID)
+    // Токены ИИ: покупатель читает свой баланс и может только списывать по 1 токену; начислять может только владелец
     match /subs/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
-      allow write: if signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"
-        && request.resource.data.keys().hasOnly(["until"]) && request.resource.data.until is timestamp;
+      allow create, update: if signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"
+        && request.resource.data.keys().hasOnly(["tokens"]) && request.resource.data.tokens is int && request.resource.data.tokens >= 0;
+      allow update: if signedIn() && request.auth.uid == uid
+        && resource.data.tokens is int && resource.data.tokens > 0
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["tokens"])
+        && request.resource.data.tokens == resource.data.tokens - 1;
     }
 
     // Токены push-уведомлений: только владелец (сервер читает через Admin SDK)

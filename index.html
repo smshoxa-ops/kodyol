@@ -264,6 +264,13 @@ h2 .gi.sm{margin-right:8px}
 .au-sw{border:0;background:none;color:var(--aor);font-size:15px;padding:6px;cursor:pointer}.au-sw:hover{color:var(--ac)}.au-sw[hidden]{display:none}
 .au-er{margin:-4px 2px 0;color:#ff6b70;font-size:14px;text-align:center;min-height:0}.au-er:empty{display:none}
 .au-note{max-width:440px;margin:14px auto 0;text-align:center;color:var(--mu);font-size:13px}
+#ai-tok{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 14px;border-radius:14px;background:rgba(128,128,128,.14);font-weight:700;font-size:14px}#ai-tok button{border:0;background:none;color:var(--ac);font-weight:800;cursor:pointer;font-size:14px}
+#ai-pw{max-width:100%!important}#ai-pw .pl{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:14px 12%;margin:0 -8px 8px;scrollbar-width:none}#ai-pw .pl::-webkit-scrollbar{display:none}
+#ai-pw .pc{position:relative;flex:0 0 76%;max-width:300px;scroll-snap-align:center;text-align:left;padding:22px 20px;border-radius:24px;background:rgba(128,128,128,.13);border:1px solid rgba(128,128,128,.28)}#ai-pw .pc.hot{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+#ai-pw .ptag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px;background:var(--ac);color:#fff}
+#ai-pw .pn{font-size:26px;font-weight:800}#ai-pw .pp{font-size:40px;font-weight:800;margin:8px 0 2px}#ai-pw .pt{color:var(--mu);margin:0 0 14px;font-size:15px}
+#ai-pw .pc ul{list-style:none;margin:0 0 18px;padding:14px 0 0;border-top:1px solid rgba(128,128,128,.28);font-size:15px}#ai-pw .pc li{margin:7px 0}#ai-pw .pc li:before{content:"✓";margin-right:9px;color:var(--ac);font-weight:800}
+#ai-pw .pc .pw-b{width:100%}
 #ai-pw{text-align:center;padding:48px 8px;max-width:440px;margin:0 auto}#ai-pw h3{margin:0 0 8px;font-size:22px}#ai-pw p{color:var(--mu);margin:0 0 20px}#ai-pw .pw-b{padding:13px 26px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;font-size:16px;cursor:pointer}
 .tp{display:flex;flex-direction:column;gap:8px;min-width:54px}.tp .dt{display:flex;gap:6px;align-items:center;height:20px}
 .tp .dt i{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));animation:tpb 1.3s infinite ease-in-out}
@@ -3784,16 +3791,17 @@ function aiRender(el,t){
 /* НАСТРОЙКА: 1) TG_USER - твой Telegram-ник без @; 2) ADMIN_UID - твой код (виден на экране ИИ после входа) */
 const TG_USER="whxxxk";
 const ADMIN_UID="bzZme2xA34ciRWWo7xxwsY98IF63";
-const AI_PRICE="$7";
+/* Тарифы-токены: 1 токен = 1 вопрос к ИИ. Токены не сгорают. */
+const PLANS=[{n:"Start",p:7,t:2000},{n:"Pro",p:15,t:6000,hot:1},{n:"Max",p:50,t:25000}];
 const AI_FREE=false;/* true = ИИ бесплатен для всех (тест). Поставь false, чтобы включить платный доступ */
-/* Доступ = документ subs/{uid} с полем until (дата). Включаешь сам в панели на экране ИИ (только для ADMIN_UID). */
+/* Баланс = документ subs/{uid} с полем tokens. Начисляешь сам в панели на экране ИИ (только для ADMIN_UID). */
 const PW={
- ru:{t:"ИИ-помощник FION Pro",d:"Нейросеть отвечает на вопросы по HTML, CSS, JavaScript и коду. "+AI_PRICE+" в месяц. Оплата через Telegram.",b:"Оплатить через Telegram",l:"Войти, чтобы купить доступ",s:"Напишите свой код в Telegram и оплатите. Доступ включится на 30 дней.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать"},
- uz:{t:"FION AI yordamchi Pro",d:"Neyrotarmoq HTML, CSS, JavaScript va kod bo'yicha savollarga javob beradi. Oyiga "+AI_PRICE+". To'lov Telegram orqali.",b:"Telegram orqali to'lash",l:"Kirish va sotib olish",s:"Kodingizni Telegramga yozing va to'lang. Kirish 30 kunga ochiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish"},
- en:{t:"FION AI Assistant Pro",d:"The AI answers questions about HTML, CSS, JavaScript and code. "+AI_PRICE+" per month. Pay via Telegram.",b:"Pay via Telegram",l:"Sign in to buy access",s:"Send your code in Telegram and pay. Access turns on for 30 days.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy"}};
-let PRO=false,proUn=null;
-function proWatch(u){proUn&&proUn();proUn=null;PRO=false;
- if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{const t=d.exists()?d.data().until:null;PRO=!!t&&(t.toMillis?t.toMillis():+t)>Date.now();aiGate()},()=>{PRO=false;aiGate()});
+ ru:{t:"Токены для ИИ",d:"Выберите пакет. 1 токен = 1 вопрос к ИИ, токены не сгорают. Оплата через Telegram.",b:"Купить",tk:"токенов",l:"Войти, чтобы купить",s:"Нажмите «Купить», напишите в Telegram и оплатите. Токены начислят вручную после оплаты.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать",bal:"Токенов:",top:"Пополнить",cls:"Закрыть",pop:"Популярный",f1:"1 токен = 1 вопрос",f2:"Не сгорают",f3:"Быстрый ответ ИИ"},
+ uz:{t:"AI uchun tokenlar",d:"Paketni tanlang. 1 token = AI ga 1 ta savol, tokenlar yonmaydi. To'lov Telegram orqali.",b:"Sotib olish",tk:"token",l:"Kirish va sotib olish",s:"«Sotib olish» ni bosing, Telegramga yozing va to'lang. Tokenlar to'lovdan keyin qo'lda qo'shiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish",bal:"Tokenlar:",top:"To'ldirish",cls:"Yopish",pop:"Ommabop",f1:"1 token = 1 savol",f2:"Yonmaydi",f3:"Tez AI javobi"},
+ en:{t:"AI tokens",d:"Pick a pack. 1 token = 1 AI question, tokens never expire. Pay via Telegram.",b:"Buy",tk:"tokens",l:"Sign in to buy",s:"Tap Buy, message us in Telegram and pay. Tokens are added manually after payment.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy",bal:"Tokens:",top:"Top up",cls:"Close",pop:"Popular",f1:"1 token = 1 question",f2:"Never expire",f3:"Fast AI answers"}};
+let PRO=false,TOK=0,proUn=null,buyOpen=false;
+function proWatch(u){proUn&&proUn();proUn=null;PRO=false;TOK=0;buyOpen=false;
+ if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{TOK=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;PRO=TOK>0;aiGate()},()=>{TOK=0;PRO=false;aiGate()});
  else aiGate()}
 function isAdm(){return !!(me&&ADMIN_UID&&me.uid===ADMIN_UID)}
 window.IC.support='<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.7-1.8 2.5-4 2.5h-2"/>';
@@ -3826,33 +3834,50 @@ function aiGate(){
  if(window.curV!="ai")return;
  const adm=isAdm(),ok=PRO||adm||AI_FREE;
  const p=E("ai-pw"),bar=document.querySelector("#v-ai .bar"),c=E("chat"),x=PW[window.lang]||PW.en;
- c.style.display=ok?"":"none";bar.style.display=ok?"":"none";p.style.display=(ok&&!adm)?"none":"";
+ c.style.display=ok?"":"none";bar.style.display=ok?"":"none";
+ let tb=E("ai-tok");
+ if(!tb){tb=document.createElement("div");tb.id="ai-tok";c.parentNode.insertBefore(tb,c)}
+ tb.textContent="";
+ if(ok&&!adm&&!AI_FREE){tb.style.display="";const sp=document.createElement("span");sp.textContent=x.bal+" "+TOK.toLocaleString("ru-RU");
+  const bt=document.createElement("button");bt.type="button";bt.textContent=buyOpen?x.cls:x.top;bt.onclick=()=>{buyOpen=!buyOpen;aiGate()};tb.append(sp,bt)}
+ else tb.style.display="none";
+ p.style.display=(adm||!ok||buyOpen)?"":"none";
  p.textContent="";
  if(adm){
   const h=document.createElement("h3");h.textContent="Панель владельца";
   const i=document.createElement("input");i.placeholder="Код покупателя";i.style.cssText="width:100%;padding:12px;border-radius:12px;border:1px solid #8886;margin:8px 0;box-sizing:border-box;background:transparent;color:inherit";
-  const bt=document.createElement("button");bt.className="pw-b";bt.textContent="Включить на 30 дней";
+  const am=document.createElement("input");am.type="number";am.min="1";am.placeholder="Сколько токенов";am.style.cssText=i.style.cssText;
+  const q=document.createElement("div");q.style.cssText="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px";
+  PLANS.forEach(pl=>{const b=document.createElement("button");b.type="button";b.textContent="$"+pl.p+" · "+pl.t;b.style.cssText="padding:8px 12px;border-radius:10px;border:1px solid #8886;background:transparent;color:inherit;cursor:pointer";b.onclick=()=>{am.value=pl.t};q.append(b)});
+  const bt=document.createElement("button");bt.className="pw-b";bt.textContent="Начислить токены";
   const m=document.createElement("p");
-  bt.onclick=async()=>{const id=i.value.trim();if(!id)return;m.textContent="...";
-   try{const r=doc(db,"subs",id),d=await getDoc(r);let t=Date.now();
-    if(d.exists()){const u=d.data().until,v=u&&(u.toMillis?u.toMillis():+u);if(v>t)t=v}
-    const e=new Date(t+30*864e5);await setDoc(r,{until:e});m.textContent="Готово. Доступ до "+e.toLocaleDateString()}
+  bt.onclick=async()=>{const id=i.value.trim(),n=Math.floor(+am.value);if(!id||!(n>0)){m.textContent="Введите код и число токенов";return}m.textContent="...";
+   try{const r=doc(db,"subs",id),d=await getDoc(r);const cur=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;
+    await setDoc(r,{tokens:cur+n});m.textContent="Готово. Теперь у покупателя "+(cur+n)+" токенов"}
    catch(err){m.textContent="Ошибка: "+err.message}};
-  p.append(h,i,bt,m);return}
- if(ok)return;
+  p.append(h,i,q,am,bt,m);return}
+ if(ok&&!buyOpen)return;
  const h=document.createElement("h3");h.textContent=x.t;
- const d=document.createElement("p");d.textContent=x.d;
- const b=document.createElement("button");b.className="pw-b";
+ const d=document.createElement("p");d.textContent=x.d;p.append(h,d);
+ const row=document.createElement("div");row.className="pl";
+ PLANS.forEach(pl=>{
+  const cd=document.createElement("div");cd.className="pc"+(pl.hot?" hot":"");
+  if(pl.hot){const tg=document.createElement("span");tg.className="ptag";tg.textContent=x.pop;cd.append(tg)}
+  const nm=document.createElement("div");nm.className="pn";nm.textContent=pl.n;
+  const pr=document.createElement("div");pr.className="pp";pr.textContent="$"+pl.p;
+  const tk=document.createElement("div");tk.className="pt";tk.textContent=pl.t.toLocaleString("ru-RU")+" "+x.tk;
+  const ul=document.createElement("ul");[x.f1,x.f2,x.f3].forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.append(li)});
+  const b=document.createElement("button");b.className="pw-b";b.type="button";b.textContent=me?x.b:x.l;
+  b.onclick=()=>{if(!me){window.show("me");return}if(!TG_USER){alert(x.n);return}window.open("https://t.me/"+TG_USER+"?text="+encodeURIComponent("FION AI "+pl.n+" $"+pl.p+" ("+pl.t+" токенов). Мой код: "+me.uid),"_blank","noopener")};
+  cd.append(nm,pr,tk,ul,b);row.append(cd)});
+ p.append(row);
  if(me){
-  b.textContent=x.b;
-  b.onclick=()=>{if(!TG_USER){alert(x.n);return}window.open("https://t.me/"+TG_USER+"?text="+encodeURIComponent("FION AI Pro 7$/мес. Мой код: "+me.uid),"_blank","noopener")};
   const cd=document.createElement("p");cd.textContent=x.c+" ";
   const co=document.createElement("code");co.textContent=me.uid;co.style.cssText="word-break:break-all;user-select:all";cd.append(co);
   const cb=document.createElement("button");cb.textContent=x.cp;cb.style.cssText="margin-left:8px;padding:4px 10px;border-radius:8px;border:1px solid #8886;background:transparent;color:inherit;cursor:pointer";
   cb.onclick=()=>{try{navigator.clipboard.writeText(me.uid);cb.textContent="✓"}catch(e){}};cd.append(cb);
   const n=document.createElement("p");n.className="au-note";n.textContent=x.s;
-  p.append(h,d,b,cd,n)}
- else{b.textContent=x.l;b.onclick=()=>window.show("me");p.append(h,d,b)}
+  p.append(cd,n)}
  const lk=document.createElement("a");lk.href="pricing.html";lk.textContent="Pricing · Terms · Refunds";lk.className="au-note";lk.style.display="block";p.append(lk)}
 E("ab").onclick=function(){window.show("home")};
 const _shAI=window.show;window.show=function(v){_shAI(v);if(v=="ai"){aiGate();aiLoad().catch(()=>{})}};
@@ -3879,6 +3904,7 @@ window.ask=async function(t){
     for await(const c of r.stream){full+=c.text();aiRender(b,full);window.scrollTo(0,document.body.scrollHeight)}
     if(!full.trim())throw new Error("empty answer");
     ok=true;aiIdx--;
+    if(me&&!isAdm()&&!AI_FREE)updateDoc(doc(db,"subs",me.uid),{tokens:increment(-1)}).catch(e=>console.warn("tokens:",e));
    }catch(e){if(!aiNoThink&&/thinking/i.test(String(e&&e.message||e))){aiNoThink=true;aiChat=null;aiIdx--;continue}
     console.warn("FION AI:",AI_MODELS[aiIdx],e);aiErr=AI_MODELS[aiIdx]+": "+String(e&&e.message||e);aiChat=null}}
  }catch(e){console.warn("FION AI load:",e);aiErr="load: "+String(e&&e.message||e)}
