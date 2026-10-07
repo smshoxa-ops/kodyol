@@ -153,6 +153,70 @@ service cloud.firestore {
       }
     }
 
+    // Групповые звонки (WebRTC mesh): документ звонка, участники (p), сигналы (s), приглашения (ginv)
+    function gIn(gid) {
+      return signedIn() && exists(/databases/$(database)/documents/gcalls/$(gid)/p/$(request.auth.uid));
+    }
+    match /gcalls/{gid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && !banned()
+        && request.resource.data.keys().hasOnly(['host','hostName','video','status','ts'])
+        && request.resource.data.host == request.auth.uid
+        && request.resource.data.hostName is string && request.resource.data.hostName.size() <= 30
+        && request.resource.data.video is bool
+        && request.resource.data.status == 'open'
+        && request.resource.data.ts == request.time;
+      allow update: if signedIn() && (resource.data.host == request.auth.uid || gIn(gid))
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status == 'ended';
+      allow delete: if false;
+
+      // участники: войти может хозяин звонка или тот, кого пригласили
+      match /p/{pid} {
+        allow read: if signedIn();
+        allow create: if signedIn() && !banned() && request.auth.uid == pid
+          && request.resource.data.keys().hasOnly(['uid','name','mu','cm','ts'])
+          && request.resource.data.uid == pid
+          && request.resource.data.name is string && request.resource.data.name.size() <= 30
+          && request.resource.data.mu is bool && request.resource.data.cm is bool
+          && request.resource.data.ts == request.time
+          && (get(/databases/$(database)/documents/gcalls/$(gid)).data.host == pid
+              || exists(/databases/$(database)/documents/ginv/$(gid + '_' + pid)));
+        allow update: if signedIn() && request.auth.uid == pid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['mu','cm']);
+        allow delete: if signedIn() && request.auth.uid == pid;
+      }
+
+      // сигналы WebRTC между двумя участниками: читает только адресат
+      match /s/{sid} {
+        allow read: if signedIn() && resource.data.to == request.auth.uid;
+        allow create: if gIn(gid)
+          && request.resource.data.keys().hasOnly(['from','to','m'])
+          && request.resource.data.from == request.auth.uid
+          && request.resource.data.to is string
+          && request.resource.data.m is string && request.resource.data.m.size() < 60000;
+        allow update: if false;
+        allow delete: if signedIn() && resource.data.to == request.auth.uid;
+      }
+    }
+
+    // Приглашение в групповой звонок: звать можно только тех, на кого ты подписан
+    match /ginv/{iid} {
+      allow read: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
+      allow create, update: if signedIn() && !banned()
+        && request.resource.data.keys().hasOnly(['gid','to','from','fromName','video','ts'])
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string && request.resource.data.to != request.auth.uid
+        && request.resource.data.gid is string
+        && iid == request.resource.data.gid + '_' + request.resource.data.to
+        && request.resource.data.fromName is string && request.resource.data.fromName.size() <= 30
+        && request.resource.data.video is bool
+        && request.resource.data.ts == request.time
+        && gIn(request.resource.data.gid)
+        && exists(/databases/$(database)/documents/follows/$(request.auth.uid + '_' + request.resource.data.to));
+      allow delete: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
+    }
+
     // «В сети»: время последней активности, пишет только владелец
     match /presence/{uid} {
       allow read: if signedIn();

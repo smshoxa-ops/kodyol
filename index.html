@@ -2539,7 +2539,7 @@ function inb(){const b=E("ib");if(!b)return;b.innerHTML="";const sr=mk("div","st
  inbox.filter(c=>!(c.del&&c.del[me.uid]&&c.del[me.uid].toMillis&&c.del[me.uid].toMillis()>=tms(c))).sort((a,c)=>tms(c)-tms(a)).forEach(c=>{const o=c.members.find(x=>x!=me.uid),rt=c.rd&&c.rd[me.uid]&&c.rd[me.uid].toMillis?c.rd[me.uid].toMillis():0,unr=c.lu&&c.lu!=me.uid&&tms(c)>rt,r=row(UM[o]||{},(c.last||"")+" · "+tf(c),()=>{room=c.id;window.R.chat()});K_pdot(r,o);if(unr){r.querySelector("b").style.fontWeight="900";const dt=mk("i");dt.style.cssText="margin-left:auto;width:11px;height:11px;border-radius:50%;background:var(--ac);flex:none";r.append(dt)}b.append(r)})}
 function kdPre(){try{const ids=["general"].concat(inbox.slice().sort((a,c)=>tms(c)-tms(a)).slice(0,3).map(c=>c.id));ids.forEach(r=>{if(PF.has(r)||TC[r])return;PF.add(r);getDocs(query(collection(db,"chats",r,"msgs"),orderBy("ts","desc"),limit(30))).then(q=>{if(!TC[r])TC[r]=q}).catch(()=>{})})}catch(e){}}
 function openTh(){un&&un();const h=E("thh");h.innerHTML="";h.onclick=null;const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>{un&&un();room=null;window.R.chat()};h.append(bk);
- if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);const ab=mk("div");ab.style.cssText="position:relative;display:flex;flex:none";ab.append(av(UM[o],36));const dot=mk("i");dot.id="pdot";dot.style.cssText="position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:#9a2fd8;border:2px solid var(--bg);display:none";ab.append(dot);const wr=mk("div");wr.style.cssText="display:flex;flex-direction:column;line-height:1.2;min-width:0";const ps=mk("small",null,"");ps.id="pst";ps.style.cssText="font-size:12px;font-weight:400;opacity:.75";wr.append(mk("span",null,nm(UM[o])),ps);h.append(ab,wr);K_pwatch(o);h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button","ha");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button","ha");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};const vb=mk("button","ha");vb.innerHTML=ico("vcam");vb.style.marginLeft="6px";vb.setAttribute("aria-label",K_Cx("v"));vb.onclick=e=>{e.stopPropagation();K_startCall(o,true)};h.append(cl,vb)}
+ if(room=="general")h.append((()=>{const s=mk("span");s.innerHTML=ico("globe")+" ";s.append(T.cgen);s.style.cssText="display:inline-flex;align-items:center;gap:6px";return s})());else{const o=room.split("_").find(x=>x!=me.uid);const ab=mk("div");ab.style.cssText="position:relative;display:flex;flex:none";ab.append(av(UM[o],36));const dot=mk("i");dot.id="pdot";dot.style.cssText="position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:#9a2fd8;border:2px solid var(--bg);display:none";ab.append(dot);const wr=mk("div");wr.style.cssText="display:flex;flex-direction:column;line-height:1.2;min-width:0";const ps=mk("small",null,"");ps.id="pst";ps.style.cssText="font-size:12px;font-weight:400;opacity:.75";wr.append(mk("span",null,nm(UM[o])),ps);h.append(ab,wr);K_pwatch(o);h.style.cursor="pointer";h.onclick=e=>{if(e.target!=bk)openU(o)};const dc=mk("button","ha");dc.innerHTML=ico("trash");dc.style.marginLeft="6px";dc.onclick=e=>{e.stopPropagation();if(!confirm(X("cf")))return;const r0=room;setDoc(doc(db,"chats",r0),{del:{[me.uid]:serverTimestamp()}},{merge:true}).then(()=>{un&&un();room=null;window.R.chat()}).catch(x=>alert(x.message))};const cl=mk("button","ha");cl.innerHTML=ico("phone");cl.style.marginLeft="auto";cl.setAttribute("aria-label",K_Cx("call"));cl.onclick=e=>{e.stopPropagation();K_startCall(o)};const vb=mk("button","ha");vb.innerHTML=ico("vcam");vb.style.marginLeft="6px";vb.setAttribute("aria-label",K_Cx("v"));vb.onclick=e=>{e.stopPropagation();K_startCall(o,true)};const gb=mk("button","ha");gb.innerHTML=ico("users");gb.style.marginLeft="6px";gb.setAttribute("aria-label",G_Lx("b"));gb.onclick=e=>{e.stopPropagation();G_new([o])};h.append(cl,vb,gb)}
  const dl=()=>{const c=inbox.find(z=>z.id==room);return c&&c.del&&c.del[me.uid]&&c.del[me.uid].toMillis?c.del[me.uid].toMillis():0};
  const mr=()=>{if(room&&room!="general"&&inbox.some(z=>z.id==room))setDoc(doc(db,"chats",room),{rd:{[me.uid]:serverTimestamp()}},{merge:true}).catch(()=>{})};
  const m=E("cm");m.innerHTML="";
@@ -3007,7 +3007,7 @@ function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);
  const u=E("K_callUI");if(u){if(msg&&!K_min){const e=E("callSt");if(e)e.textContent=msg;setTimeout(()=>u.remove(),1200)}else u.remove()}
  if(K_min&&msg)toast(msg,0);K_min=false;K_bubRm()}
 async function K_startCall(o,video){
- if(K_cs||!o)return;
+ if(K_cs||G_cs||G_inc||G_busy||!o)return;
  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);return}
  let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_media(video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}
  const ref=doc(collection(db,"calls"));
@@ -3027,7 +3027,7 @@ async function K_startCall(o,video){
  c.to=setTimeout(()=>{if(K_cs==c&&!pc.remoteDescription){updateDoc(ref,{status:"ended"}).catch(()=>{});K_endCall(false,K_Cx("o"))}},45000)}
 async function K_incoming(id,x){
  if(!UM[x.from]){try{const d=await getDoc(doc(db,"users",x.from));if(d.exists())UM[x.from]={id:x.from,...d.data()}}catch(e){}}
- if(K_cs){updateDoc(doc(db,"calls",id),{status:"declined"}).catch(()=>{});return}
+ if(K_cs||G_cs||G_inc||G_busy){updateDoc(doc(db,"calls",id),{status:"declined"}).catch(()=>{});return}
  const c=K_cs={id,role:"b",peer:x.from,un:[],offer:x.offer,inc:true,q:[],pend:[],ready:true,spk:true,uid:me.uid,video:!!x.video,face:"user"};
  K_island(UM[x.from]||{name:x.fromName,username:x.fromName});K_ring(true);
  c.un.push(onSnapshot(doc(db,"calls",id),d=>{const s=d.data()&&d.data().status;if(K_cs==c&&(s=="ended"||s=="declined"))K_endCall(false,K_Cx("f"))},()=>{}));
@@ -3043,7 +3043,297 @@ async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  catch(e){toast(e.code||e.message,0);K_endCall(true,K_Cx("f"))}}
 function K_callInit(u){K_callStop();
  K_callUn=onSnapshot(query(collection(db,"calls"),where("to","==",u.uid),where("status","==","ringing")),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();if(Date.now()-t>60000)return;K_incoming(ch.doc.id,x)})},()=>{})}
-function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true)}
+function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true);G_stop()}
+/* ===== ГРУППОВЫЕ ЗВОНКИ (v160): до 6 человек, звать можно тех, на кого ты подписан (как в Discord).
+   WebRTC «каждый с каждым» (mesh), сигналинг через Firestore: gcalls/{id} (+ p = участники, s = сигналы), ginv/{id_uid} = приглашения ===== */
+const G_MAX=6;
+const G_L={
+ru:{b:"Групповой звонок",t:"Групповой звонок",tv:"Групповой видеозвонок",ptitle:"Позвать в звонок",none:"Вы пока ни на кого не подписаны. Подпишитесь на людей, чтобы звать их в звонок.",srch:"Поиск",load:"Загрузка…",call:"Позвонить",vcall:"Видео",add:"Пригласить",lim:"В звонке максимум {n} человек",sel:"Выбрано: {n}",wait:"Ждём участников…",con:"Подключение…",err:"Не удалось начать звонок",busy:"Сначала завершите текущий звонок",nobody:"Никто не ответил",end:"Вы вышли из звонка",sent:"Приглашения отправлены",gone:"Звонок уже завершён",full:"В звонке нет мест",me:"Вы",on:"в сети",mu:"Микрофон",cam:"Камера",leave:"Выйти",inc:"Групповой звонок",incv:"Групповой видеозвонок",a:"Принять",d:"Отклонить"},
+en:{b:"Group call",t:"Group call",tv:"Group video call",ptitle:"Invite to call",none:"You don't follow anyone yet. Follow people to invite them to a call.",srch:"Search",load:"Loading…",call:"Call",vcall:"Video",add:"Invite",lim:"Up to {n} people per call",sel:"Selected: {n}",wait:"Waiting for others…",con:"Connecting…",err:"Couldn't start the call",busy:"Finish your current call first",nobody:"Nobody answered",end:"You left the call",sent:"Invites sent",gone:"This call has already ended",full:"The call is full",me:"You",on:"online",mu:"Microphone",cam:"Camera",leave:"Leave",inc:"Group call",incv:"Group video call",a:"Accept",d:"Decline"},
+uz:{b:"Guruh qo'ng'irog'i",t:"Guruh qo'ng'irog'i",tv:"Guruh video qo'ng'irog'i",ptitle:"Qo'ng'iroqqa chaqirish",none:"Siz hali hech kimga obuna bo'lmagansiz. Qo'ng'iroqqa chaqirish uchun odamlarga obuna bo'ling.",srch:"Qidirish",load:"Yuklanmoqda…",call:"Qo'ng'iroq",vcall:"Video",add:"Taklif qilish",lim:"Qo'ng'iroqda ko'pi bilan {n} kishi",sel:"Tanlandi: {n}",wait:"Qatnashchilar kutilmoqda…",con:"Ulanmoqda…",err:"Qo'ng'iroqni boshlab bo'lmadi",busy:"Avval joriy qo'ng'iroqni tugating",nobody:"Hech kim javob bermadi",end:"Siz qo'ng'iroqdan chiqdingiz",sent:"Takliflar yuborildi",gone:"Qo'ng'iroq allaqachon tugagan",full:"Qo'ng'iroqda joy yo'q",me:"Siz",on:"onlayn",mu:"Mikrofon",cam:"Kamera",leave:"Chiqish",inc:"Guruh qo'ng'irog'i",incv:"Guruh video qo'ng'irog'i",a:"Qabul qilish",d:"Rad etish"}};
+const G_Lx=(k,v)=>{let t=(G_L[window.lang]||G_L.en)[k];if(t==null)t=G_L.en[k]||"";for(const x in v||{})t=t.replace("{"+x+"}",v[x]);return t};
+let G_cs=null,G_invUn=null,G_inc=null,G_busy=false;
+const G_myName=()=>((typeof MY!="undefined"&&MY&&(MY.username||MY.name))||(me&&me.displayName)||"User").slice(0,30);
+const G_MICOFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></svg>';
+(function(){if(document.getElementById("g-css"))return;const s=document.createElement("style");s.id="g-css";
+s.textContent=
+".gpk{position:fixed;inset:0;z-index:330;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}"+
+".gpb{width:min(100%,460px);max-height:82vh;display:flex;flex-direction:column;background:var(--bg,#12131c);color:var(--tx,#fff);border-radius:22px 22px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);box-sizing:border-box;border:1px solid var(--bd,rgba(255,255,255,.12))}"+
+"@media(min-width:600px){.gpk{align-items:center}.gpb{border-radius:22px}}"+
+".gph{display:flex;align-items:center;justify-content:space-between;font-size:18px;padding:2px 2px 10px}"+
+".gpx{width:34px;height:34px;border:0;border-radius:50%;background:rgba(128,128,128,.2);color:inherit;font-size:16px;cursor:pointer}"+
+".gps{width:100%;box-sizing:border-box;height:42px;border-radius:12px;border:1px solid var(--bd,rgba(255,255,255,.14));background:var(--card,rgba(255,255,255,.06));color:inherit;padding:0 12px;font-size:16px;outline:0;margin-bottom:8px;font-family:inherit}"+
+".gpl{flex:1;min-height:120px;overflow:auto;-webkit-overflow-scrolling:touch}"+
+".gpe{padding:26px 8px;text-align:center;opacity:.65;font-size:14px}"+
+".gpr{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;color:inherit;padding:8px 6px;border-radius:12px;cursor:pointer;text-align:left;font-family:inherit}"+
+".gpr:active{background:rgba(128,128,128,.14)}"+
+".gpr .gpn{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}"+
+".gpr .gpn b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"+
+".gpr .gpn small{font-size:12px;opacity:.6}"+
+".gpr .gpn small.on{color:#9a2fd8;opacity:1}"+
+".gpck{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid rgba(128,128,128,.55);display:grid;place-items:center;transition:background .15s,border-color .15s}"+
+".gpr.sel .gpck{background:#9c1ce6;border-color:#9c1ce6}"+
+".gpr.sel .gpck::after{content:'';width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}"+
+".gpf{display:flex;align-items:center;gap:10px;padding-top:10px}"+
+".gpc{flex:1;font-size:13px;opacity:.7}"+
+".gpg{height:46px;padding:0 18px;border:0;border-radius:14px;background:linear-gradient(135deg,#6f08aa,#9c1ce6);color:#fff;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit}"+
+".gpg:disabled{opacity:.4;cursor:default}"+
+".gpg svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}"+
+"#G_ui{position:fixed;inset:0;z-index:300;background:#111214;color:#fff;display:flex;flex-direction:column;overflow:hidden;-webkit-user-select:none;user-select:none;animation:kcIn .38s cubic-bezier(.2,.9,.3,1) both}"+
+"#G_ui svg{display:block}"+
+"#G_ui .gch{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 6px;flex:none}"+
+"#G_ui .gtt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}"+
+"#G_ui .gtt b{font-size:18px}"+
+"#G_ui .gtt small{font-size:12px;opacity:.65;font-variant-numeric:tabular-nums}"+
+"#G_ui .gadd{width:44px;height:44px;border:0;border-radius:12px;background:#0a0a0c;color:#fff;display:grid;place-items:center;cursor:pointer}"+
+"#G_ui .gadd svg{width:22px;height:22px}"+
+"#G_ui .gcg{flex:1;min-height:0;display:grid;gap:10px;padding:8px 12px}"+
+"#G_ui .gct{position:relative;min-height:0;min-width:0;border-radius:20px;overflow:hidden;background:#2b2e3b;display:grid;place-items:center}"+
+"#G_ui .gct .av{position:relative;z-index:1;transition:opacity .2s}"+
+"#G_ui .gct.cn .av{opacity:.45}"+
+"#G_ui .gct video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}"+
+"#G_ui .gct.hv video{display:block}"+
+"#G_ui .gct.hv .av{display:none}"+
+"#G_ui .gct.me video{transform:scaleX(-1)}"+
+"#G_ui .gct::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;box-shadow:inset 0 0 0 3px #a63df0,inset 0 0 0 6px #000;opacity:0;transition:opacity .14s}"+
+"#G_ui .gct.sp::after{opacity:1}"+
+"#G_ui .gcl{position:absolute;left:8px;bottom:8px;z-index:2;display:flex;align-items:center;gap:6px;max-width:calc(100% - 16px);padding:5px 10px;border-radius:10px;background:rgba(24,24,30,.78);font-size:14px;font-weight:600}"+
+"#G_ui .gcl .gcn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"+
+"#G_ui .gcm{display:none;color:#ff5a5f}#G_ui .gct.mu .gcm{display:flex}#G_ui .gcm svg{width:16px;height:16px}"+
+"#G_ui .gcw{position:absolute;top:8px;right:10px;z-index:2;font-size:12px;opacity:.8;display:none}#G_ui .gct.cn .gcw{display:block}"+
+"#G_ui .gcr{flex:none;display:flex;align-items:center;justify-content:space-around;margin:6px 14px calc(env(safe-area-inset-bottom,0px) + 14px);height:80px;border-radius:30px;border:1.5px solid rgba(255,255,255,.14);background:#0c0c0e}"+
+"#G_ui .gb{width:60px;height:56px;border:0;border-radius:16px;background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s,transform .12s}"+
+"#G_ui .gb svg{width:27px;height:27px}"+
+"#G_ui .gb:active{transform:scale(.92)}"+
+"#G_ui .gb.off{background:rgba(229,72,77,.16);color:#ff5a5f;box-shadow:inset 0 0 0 1px rgba(229,72,77,.35)}"+
+"#G_ui .gb.end{width:80px;background:#e0323d}"+
+"#G_ui .gb.end svg{fill:none;stroke:#fff}";
+document.head.append(s)})();
+
+/* ---------- выбор людей из тех, на кого подписан ---------- */
+async function G_pick(o){
+ if(E("G_pk")||!me)return;
+ const ov=mk("div","gpk");ov.id="G_pk";const bx=mk("div","gpb");
+ const hd=mk("div","gph"),x=mk("button","gpx","✕");x.setAttribute("aria-label","Close");hd.append(mk("b",null,o.title),x);
+ const sr=document.createElement("input");sr.className="gps";sr.placeholder=G_Lx("srch");sr.setAttribute("autocomplete","off");
+ const ls=mk("div","gpl");ls.append(mk("div","gpe",G_Lx("load")));
+ const ft=mk("div","gpf"),cnt=mk("span","gpc",""),b1=mk("button","gpg",o.btn),b2=o.vbtn?mk("button","gpg",""):null;
+ if(b2)b2.innerHTML='<svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/></svg>';
+ ft.append(cnt);if(b2)ft.append(b2);ft.append(b1);
+ bx.append(hd,sr,ls,ft);ov.append(bx);document.body.append(ov);
+ const close=()=>ov.remove();x.onclick=close;ov.addEventListener("pointerdown",e=>{if(e.target===ov)close()});
+ let ids=[];
+ try{const q=await getDocs(query(collection(db,"follows"),where("a","==",me.uid)));ids=q.docs.map(d=>d.data().b).filter(v=>v&&v!=me.uid&&!(o.ex&&o.ex.has(v)))}catch(e){}
+ await Promise.all(ids.filter(v=>!UM[v]||!(UM[v].username||UM[v].name)).map(async v=>{try{const d=await getDoc(doc(db,"users",v));if(d.exists())UM[v]={id:v,...d.data()}}catch(e){}}));
+ ids=ids.filter(v=>UM[v]);
+ if(!ov.isConnected)return;
+ const sel=new Set((o.pre||[]).filter(v=>ids.indexOf(v)>=0).slice(0,o.max));
+ const upd=()=>{cnt.textContent=G_Lx("sel",{n:sel.size});b1.disabled=!sel.size;if(b2)b2.disabled=!sel.size};
+ const paint=()=>{const q=sr.value.trim().toLowerCase();ls.textContent="";
+  if(!ids.length){ls.append(mk("div","gpe",G_Lx("none")));upd();return}
+  const l=ids.filter(v=>!q||nm(UM[v]).toLowerCase().indexOf(q)>=0).sort((a,b)=>(K_ponl(b)-K_ponl(a))||nm(UM[a]).localeCompare(nm(UM[b])));
+  l.forEach(v=>{const r=mk("button","gpr"+(sel.has(v)?" sel":""));r.type="button";
+   const tx=mk("div","gpn"),on=K_ponl(v),sm=mk("small",on?"on":"",on?G_Lx("on"):"");tx.append(mk("b",null,nm(UM[v])),sm);
+   r.append(av(UM[v],42),tx,mk("span","gpck"));
+   r.onclick=()=>{if(sel.has(v)){sel.delete(v);r.classList.remove("sel")}else{if(sel.size>=o.max){toast(G_Lx("lim",{n:G_MAX}),0);return}sel.add(v);r.classList.add("sel")}upd()};
+   ls.append(r)});upd()};
+ sr.oninput=paint;paint();
+ const go=v=>()=>{if(!sel.size)return;const l=Array.from(sel);close();o.on(l,v)};
+ b1.onclick=go(false);if(b2)b2.onclick=go(true);
+}
+
+/* ---------- входящее приглашение (остров сверху) ---------- */
+function G_islRm(now){const o=E("G_isl");if(!o)return;if(now){o.remove();return}if(o.classList.contains("out"))return;o.classList.remove("on");o.classList.add("out");setTimeout(()=>o.remove(),300)}
+function G_island(u,x){
+ G_islRm(1);const o=mk("div","kisl");o.id="G_isl";o.setAttribute("role","alertdialog");
+ const inn=mk("div","ki-in"),aw=mk("span","ki-av");aw.append(av(u,52));
+ const tx=mk("div","ki-tx");tx.append(mk("small",null,G_Lx(x.video?"incv":"inc")),mk("b",null,nm(u)));
+ const btn=(cls,lbl,fn)=>{const b=mk("button","ki-b "+cls);b.innerHTML=ico("phone");b.setAttribute("aria-label",lbl);b.onclick=e=>{e.stopPropagation();fn()};return b};
+ inn.append(aw,tx,btn("d",G_Lx("d"),G_decline),btn("a",G_Lx("a"),G_accept));
+ o.append(inn);document.body.append(o);
+ setTimeout(()=>{if(o.isConnected&&!o.classList.contains("out"))o.classList.add("on")},700)}
+async function G_incoming(id,x){
+ if(K_cs||G_cs||G_inc||G_busy)return;/* заняты: приглашение просто истечёт */
+ if(!UM[x.from]){try{const d=await getDoc(doc(db,"users",x.from));if(d.exists())UM[x.from]={id:x.from,...d.data()}}catch(e){}}
+ if(K_cs||G_cs||G_inc||G_busy)return;
+ const t={id,x,un:[],to:null};G_inc=t;
+ G_island(UM[x.from]||{name:x.fromName,username:x.fromName},x);K_ring(true);
+ t.un.push(onSnapshot(doc(db,"gcalls",x.gid),d=>{if(G_inc!==t)return;const s=d.data();if(!d.exists()||(s&&s.status=="ended"))G_incClear(true)},()=>{}));
+ t.to=setTimeout(()=>{if(G_inc===t)G_incClear(true)},45000)}
+function G_incClear(del){const t=G_inc;if(!t)return;G_inc=null;clearTimeout(t.to);t.un.forEach(f=>{try{f()}catch(e){}});K_ring(false);G_islRm();if(del)deleteDoc(doc(db,"ginv",t.id)).catch(()=>{})}
+function G_decline(){G_incClear(true)}
+async function G_accept(){const t=G_inc;if(!t||G_busy||K_cs||G_cs)return;const x=t.x;G_incClear(false);G_busy=true;
+ try{
+  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);return}
+  const d=await getDoc(doc(db,"gcalls",x.gid));
+  if(!d.exists()||d.data().status=="ended"){toast(G_Lx("gone"),0);deleteDoc(doc(db,"ginv",t.id)).catch(()=>{});return}
+  const ps=await getDocs(collection(db,"gcalls",x.gid,"p"));
+  if(!ps.size){toast(G_Lx("gone"),0);deleteDoc(doc(db,"ginv",t.id)).catch(()=>{});return}/* все уже вышли */
+  if(ps.size>=G_MAX){toast(G_Lx("full"),0);return}
+  const video=!!d.data().video;let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia(K_media(video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}
+  await G_enter(x.gid,stream,video,[],false)
+ }catch(e){toast(e.code||e.message,0)}finally{G_busy=false}}
+
+/* ---------- запуск звонка ---------- */
+function G_new(pre){
+ if(K_cs||G_cs||G_busy||G_inc){toast(G_Lx("busy"),0);return}
+ G_pick({title:G_Lx("ptitle"),pre:pre||[],max:G_MAX-1,btn:G_Lx("call"),vbtn:G_Lx("vcall"),on:(u,v)=>G_start(u,v)})}
+async function G_start(uids,video){
+ if(K_cs||G_cs||G_busy||!uids||!uids.length)return;
+ if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);return}
+ G_busy=true;
+ try{
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_media(!!video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}
+  const ref=doc(collection(db,"gcalls"));
+  try{await setDoc(ref,{host:me.uid,hostName:G_myName(),video:!!video,status:"open",ts:serverTimestamp()})}
+  catch(e){stream.getTracks().forEach(t=>t.stop());toast(e.code||e.message,0);return}
+  await G_enter(ref.id,stream,!!video,uids,true)
+ }finally{G_busy=false}}
+function G_invite(c,uids){const n=G_myName();uids.forEach(u=>{setDoc(doc(db,"ginv",c.id+"_"+u),{gid:c.id,to:u,from:c.uid,fromName:n,video:c.video,ts:serverTimestamp()}).catch(e=>toast(e.code||e.message,0))})}
+function G_addPpl(c){const have=Object.keys(c.pd),left=G_MAX-1-have.length;
+ if(left<=0){toast(G_Lx("lim",{n:G_MAX}),0);return}
+ const ex=new Set(have);ex.add(c.uid);
+ G_pick({title:G_Lx("ptitle"),ex,max:left,btn:G_Lx("add"),on:u=>{if(G_cs===c&&u.length){G_invite(c,u);toast(G_Lx("sent"),1)}}})}
+
+/* ---------- сам звонок ---------- */
+async function G_enter(gid,stream,video,uids,host){
+ const c=G_cs={id:gid,uid:me.uid,stream,video:!!video,peers:{},pd:{},rt:{},un:[],mu:false,cm:false,t0:0,host:!!host,left:false,ringing:false};
+ G_ui(c);G_render(c);
+ try{
+  const old=await getDocs(query(collection(db,"gcalls",gid,"s"),where("to","==",me.uid)));
+  old.docs.forEach(d=>deleteDoc(d.ref).catch(()=>{}));/* старые сигналы прошлых заходов */
+  if(G_cs!==c)return;
+  c.un.push(onSnapshot(query(collection(db,"gcalls",gid,"s"),where("to","==",me.uid)),s=>s.docChanges().forEach(ch=>{
+   if(ch.type!="added")return;const x=ch.doc.data();deleteDoc(ch.doc.ref).catch(()=>{});
+   let m=null;try{m=JSON.parse(x.m)}catch(e){}if(m)G_sig(c,x.from,m)}),()=>{}));
+  await setDoc(doc(db,"gcalls",gid,"p",me.uid),{uid:me.uid,name:G_myName(),mu:false,cm:false,ts:serverTimestamp()});
+ }catch(e){toast(e.code||e.message,0);G_leave(G_Lx("err"));return}
+ if(G_cs!==c)return;
+ deleteDoc(doc(db,"ginv",gid+"_"+me.uid)).catch(()=>{});
+ c.un.push(onSnapshot(collection(db,"gcalls",gid,"p"),s=>{if(G_cs!==c)return;
+  s.docChanges().forEach(ch=>{const id=ch.doc.id;if(id==c.uid)return;
+   if(ch.type=="removed"){delete c.pd[id];delete c.rt[id];G_drop(c,id);return}
+   const x=ch.doc.data(),old=c.pd[id];c.pd[id]=x;let p=c.peers[id];
+   if(p&&old&&tms(old)&&tms(x)&&tms(old)!=tms(x)){G_drop(c,id);p=null}/* человек вышел и сразу зашёл снова */
+   if(!p)p=G_peer(c,id,x);
+   p.name=x.name||p.name;p.mu=!!x.mu;p.cm=!!x.cm;
+   if(!p.started&&me.uid>id)G_offer(c,p)});/* предложение отправляет тот, чей uid «больше»: так нет встречных предложений */
+  if(c.ringing&&Object.keys(c.pd).length){c.ringing=false;K_ring(false);clearTimeout(c.to)}
+  G_render(c)},()=>{}));
+ G_speak(c);
+ if(uids&&uids.length){G_invite(c,uids);c.ringing=true;K_ring(2);
+  c.to=setTimeout(()=>{if(G_cs===c&&!Object.keys(c.pd).length)G_leave(G_Lx("nobody"))},60000)}}
+function G_peer(c,id,x){let p=c.peers[id];if(p)return p;
+ const u=UM[id];
+ p=c.peers[id]={id,name:(x&&x.name)||nm(u),pc:null,pend:[],started:false,mu:false,cm:false,stream:null,au:null,con:false,ct:null,dt:null};
+ const pc=p.pc=new RTCPeerConnection(K_ICE_CFG);
+ c.stream.getTracks().forEach(t=>pc.addTrack(t,c.stream));
+ const au=document.createElement("audio");au.autoplay=true;au.setAttribute("playsinline","");document.body.append(au);p.au=au;
+ pc.ontrack=e=>{const st=e.streams[0];if(!st)return;p.stream=st;au.srcObject=st;au.play&&au.play().catch(()=>{});G_render(c)};
+ pc.onicecandidate=e=>{if(e.candidate)G_send(c,id,{k:"i",c:e.candidate})};
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(G_cs!==c||c.peers[id]!==p)return;
+  if(s=="connected"){p.con=true;clearTimeout(p.ct);clearTimeout(p.dt);
+   if(!c.t0){c.t0=Date.now();c.tm=setInterval(()=>G_status(c),1000)}G_render(c)}
+  else if(s=="failed")G_drop(c,id,true);
+  else if(s=="disconnected"){clearTimeout(p.dt);p.dt=setTimeout(()=>{if(G_cs===c&&c.peers[id]===p&&pc.connectionState=="disconnected")G_drop(c,id,true)},8000)}};
+ p.ct=setTimeout(()=>{if(G_cs===c&&c.peers[id]===p&&!p.con)G_drop(c,id,true)},25000);
+ return p}
+function G_close(p){clearTimeout(p.ct);clearTimeout(p.dt);
+ try{if(p.pc){p.pc.onicecandidate=null;p.pc.ontrack=null;p.pc.onconnectionstatechange=null;p.pc.close()}}catch(e){}
+ try{if(p.au){p.au.srcObject=null;p.au.remove()}}catch(e){}}
+function G_drop(c,id,retry){const p=c.peers[id];if(!p)return;G_close(p);delete c.peers[id];
+ if(G_cs!==c)return;G_render(c);
+ if(retry&&!c.left&&c.pd[id]&&(c.rt[id]||0)<2){c.rt[id]=(c.rt[id]||0)+1;
+  setTimeout(()=>{if(G_cs!==c||!c.pd[id]||c.peers[id])return;const q=G_peer(c,id,c.pd[id]);if(me.uid>id)G_offer(c,q);G_render(c)},1500)}}
+function G_send(c,to,m){if(c.left)return;addDoc(collection(db,"gcalls",c.id,"s"),{from:c.uid,to,m:JSON.stringify(m)}).catch(()=>{})}
+async function G_offer(c,p){if(p.started||!p.pc)return;p.started=true;
+ try{const off=await p.pc.createOffer();await p.pc.setLocalDescription(off);G_send(c,p.id,{k:"o",d:{type:off.type,sdp:off.sdp}})}catch(e){}}
+function G_flush(p){p.pend.splice(0).forEach(x=>p.pc.addIceCandidate(x).catch(()=>{}))}
+async function G_sig(c,from,m){if(G_cs!==c||!m)return;let p=c.peers[from];
+ if(m.k=="o"){
+  if(p&&p.pc.remoteDescription){G_drop(c,from);p=null}/* старое соединение: начинаем заново */
+  p=G_peer(c,from,c.pd[from]);p.started=true;
+  try{await p.pc.setRemoteDescription(m.d);G_flush(p);const an=await p.pc.createAnswer();await p.pc.setLocalDescription(an);G_send(c,from,{k:"a",d:{type:an.type,sdp:an.sdp}})}catch(e){}
+ }else if(m.k=="a"){
+  if(!p||p.pc.signalingState!="have-local-offer")return;
+  try{await p.pc.setRemoteDescription(m.d);G_flush(p)}catch(e){}
+ }else if(m.k=="i"){
+  if(!p)p=G_peer(c,from,c.pd[from]);
+  if(p.pc.remoteDescription)p.pc.addIceCandidate(m.c).catch(()=>{});else p.pend.push(m.c)}}
+function G_pset(c,patch){updateDoc(doc(db,"gcalls",c.id,"p",c.uid),patch).catch(()=>{})}
+
+/* ---------- интерфейс звонка ---------- */
+function G_ui(c){
+ let o=E("G_ui");if(o)o.remove();o=mk("div");o.id="G_ui";
+ const I=(d,off)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+(off?'<path d="M4 4l16 16"/>':'')+'</svg>';
+ const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',add:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/>'};
+ const bt=(cls,html,lbl,fn)=>{const b=mk("button",cls);b.innerHTML=html;b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);return b};
+ const hd=mk("div","gch"),tt=mk("div","gtt"),st=mk("small",null,"");st.id="G_st";
+ tt.append(mk("b",null,G_Lx(c.video?"tv":"t")),st);
+ hd.append(tt,bt("gadd",I(P.add),G_Lx("add"),()=>G_addPpl(c)));
+ const g=mk("div","gcg"),bar=mk("div","gcr");
+ bar.append(bt("gb",I(P.mic),G_Lx("mu"),b=>{const t=c.stream.getAudioTracks()[0];if(!t)return;t.enabled=!t.enabled;c.mu=!t.enabled;b.classList.toggle("off",c.mu);b.innerHTML=I(P.mic,c.mu);G_pset(c,{mu:c.mu});G_render(c)}));
+ if(c.video)bar.append(bt("gb",I(P.cam),G_Lx("cam"),b=>{const t=c.stream.getVideoTracks()[0];if(!t)return;t.enabled=!t.enabled;c.cm=!t.enabled;b.classList.toggle("off",c.cm);b.innerHTML=I(P.cam,c.cm);G_pset(c,{cm:c.cm});G_render(c)}));
+ const en=bt("gb end",ico("phone"),G_Lx("leave"),()=>G_leave(G_Lx("end")));const es=en.querySelector("svg");if(es)es.style.transform="rotate(135deg)";bar.append(en);
+ o.append(hd,g,bar);document.body.append(o)}
+function G_cols(n){const w=window.innerWidth>window.innerHeight;return n<=1?1:n==2?(w?2:1):n<=4?2:(w?3:2)}
+function G_status(c){const s=E("G_st");if(!s||G_cs!==c)return;const k=Object.keys(c.peers);
+ if(c.t0)s.textContent=K_dur(Math.floor((Date.now()-c.t0)/1000))+" · "+(k.filter(x=>c.peers[x].con).length+1);
+ else s.textContent=k.length?G_Lx("con"):G_Lx("wait")}
+function G_render(c){const o=E("G_ui");if(!o||G_cs!==c)return;const g=o.querySelector(".gcg");if(!g)return;
+ const ids=[c.uid].concat(Object.keys(c.peers));
+ Array.prototype.slice.call(g.children).forEach(t=>{if(ids.indexOf(t.dataset.u)<0)t.remove()});
+ ids.forEach(id=>{const isMe=id==c.uid,p=isMe?null:c.peers[id];
+  let t=null;Array.prototype.forEach.call(g.children,x=>{if(x.dataset.u==id)t=x});
+  const u=isMe?(UM[me.uid]||(typeof MY!="undefined"?MY:null)||{}):(UM[id]||{name:p.name,username:p.name});
+  if(!t){t=mk("div","gct"+(isMe?" me":""));t.dataset.u=id;t.append(av(u,72));
+   if(c.video){const v=document.createElement("video");v.autoplay=true;v.muted=true;v.setAttribute("playsinline","");t.append(v)}
+   const lb=mk("div","gcl"),mi=mk("span","gcm");mi.innerHTML=G_MICOFF;lb.append(mi,mk("span","gcn",""));
+   t.append(lb,mk("div","gcw",G_Lx("con")));g.append(t)}
+  t.querySelector(".gcn").textContent=isMe?G_Lx("me"):(nm(u)!="?"?nm(u):p.name);
+  t.classList.toggle("mu",isMe?c.mu:!!p.mu);
+  t.classList.toggle("cn",!isMe&&!p.con);
+  if(c.video){const v=t.querySelector("video"),st=isMe?c.stream:p.stream,off=isMe?c.cm:p.cm;
+   if(v&&st&&v.srcObject!==st){v.srcObject=st;v.play&&v.play().catch(()=>{})}
+   t.classList.toggle("hv",!!st&&!off&&st.getVideoTracks().length>0)}});
+ const n=ids.length,cs=G_cols(n);g.style.gridTemplateColumns="repeat("+cs+",1fr)";g.style.gridTemplateRows="repeat("+Math.ceil(n/cs)+",1fr)";
+ G_status(c)}
+/* кто говорит: фиолетовая обводка плитки */
+function G_speak(c){const o=E("G_ui");if(!o)return;
+ const AC=window.AudioContext||window.webkitAudioContext;let ctx=null;try{ctx=AC?new AC():null}catch(e){}
+ const an={};
+ const hook=(id,s)=>{if(!ctx||!s||!s.getAudioTracks().length||(an[id]&&an[id].s===s))return;
+  try{const n=ctx.createAnalyser();n.fftSize=512;ctx.createMediaStreamSource(s).connect(n);an[id]={s,n,b:new Uint8Array(n.fftSize),last:0}}catch(e){}};
+ c.sp=setInterval(()=>{
+  if(G_cs!==c||!o.isConnected){clearInterval(c.sp);try{ctx&&ctx.close()}catch(e){}return}
+  if(ctx&&ctx.state=="suspended")ctx.resume().catch(()=>{});
+  hook(c.uid,c.stream);Object.keys(c.peers).forEach(id=>hook(id,c.peers[id].stream));
+  const now=Date.now();
+  Array.prototype.forEach.call(o.querySelectorAll(".gct"),t=>{const id=t.dataset.u,x=an[id];if(!x){t.classList.remove("sp");return}
+   if(id!=c.uid||!c.mu){x.n.getByteTimeDomainData(x.b);let q=0;for(let i=0;i<x.b.length;i++){const d=(x.b[i]-128)/128;q+=d*d}if(Math.sqrt(q/x.b.length)>.02)x.last=now}
+   t.classList.toggle("sp",!!x.last&&now-x.last<350)})},120)}
+async function G_leave(msg){const c=G_cs;if(!c)return;G_cs=null;c.left=true;
+ clearInterval(c.tm);clearInterval(c.sp);clearTimeout(c.to);if(c.ringing)K_ring(false);
+ c.un.forEach(f=>{try{f()}catch(e){}});
+ Object.keys(c.peers).forEach(id=>G_close(c.peers[id]));c.peers={};
+ try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
+ const o=E("G_ui");if(o){o.style.animation="none";o.style.transition="opacity .25s";o.style.opacity="0";setTimeout(()=>o.remove(),260)}
+ if(msg)toast(msg,0);
+ let others=Object.keys(c.pd).length;
+ try{const ps=await getDocs(collection(db,"gcalls",c.id,"p"));others=ps.docs.filter(d=>d.id!=c.uid).length}catch(e){}/* свежие данные с сервера */
+ try{if(!others)await updateDoc(doc(db,"gcalls",c.id),{status:"ended"})}catch(e){}/* последний вышедший закрывает звонок */
+ try{await deleteDoc(doc(db,"gcalls",c.id,"p",c.uid))}catch(e){}}
+
+/* ---------- подписка на приглашения ---------- */
+function G_init(u){G_stop();
+ G_invUn=onSnapshot(query(collection(db,"ginv"),where("to","==",u.uid)),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;
+  const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();
+  if(Date.now()-t>60000){deleteDoc(ch.doc.ref).catch(()=>{});return}/* просроченное приглашение */
+  G_incoming(ch.doc.id,x)})},()=>{})}
+function G_stop(){if(G_invUn){G_invUn();G_invUn=null}if(G_inc)G_incClear(false);if(G_cs)G_leave()}
+window.addEventListener("resize",()=>{if(G_cs)G_render(G_cs)});
+window.addEventListener("pagehide",()=>{const c=G_cs;if(c){try{deleteDoc(doc(db,"gcalls",c.id,"p",c.uid))}catch(e){}}});
 /* ===== «В сети» / «был(а) в сети»: присутствие через Firestore (коллекция presence) ===== */
 const K_PL={
 ru:{on:"в сети",min:"был(а) в сети {n} мин. назад",today:"был(а) сегодня в {t}",yest:"был(а) вчера в {t}",date:"был(а) {d} в {t}",long:"давно не был(а) в сети"},
@@ -3083,7 +3373,7 @@ function banUI(on){let o=document.getElementById("banScr");if(!on){o&&o.remove()
  o=document.createElement("div");o.id="banScr";const w=document.createElement("div");w.className="bnb";const e=document.createElement("div");e.className="bne";e.textContent="🚫";const h=document.createElement("h1");h.textContent="ВЫ ЗАБАНЕНЫ";const p=document.createElement("p");p.textContent="Доступ к FION закрыт владельцем.";const x=document.createElement("button");x.textContent="Выйти";x.onclick=()=>signOut(auth);w.append(e,h,p,x);o.append(w);document.body.append(o);document.documentElement.style.overflow="hidden"}
 function banWatch(u){bnUn&&bnUn();bnUn=null;banUI(false);if(u)bnUn=onSnapshot(doc(db,"bans",u.uid),d=>banUI(d.exists()),()=>{})}
 onAuthStateChanged(auth,async u=>{me=u;setTimeout(()=>{syncDr();supWatch()},300);banWatch(u);K_callStop();K_pstopSelf();um&&um();uu&&uu();im&&im();un&&un();
- if(u){vLoad();K_callInit(u);K_pinit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
+ if(u){vLoad();K_callInit(u);G_init(u);K_pinit(u);pushInit(u);proWatch(u);const r=doc(db,"users",u.uid),s=await getDoc(r).catch(()=>null);
   if(s&&!s.exists()){const dn=(u.displayName||(u.email||"").split("@")[0]||"").slice(0,30);
    try{await window.kdPickLang()}catch(e){}
    const okU=await askUsername(u,r,dn);if(!okU)return}
