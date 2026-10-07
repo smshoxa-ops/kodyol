@@ -2815,7 +2815,7 @@ function K_callUI(u){
  if(!re)o.style.animation="kcIn .38s cubic-bezier(.2,.9,.3,1) both";
  const c=K_cs,vid=!!(c&&c.video),meU=UM[me.uid]||(typeof MY!="undefined"?MY:null)||{};
  const I=(d,off)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+(off?'<path d="M4 4l16 16"/>':'')+'</svg>';
- const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',scr:'<rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17v4M9.5 11.5L12 9l2.5 2.5M12 9v5"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',flip:'<path d="M20 7h-9a5 5 0 0 0-5 5M4 17h9a5 5 0 0 0 5-5"/><path d="M17 4l3 3-3 3M7 14l-3 3 3 3"/>',chev:'<path d="M6 9l6 6 6-6"/>',chat:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>',arr:'<path d="M9 6l6 6-6 6"/>'};
+ const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',scr:'<rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17v4M9.5 11.5L12 9l2.5 2.5M12 9v5"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',flip:'<path d="M20 7h-9a5 5 0 0 0-5 5M4 17h9a5 5 0 0 0 5-5"/><path d="M17 4l3 3-3 3M7 14l-3 3 3 3"/>',chev:'<path d="M6 9l6 6 6-6"/>',chat:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>',add:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/>',arr:'<path d="M9 6l6 6-6 6"/>'};
  const bt=(cls,html,lbl,fn)=>{const b=mk("button",cls);b.innerHTML=html;b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);return b};
  /* шапка */
  const hd=mk("div","kdhd");
@@ -2825,7 +2825,7 @@ function K_callUI(u){
  const sp0=bt("kdib",I(P.spk,!(c&&c.spk)),K_Cx("sp"),b=>{const k=K_cs;if(!k)return;k.spk=!k.spk;b.innerHTML=I(P.spk,!k.spk);K_spk(k,k.spk)});
  const ch0=bt("kdib",I(P.chat),K_Cx("mn"),()=>K_minimize());
  const sp1=mk("div");sp1.style.flex="1";
- hd.append(bt("kdib",I(P.chev),K_Cx("mn"),()=>K_minimize()),pill,sp1,sp0,ch0);
+ hd.append(bt("kdib",I(P.chev),K_Cx("mn"),()=>K_minimize()),pill,sp1,bt("kdib",I(P.add),G_Lx("inv"),()=>K_toGroup()),sp0,ch0);
  /* плитки */
  const tiles=mk("div","kdtiles");
  const tile=(cls,usr,label)=>{const t=mk("div","kdtile "+cls);const a=av(usr,112);a.style.borderRadius="50%";const lb=mk("div","kdlb");const mi=mk("span","kdmi");mi.innerHTML=I(P.mic,1);lb.append(mi,mk("span",null,label));t.append(a,lb);return {t,a}};
@@ -3043,14 +3043,16 @@ async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  catch(e){toast(e.code||e.message,0);K_endCall(true,K_Cx("f"))}}
 function K_callInit(u){K_callStop();
  K_callUn=onSnapshot(query(collection(db,"calls"),where("to","==",u.uid),where("status","==","ringing")),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();if(Date.now()-t>60000)return;K_incoming(ch.doc.id,x)})},()=>{})}
+function K_toGroup(){const c=K_cs;if(!c||!c.peer||G_cs||G_busy)return;const peer=c.peer;
+ G_pick({title:G_Lx("ptitle"),ex:new Set([peer]),max:G_MAX-2,btn:G_Lx("call"),on:u=>{if(K_cs!==c||!u.length)return;const v=!!c.video;K_endCall(true,"");G_start([peer].concat(u),v)}})}
 function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true);G_stop()}
 /* ===== ГРУППОВЫЕ ЗВОНКИ (v160): до 6 человек, звать можно тех, на кого ты подписан (как в Discord).
    WebRTC «каждый с каждым» (mesh), сигналинг через Firestore: gcalls/{id} (+ p = участники, s = сигналы), ginv/{id_uid} = приглашения ===== */
 const G_MAX=6;
 const G_L={
-ru:{b:"Групповой звонок",t:"Групповой звонок",tv:"Групповой видеозвонок",ptitle:"Позвать в звонок",none:"Вы пока ни на кого не подписаны. Подпишитесь на людей, чтобы звать их в звонок.",srch:"Поиск",load:"Загрузка…",call:"Позвонить",vcall:"Видео",add:"Пригласить",lim:"В звонке максимум {n} человек",sel:"Выбрано: {n}",wait:"Ждём участников…",con:"Подключение…",err:"Не удалось начать звонок",busy:"Сначала завершите текущий звонок",nobody:"Никто не ответил",end:"Вы вышли из звонка",sent:"Приглашения отправлены",gone:"Звонок уже завершён",full:"В звонке нет мест",me:"Вы",on:"в сети",mu:"Микрофон",cam:"Камера",leave:"Выйти",inc:"Групповой звонок",incv:"Групповой видеозвонок",a:"Принять",d:"Отклонить"},
-en:{b:"Group call",t:"Group call",tv:"Group video call",ptitle:"Invite to call",none:"You don't follow anyone yet. Follow people to invite them to a call.",srch:"Search",load:"Loading…",call:"Call",vcall:"Video",add:"Invite",lim:"Up to {n} people per call",sel:"Selected: {n}",wait:"Waiting for others…",con:"Connecting…",err:"Couldn't start the call",busy:"Finish your current call first",nobody:"Nobody answered",end:"You left the call",sent:"Invites sent",gone:"This call has already ended",full:"The call is full",me:"You",on:"online",mu:"Microphone",cam:"Camera",leave:"Leave",inc:"Group call",incv:"Group video call",a:"Accept",d:"Decline"},
-uz:{b:"Guruh qo'ng'irog'i",t:"Guruh qo'ng'irog'i",tv:"Guruh video qo'ng'irog'i",ptitle:"Qo'ng'iroqqa chaqirish",none:"Siz hali hech kimga obuna bo'lmagansiz. Qo'ng'iroqqa chaqirish uchun odamlarga obuna bo'ling.",srch:"Qidirish",load:"Yuklanmoqda…",call:"Qo'ng'iroq",vcall:"Video",add:"Taklif qilish",lim:"Qo'ng'iroqda ko'pi bilan {n} kishi",sel:"Tanlandi: {n}",wait:"Qatnashchilar kutilmoqda…",con:"Ulanmoqda…",err:"Qo'ng'iroqni boshlab bo'lmadi",busy:"Avval joriy qo'ng'iroqni tugating",nobody:"Hech kim javob bermadi",end:"Siz qo'ng'iroqdan chiqdingiz",sent:"Takliflar yuborildi",gone:"Qo'ng'iroq allaqachon tugagan",full:"Qo'ng'iroqda joy yo'q",me:"Siz",on:"onlayn",mu:"Mikrofon",cam:"Kamera",leave:"Chiqish",inc:"Guruh qo'ng'irog'i",incv:"Guruh video qo'ng'irog'i",a:"Qabul qilish",d:"Rad etish"}};
+ru:{b:"Групповой звонок",t:"Групповой звонок",tv:"Групповой видеозвонок",ptitle:"Позвать в звонок",none:"Вы пока ни на кого не подписаны. Подпишитесь на людей, чтобы звать их в звонок.",srch:"Поиск",load:"Загрузка…",call:"Позвонить",vcall:"Видео",add:"Пригласить",lim:"В звонке максимум {n} человек",sel:"Выбрано: {n}",wait:"Ждём участников…",con:"Подключение…",err:"Не удалось начать звонок",busy:"Сначала завершите текущий звонок",nobody:"Никто не ответил",end:"Вы вышли из звонка",sent:"Приглашения отправлены",gone:"Звонок уже завершён",full:"В звонке нет мест",me:"Вы",on:"в сети",mu:"Микрофон",cam:"Камера",leave:"Выйти",inc:"Групповой звонок",incv:"Групповой видеозвонок",a:"Принять",d:"Отклонить",inv:"Пригласить",alone:"Здесь пока никого нет",alone2:"Позовите друзей из своих подписок — им придёт приглашение в звонок",deaf:"Звук"},
+en:{b:"Group call",t:"Group call",tv:"Group video call",ptitle:"Invite to call",none:"You don't follow anyone yet. Follow people to invite them to a call.",srch:"Search",load:"Loading…",call:"Call",vcall:"Video",add:"Invite",lim:"Up to {n} people per call",sel:"Selected: {n}",wait:"Waiting for others…",con:"Connecting…",err:"Couldn't start the call",busy:"Finish your current call first",nobody:"Nobody answered",end:"You left the call",sent:"Invites sent",gone:"This call has already ended",full:"The call is full",me:"You",on:"online",mu:"Microphone",cam:"Camera",leave:"Leave",inc:"Group call",incv:"Group video call",a:"Accept",d:"Decline",inv:"Invite",alone:"No one else is here yet",alone2:"Invite people you follow — they will get a call invite",deaf:"Sound"},
+uz:{b:"Guruh qo'ng'irog'i",t:"Guruh qo'ng'irog'i",tv:"Guruh video qo'ng'irog'i",ptitle:"Qo'ng'iroqqa chaqirish",none:"Siz hali hech kimga obuna bo'lmagansiz. Qo'ng'iroqqa chaqirish uchun odamlarga obuna bo'ling.",srch:"Qidirish",load:"Yuklanmoqda…",call:"Qo'ng'iroq",vcall:"Video",add:"Taklif qilish",lim:"Qo'ng'iroqda ko'pi bilan {n} kishi",sel:"Tanlandi: {n}",wait:"Qatnashchilar kutilmoqda…",con:"Ulanmoqda…",err:"Qo'ng'iroqni boshlab bo'lmadi",busy:"Avval joriy qo'ng'iroqni tugating",nobody:"Hech kim javob bermadi",end:"Siz qo'ng'iroqdan chiqdingiz",sent:"Takliflar yuborildi",gone:"Qo'ng'iroq allaqachon tugagan",full:"Qo'ng'iroqda joy yo'q",me:"Siz",on:"onlayn",mu:"Mikrofon",cam:"Kamera",leave:"Chiqish",inc:"Guruh qo'ng'irog'i",incv:"Guruh video qo'ng'irog'i",a:"Qabul qilish",d:"Rad etish",inv:"Taklif qilish",alone:"Hozircha hech kim yo'q",alone2:"Obuna bo'lgan do'stlaringizni chaqiring — ularga taklif keladi",deaf:"Ovoz"}};
 const G_Lx=(k,v)=>{let t=(G_L[window.lang]||G_L.en)[k];if(t==null)t=G_L.en[k]||"";for(const x in v||{})t=t.replace("{"+x+"}",v[x]);return t};
 let G_cs=null,G_invUn=null,G_inc=null,G_busy=false;
 const G_myName=()=>((typeof MY!="undefined"&&MY&&(MY.username||MY.name))||(me&&me.displayName)||"User").slice(0,30);
@@ -3079,16 +3081,16 @@ s.textContent=
 ".gpg{height:46px;padding:0 18px;border:0;border-radius:14px;background:linear-gradient(135deg,#6f08aa,#9c1ce6);color:#fff;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit}"+
 ".gpg:disabled{opacity:.4;cursor:default}"+
 ".gpg svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}"+
-"#G_ui{position:fixed;inset:0;z-index:300;background:#111214;color:#fff;display:flex;flex-direction:column;overflow:hidden;-webkit-user-select:none;user-select:none;animation:kcIn .38s cubic-bezier(.2,.9,.3,1) both}"+
+"#G_ui{position:fixed;inset:0;z-index:300;background:#1e1f22;color:#fff;display:flex;flex-direction:column;overflow:hidden;-webkit-user-select:none;user-select:none;animation:kcIn .38s cubic-bezier(.2,.9,.3,1) both}"+
 "#G_ui svg{display:block}"+
 "#G_ui .gch{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 6px;flex:none}"+
 "#G_ui .gtt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}"+
 "#G_ui .gtt b{font-size:18px}"+
 "#G_ui .gtt small{font-size:12px;opacity:.65;font-variant-numeric:tabular-nums}"+
-"#G_ui .gadd{width:44px;height:44px;border:0;border-radius:12px;background:#0a0a0c;color:#fff;display:grid;place-items:center;cursor:pointer}"+
-"#G_ui .gadd svg{width:22px;height:22px}"+
+"#G_ui .gadd{height:40px;padding:0 16px 0 12px;gap:8px;border:0;border-radius:20px;background:linear-gradient(135deg,#6f08aa,#9c1ce6);color:#fff;display:flex;align-items:center;font:700 14px/1 inherit;font-family:inherit;cursor:pointer}"+
+"#G_ui .gadd svg{width:20px;height:20px}"+
 "#G_ui .gcg{flex:1;min-height:0;display:grid;gap:10px;padding:8px 12px}"+
-"#G_ui .gct{position:relative;min-height:0;min-width:0;border-radius:20px;overflow:hidden;background:#2b2e3b;display:grid;place-items:center}"+
+"#G_ui .gct{position:relative;min-height:0;min-width:0;border-radius:16px;overflow:hidden;background:#2b2d31;display:grid;place-items:center}"+
 "#G_ui .gct .av{position:relative;z-index:1;transition:opacity .2s}"+
 "#G_ui .gct.cn .av{opacity:.45}"+
 "#G_ui .gct video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:none}"+
@@ -3101,13 +3103,18 @@ s.textContent=
 "#G_ui .gcl .gcn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"+
 "#G_ui .gcm{display:none;color:#ff5a5f}#G_ui .gct.mu .gcm{display:flex}#G_ui .gcm svg{width:16px;height:16px}"+
 "#G_ui .gcw{position:absolute;top:8px;right:10px;z-index:2;font-size:12px;opacity:.8;display:none}#G_ui .gct.cn .gcw{display:block}"+
-"#G_ui .gcr{flex:none;display:flex;align-items:center;justify-content:space-around;margin:6px 14px calc(env(safe-area-inset-bottom,0px) + 14px);height:80px;border-radius:30px;border:1.5px solid rgba(255,255,255,.14);background:#0c0c0e}"+
-"#G_ui .gb{width:60px;height:56px;border:0;border-radius:16px;background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s,transform .12s}"+
+"#G_ui .gcr{flex:none;display:flex;align-items:center;justify-content:space-around;margin:6px 14px calc(env(safe-area-inset-bottom,0px) + 14px);gap:14px;height:80px;border-radius:0;border:0;background:transparent}"+
+"#G_ui .gb{width:58px;height:58px;border:0;border-radius:50%;background:#2b2d31;color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s,transform .12s}"+
 "#G_ui .gb svg{width:27px;height:27px}"+
 "#G_ui .gb:active{transform:scale(.92)}"+
-"#G_ui .gb.off{background:rgba(229,72,77,.16);color:#ff5a5f;box-shadow:inset 0 0 0 1px rgba(229,72,77,.35)}"+
-"#G_ui .gb.end{width:80px;background:#e0323d}"+
+"#G_ui .gb.off{background:#fff;color:#e0323d}"+
+"#G_ui .gb.end{background:#da373c}"+
 "#G_ui .gb.end svg{fill:none;stroke:#fff}";
+"#G_ui .gem{flex:none;margin:0 14px 4px;padding:18px 16px;border-radius:16px;background:#2b2d31;text-align:center}"+
+"#G_ui .gem b{display:block;font-size:17px;margin-bottom:4px}"+
+"#G_ui .gem span{display:block;font-size:13px;opacity:.7;margin-bottom:12px}"+
+"#G_ui .gem button{height:44px;padding:0 22px;border:0;border-radius:22px;background:linear-gradient(135deg,#6f08aa,#9c1ce6);color:#fff;font:700 15px/1 inherit;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px}"+
+"#G_ui .gem button svg{width:20px;height:20px}";
 document.head.append(s)})();
 
 /* ---------- выбор людей из тех, на кого подписан ---------- */
@@ -3229,7 +3236,7 @@ function G_peer(c,id,x){let p=c.peers[id];if(p)return p;
  p=c.peers[id]={id,name:(x&&x.name)||nm(u),pc:null,pend:[],started:false,mu:false,cm:false,stream:null,au:null,con:false,ct:null,dt:null};
  const pc=p.pc=new RTCPeerConnection(K_ICE_CFG);
  c.stream.getTracks().forEach(t=>pc.addTrack(t,c.stream));
- const au=document.createElement("audio");au.autoplay=true;au.setAttribute("playsinline","");document.body.append(au);p.au=au;
+ const au=document.createElement("audio");au.autoplay=true;au.muted=!!c.deaf;au.setAttribute("playsinline","");document.body.append(au);p.au=au;
  pc.ontrack=e=>{const st=e.streams[0];if(!st)return;p.stream=st;au.srcObject=st;au.play&&au.play().catch(()=>{});G_render(c)};
  pc.onicecandidate=e=>{if(e.candidate)G_send(c,id,{k:"i",c:e.candidate})};
  pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(G_cs!==c||c.peers[id]!==p)return;
@@ -3267,14 +3274,15 @@ function G_pset(c,patch){updateDoc(doc(db,"gcalls",c.id,"p",c.uid),patch).catch(
 function G_ui(c){
  let o=E("G_ui");if(o)o.remove();o=mk("div");o.id="G_ui";
  const I=(d,off)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+(off?'<path d="M4 4l16 16"/>':'')+'</svg>';
- const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',add:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/>'};
+ const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',add:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/>'};
  const bt=(cls,html,lbl,fn)=>{const b=mk("button",cls);b.innerHTML=html;b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);return b};
  const hd=mk("div","gch"),tt=mk("div","gtt"),st=mk("small",null,"");st.id="G_st";
  tt.append(mk("b",null,G_Lx(c.video?"tv":"t")),st);
- hd.append(tt,bt("gadd",I(P.add),G_Lx("add"),()=>G_addPpl(c)));
+ hd.append(tt,bt("gadd",I(P.add)+"<span>"+G_Lx("inv")+"</span>",G_Lx("inv"),()=>G_addPpl(c)));
  const g=mk("div","gcg"),bar=mk("div","gcr");
  bar.append(bt("gb",I(P.mic),G_Lx("mu"),b=>{const t=c.stream.getAudioTracks()[0];if(!t)return;t.enabled=!t.enabled;c.mu=!t.enabled;b.classList.toggle("off",c.mu);b.innerHTML=I(P.mic,c.mu);G_pset(c,{mu:c.mu});G_render(c)}));
  if(c.video)bar.append(bt("gb",I(P.cam),G_Lx("cam"),b=>{const t=c.stream.getVideoTracks()[0];if(!t)return;t.enabled=!t.enabled;c.cm=!t.enabled;b.classList.toggle("off",c.cm);b.innerHTML=I(P.cam,c.cm);G_pset(c,{cm:c.cm});G_render(c)}));
+ bar.append(bt("gb",I(P.spk),G_Lx("deaf"),b=>{c.deaf=!c.deaf;b.classList.toggle("off",c.deaf);b.innerHTML=I(P.spk,c.deaf);Object.keys(c.peers).forEach(k=>{if(c.peers[k].au)c.peers[k].au.muted=c.deaf})}));
  const en=bt("gb end",ico("phone"),G_Lx("leave"),()=>G_leave(G_Lx("end")));const es=en.querySelector("svg");if(es)es.style.transform="rotate(135deg)";bar.append(en);
  o.append(hd,g,bar);document.body.append(o)}
 function G_cols(n){const w=window.innerWidth>window.innerHeight;return n<=1?1:n==2?(w?2:1):n<=4?2:(w?3:2)}
@@ -3297,6 +3305,11 @@ function G_render(c){const o=E("G_ui");if(!o||G_cs!==c)return;const g=o.querySel
   if(c.video){const v=t.querySelector("video"),st=isMe?c.stream:p.stream,off=isMe?c.cm:p.cm;
    if(v&&st&&v.srcObject!==st){v.srcObject=st;v.play&&v.play().catch(()=>{})}
    t.classList.toggle("hv",!!st&&!off&&st.getVideoTracks().length>0)}});
+ let em=E("G_em");
+ if(ids.length<2){if(!em){em=mk("div","gem");em.id="G_em";em.append(mk("b",null,G_Lx("alone")),mk("span",null,G_Lx("alone2")));
+   const eb=mk("button",null);eb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/></svg>'+G_Lx("inv");
+   eb.onclick=()=>{if(G_cs)G_addPpl(G_cs)};em.append(eb);o.insertBefore(em,o.querySelector(".gcr"))}}
+ else if(em)em.remove();
  const n=ids.length,cs=G_cols(n);g.style.gridTemplateColumns="repeat("+cs+",1fr)";g.style.gridTemplateRows="repeat("+Math.ceil(n/cs)+",1fr)";
  G_status(c)}
 /* кто говорит: фиолетовая обводка плитки */
