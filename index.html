@@ -3791,17 +3791,18 @@ function aiRender(el,t){
 /* НАСТРОЙКА: 1) TG_USER - твой Telegram-ник без @; 2) ADMIN_UID - твой код (виден на экране ИИ после входа) */
 const TG_USER="whxxxk";
 const ADMIN_UID="bzZme2xA34ciRWWo7xxwsY98IF63";
-/* Тарифы-токены: 1 токен = 1 вопрос к ИИ. Токены не сгорают. */
-const PLANS=[{n:"Start",p:7,t:2000},{n:"Pro",p:15,t:6000,hot:1},{n:"Max",p:50,t:25000}];
+/* Тарифы-токены: 50 токенов = 1 вопрос к ИИ (для всех). Токены не сгорают. */
+const TOK_PER_Q=50;
+const PLANS=[{n:"Start",p:7,t:2000},{n:"Pro",p:15,t:7000,hot:1},{n:"Max",p:50,t:25000}];
 const AI_FREE=false;/* true = ИИ бесплатен для всех (тест). Поставь false, чтобы включить платный доступ */
 /* Баланс = документ subs/{uid} с полем tokens. Начисляешь сам в панели на экране ИИ (только для ADMIN_UID). */
 const PW={
- ru:{t:"Токены для ИИ",d:"Выберите пакет. 1 токен = 1 вопрос к ИИ, токены не сгорают. Оплата через Telegram.",b:"Купить",tk:"токенов",l:"Войти, чтобы купить",s:"Нажмите «Купить», напишите в Telegram и оплатите. Токены начислят вручную после оплаты.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать",bal:"Токенов:",top:"Пополнить",cls:"Закрыть",pop:"Популярный",f1:"1 токен = 1 вопрос",f2:"Не сгорают",f3:"Быстрый ответ ИИ"},
- uz:{t:"AI uchun tokenlar",d:"Paketni tanlang. 1 token = AI ga 1 ta savol, tokenlar yonmaydi. To'lov Telegram orqali.",b:"Sotib olish",tk:"token",l:"Kirish va sotib olish",s:"«Sotib olish» ni bosing, Telegramga yozing va to'lang. Tokenlar to'lovdan keyin qo'lda qo'shiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish",bal:"Tokenlar:",top:"To'ldirish",cls:"Yopish",pop:"Ommabop",f1:"1 token = 1 savol",f2:"Yonmaydi",f3:"Tez AI javobi"},
- en:{t:"AI tokens",d:"Pick a pack. 1 token = 1 AI question, tokens never expire. Pay via Telegram.",b:"Buy",tk:"tokens",l:"Sign in to buy",s:"Tap Buy, message us in Telegram and pay. Tokens are added manually after payment.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy",bal:"Tokens:",top:"Top up",cls:"Close",pop:"Popular",f1:"1 token = 1 question",f2:"Never expire",f3:"Fast AI answers"}};
+ ru:{t:"Токены для ИИ",d:"Выберите пакет. 50 токенов = 1 вопрос к ИИ, токены не сгорают. Оплата через Telegram.",b:"Купить",tk:"токенов",l:"Войти, чтобы купить",s:"Нажмите «Купить», напишите в Telegram и оплатите. Токены начислят вручную после оплаты.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать",bal:"Токенов:",top:"Пополнить",cls:"Закрыть",pop:"Популярный",f1:"50 токенов = 1 вопрос",f2:"Не сгорают",f3:"Качественные ответы ИИ"},
+ uz:{t:"AI uchun tokenlar",d:"Paketni tanlang. 50 token = AI ga 1 ta savol, tokenlar yonmaydi. To'lov Telegram orqali.",b:"Sotib olish",tk:"token",l:"Kirish va sotib olish",s:"«Sotib olish» ni bosing, Telegramga yozing va to'lang. Tokenlar to'lovdan keyin qo'lda qo'shiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish",bal:"Tokenlar:",top:"To'ldirish",cls:"Yopish",pop:"Ommabop",f1:"50 token = 1 savol",f2:"Yonmaydi",f3:"Sifatli AI javoblari"},
+ en:{t:"AI tokens",d:"Pick a pack. 50 tokens = 1 AI question, tokens never expire. Pay via Telegram.",b:"Buy",tk:"tokens",l:"Sign in to buy",s:"Tap Buy, message us in Telegram and pay. Tokens are added manually after payment.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy",bal:"Tokens:",top:"Top up",cls:"Close",pop:"Popular",f1:"50 tokens = 1 question",f2:"Never expire",f3:"Quality AI answers"}};
 let PRO=false,TOK=0,proUn=null,buyOpen=false;
 function proWatch(u){proUn&&proUn();proUn=null;PRO=false;TOK=0;buyOpen=false;
- if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{TOK=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;PRO=TOK>0;aiGate()},()=>{TOK=0;PRO=false;aiGate()});
+ if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{TOK=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;PRO=TOK>=TOK_PER_Q;aiGate()},()=>{TOK=0;PRO=false;aiGate()});
  else aiGate()}
 function isAdm(){return !!(me&&ADMIN_UID&&me.uid===ADMIN_UID)}
 window.IC.support='<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.7-1.8 2.5-4 2.5h-2"/>';
@@ -3904,7 +3905,7 @@ window.ask=async function(t){
     for await(const c of r.stream){full+=c.text();aiRender(b,full);window.scrollTo(0,document.body.scrollHeight)}
     if(!full.trim())throw new Error("empty answer");
     ok=true;aiIdx--;
-    if(me&&!isAdm()&&!AI_FREE)updateDoc(doc(db,"subs",me.uid),{tokens:increment(-1)}).catch(e=>console.warn("tokens:",e));
+    if(me&&!isAdm()&&!AI_FREE)updateDoc(doc(db,"subs",me.uid),{tokens:increment(-TOK_PER_Q)}).catch(e=>console.warn("tokens:",e));
    }catch(e){if(!aiNoThink&&/thinking/i.test(String(e&&e.message||e))){aiNoThink=true;aiChat=null;aiIdx--;continue}
     console.warn("FION AI:",AI_MODELS[aiIdx],e);aiErr=AI_MODELS[aiIdx]+": "+String(e&&e.message||e);aiChat=null}}
  }catch(e){console.warn("FION AI load:",e);aiErr="load: "+String(e&&e.message||e)}
