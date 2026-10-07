@@ -603,6 +603,26 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 #K_callUI.kdhide .kdtiles{top:calc(env(safe-area-inset-top,0px) + 80px);bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}
 #K_callUI .kdbar.many .kdbb{width:54px}#K_callUI .kdbar.many .kdbb.end{width:72px}
 #K_callUI .kdbb.on{background:rgba(138,47,208,.3);color:#e2b8ff;box-shadow:inset 0 0 0 1px rgba(168,85,247,.55)}
+/* v165: шапка и панель кнопок звонка с несколькими людьми = как в обычном звонке */
+#G_ui .kdhd{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 8px;transition:transform .32s cubic-bezier(.2,.9,.3,1),opacity .25s}
+#G_ui .kdib,#G_ui .kdpill{height:44px;border:0;border-radius:12px;background:#0a0a0c;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:inherit}
+#G_ui .kdib{width:44px}#G_ui .kdib svg{width:22px;height:22px}
+#G_ui .kdpill{gap:8px;padding:0 12px 0 16px;min-width:0;text-align:left}
+#G_ui .kdpc{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+#G_ui .kdpn{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
+#G_ui .kdps{font-size:11px;opacity:.65;font-variant-numeric:tabular-nums}
+#G_ui .kdar svg{width:16px;height:16px;stroke-width:2.6}
+#G_ui .kdbar{position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);height:92px;z-index:3;display:flex;align-items:center;justify-content:space-around;padding:12px 10px 0;border-radius:30px;border:1.5px solid rgba(255,255,255,.14);background:#0c0c0e;transition:transform .32s cubic-bezier(.2,.9,.3,1),opacity .25s}
+#G_ui .kdbar::before{content:"";position:absolute;top:8px;left:50%;width:56px;height:5px;margin-left:-28px;border-radius:3px;background:rgba(255,255,255,.35)}
+#G_ui .kdbb{width:64px;height:58px;border:0;border-radius:16px;background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s}
+#G_ui .kdbb svg{width:28px;height:28px}
+#G_ui .kdbb:active,#G_ui .kdib:active{transform:scale(.92)}
+#G_ui .kdbb.off{background:rgba(229,72,77,.16);color:#ff5a5f;box-shadow:inset 0 0 0 1px rgba(229,72,77,.35)}
+#G_ui .kdbb.end{width:80px;background:#e0323d}
+#G_ui .kdbb.end svg{fill:none;stroke:#fff}
+#G_ui .kdbar.many .kdbb{width:54px}#G_ui .kdbar.many .kdbb.end{width:72px}
+#G_ui .kdbb.on{background:rgba(138,47,208,.3);color:#e2b8ff;box-shadow:inset 0 0 0 1px rgba(168,85,247,.55)}
+#G_ui svg{display:block}
 #K_callUI .kdscr{z-index:2;background:#000;border-radius:22px;overflow:hidden;gap:0}
 #K_callUI .kdscrt{background:#000;border-radius:22px}
 #K_callUI .kdscrt video{object-fit:contain;background:#000}
@@ -3044,7 +3064,7 @@ async function K_acceptCall(){const c=K_cs;if(!c||!c.inc)return;
  catch(e){toast(e.code||e.message,0);K_endCall(true,K_Cx("f"))}}
 function K_callInit(u){K_callStop();
  K_callUn=onSnapshot(query(collection(db,"calls"),where("to","==",u.uid),where("status","==","ringing")),s=>{s.docChanges().forEach(ch=>{if(ch.type!="added")return;const x=ch.doc.data(),t=x.ts&&x.ts.toMillis?x.ts.toMillis():Date.now();if(Date.now()-t>60000)return;K_incoming(ch.doc.id,x)})},()=>{})}
-function K_toGroup(){const c=K_cs;if(!c||!c.peer||G_cs||G_busy)return;const peer=c.peer,v=!!c.video;K_endCall(true,"");G_start([peer],v,true)}
+function K_toGroup(){const c=K_cs;if(!c||!c.peer||G_cs||G_busy||!c.stream)return;const peer=c.peer,v=!!c.video,st=c.stream;c.stream=null;G_noAnim=true;G_start([peer],v,true,st,()=>K_endCall(true,""))}
 function K_callStop(){if(K_callUn){K_callUn();K_callUn=null}if(K_cs)K_endCall(true);G_stop()}
 /* ===== ГРУППОВЫЕ ЗВОНКИ (v160): до 6 человек, звать можно тех, на кого ты подписан (как в Discord).
    WebRTC «каждый с каждым» (mesh), сигналинг через Firestore: gcalls/{id} (+ p = участники, s = сигналы), ginv/{id_uid} = приглашения ===== */
@@ -3175,6 +3195,10 @@ s.textContent=
 "#G_ui .gshn small{font-size:12px;opacity:.6}#G_ui .gshn small.on{color:#23a559;opacity:1}"+
 "#G_ui .gshg{height:36px;padding:0 16px;border:0;border-radius:18px;background:#23a559;color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;transition:background .2s,transform .12s}"+
 "#G_ui .gshg:active{transform:scale(.94)}#G_ui .gshg.wait{background:rgba(255,255,255,.14);color:rgba(255,255,255,.7);cursor:default}"+
+"#G_ui{background:#111214}"+
+"#G_ui .gcg{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 68px);bottom:calc(env(safe-area-inset-bottom,0px) + 118px);margin:0}"+
+"#G_ui .gct{border-radius:22px;background:#526b92}#G_ui .gct.me{background:#b0b3bc}#G_ui .gct.ring,#G_ui .gct.bad{background:#41546f}#G_ui .gct.gadt{background:transparent}"+
+"#G_ui .gcl{font-size:16px;font-weight:600;padding:7px 14px;border-radius:12px;background:rgba(24,24,30,.78)}"+
 "@media(prefers-reduced-motion:reduce){#G_ui .gct,#G_ui .gct *{animation-duration:.01s!important;transition-duration:.01s!important}}";
 document.head.appendChild(s)})();
 /* ---------- выбор людей из тех, на кого подписан ---------- */
@@ -3221,7 +3245,7 @@ function G_island(u,x){
  setTimeout(()=>{if(o.isConnected&&!o.classList.contains("out"))o.classList.add("on")},700)}
 async function G_incoming(id,x){
  if(!G_cs&&!G_inc&&!G_busy&&((K_cs&&K_cs.peer===x.from&&!K_cs.inc)||(!K_cs&&K_lastPeer&&K_lastPeer.u===x.from&&Date.now()-K_lastPeer.t<10000))){
-  K_lastPeer=null;const t0={id,x,un:[],to:null};G_inc=t0;if(K_cs)K_endCall(false,"");G_accept();return}
+  K_lastPeer=null;G_noAnim=true;const t0={id,x,un:[],to:null};G_inc=t0;if(K_cs)K_endCall(false,"");G_accept();return}
  if(K_cs||G_cs||G_inc||G_busy)return;/* заняты: приглашение просто истечёт */
  if(!UM[x.from]){try{const d=await getDoc(doc(db,"users",x.from));if(d.exists())UM[x.from]={id:x.from,...d.data()}}catch(e){}}
  if(K_cs||G_cs||G_inc||G_busy)return;
@@ -3249,16 +3273,16 @@ function G_new(pre){
  if(K_cs||G_cs||G_busy||G_inc){toast(G_Lx("busy"),0);return}
  /* v163: без отдельного меню — звонок открывается сразу, человек появляется на экране «Звоним…» */
  if(pre&&pre.length)G_start(pre,false);else G_start([],false,true)}
-async function G_start(uids,video,openSheet){
- if(K_cs||G_cs||G_busy)return;uids=uids||[];
+async function G_start(uids,video,openSheet,stream0,after){
+ if((K_cs&&!stream0)||G_cs||G_busy)return;uids=uids||[];
  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast(K_Cx("u"),0);return}
  G_busy=true;
  try{
-  let stream;try{stream=await navigator.mediaDevices.getUserMedia(K_media(!!video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}
+  let stream=stream0;if(!stream){try{stream=await navigator.mediaDevices.getUserMedia(K_media(!!video))}catch(e){toast(K_Cx(video?"mc":"m"),0);return}}
   const ref=doc(collection(db,"gcalls"));
   try{await setDoc(ref,{host:me.uid,hostName:G_myName(),video:!!video,status:"open",ts:serverTimestamp()})}
-  catch(e){stream.getTracks().forEach(t=>t.stop());toast(e.code||e.message,0);return}
-  await G_enter(ref.id,stream,!!video,uids,true);
+  catch(e){if(stream0){G_noAnim=false;if(K_cs)K_cs.stream=stream0}else stream.getTracks().forEach(t=>t.stop());toast(e.code||e.message,0);return}
+  const pr=G_enter(ref.id,stream,!!video,uids,true);if(after)after();await pr;
   if(openSheet&&G_cs&&G_cs.id==ref.id){const cc=G_cs;setTimeout(()=>{if(G_cs===cc)G_sheet(cc)},700)}
  }finally{G_busy=false}}
 /* приглашение: человек сразу появляется плиткой «Звоним…» */
@@ -3377,24 +3401,24 @@ function G_pset(c,patch){updateDoc(doc(db,"gcalls",c.id,"p",c.uid),patch).catch(
 
 /* ---------- интерфейс звонка ---------- */
 function G_ui(c){
- let o=E("G_ui");if(o)o.remove();o=mk("div");o.id="G_ui";
+ let o=E("G_ui");if(o)o.remove();o=mk("div");o.id="G_ui";if(G_noAnim){o.style.animation="none";G_noAnim=false}
  const I=(d,off)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+(off?'<path d="M4 4l16 16"/>':'')+'</svg>';
  const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',add:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/>'};
  const bt=(cls,html,lbl,fn)=>{const b=mk("button",cls);b.innerHTML=html;b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);return b};
- const hd=mk("div","gch"),tt=mk("div","gtt"),st=mk("small",null,"");st.id="G_st";
- tt.append(mk("b",null,G_Lx(c.video?"tv":"t")),st);
- hd.append(tt,bt("gadd",I(P.add)+"<span>"+G_Lx("inv")+"</span>",G_Lx("inv"),()=>G_sheet(c)));
- const g=mk("div","gcg"),bar=mk("div","gcr");
- bar.append(bt("gb",I(P.mic),G_Lx("mu"),b=>{const t=c.stream.getAudioTracks()[0];if(!t)return;t.enabled=!t.enabled;c.mu=!t.enabled;b.classList.toggle("off",c.mu);b.innerHTML=I(P.mic,c.mu);G_pset(c,{mu:c.mu});G_render(c)}));
- if(c.video)bar.append(bt("gb",I(P.cam),G_Lx("cam"),b=>{const t=c.stream.getVideoTracks()[0];if(!t)return;t.enabled=!t.enabled;c.cm=!t.enabled;b.classList.toggle("off",c.cm);b.innerHTML=I(P.cam,c.cm);G_pset(c,{cm:c.cm});G_render(c)}));
- bar.append(bt("gb",I(P.spk),G_Lx("deaf"),b=>{c.deaf=!c.deaf;b.classList.toggle("off",c.deaf);b.innerHTML=I(P.spk,c.deaf);Object.keys(c.peers).forEach(k=>{if(c.peers[k].au)c.peers[k].au.muted=c.deaf})}));
- const en=bt("gb end",ico("phone"),G_Lx("leave"),()=>G_leave(G_Lx("end")));const es=en.querySelector("svg");if(es)es.style.transform="rotate(135deg)";bar.append(en);
+ const hd=mk("div","kdhd");
+ const pill=mk("div","kdpill");pill.style.cursor="default";const pc=mk("span","kdpc"),pn=mk("span","kdpn","");pn.id="G_pn";const st=mk("span","kdps","");st.id="G_st";pc.append(pn,st);pill.append(pc);
+ const sp1=mk("div");sp1.style.flex="1";
+ hd.append(pill,sp1,bt("kdib",I(P.add),G_Lx("inv"),()=>G_sheet(c)),bt("kdib",I(P.spk,c.deaf),G_Lx("deaf"),b=>{c.deaf=!c.deaf;b.innerHTML=I(P.spk,c.deaf);Object.keys(c.peers).forEach(k=>{if(c.peers[k].au)c.peers[k].au.muted=c.deaf})}));
+ const g=mk("div","gcg"),bar=mk("div","kdbar"+(c.video?" many":""));
+ bar.append(bt("kdbb",I(P.mic),G_Lx("mu"),b=>{const t=c.stream.getAudioTracks()[0];if(!t)return;t.enabled=!t.enabled;c.mu=!t.enabled;b.classList.toggle("off",c.mu);b.innerHTML=I(P.mic,c.mu);G_pset(c,{mu:c.mu});G_render(c)}));
+ if(c.video)bar.append(bt("kdbb",I(P.cam),G_Lx("cam"),b=>{const t=c.stream.getVideoTracks()[0];if(!t)return;t.enabled=!t.enabled;c.cm=!t.enabled;b.classList.toggle("off",c.cm);b.innerHTML=I(P.cam,c.cm);G_pset(c,{cm:c.cm});G_render(c)}));
+ const en=bt("kdbb end",ico("phone"),G_Lx("leave"),()=>G_leave(G_Lx("end")));const es=en.querySelector("svg");if(es)es.style.transform="rotate(135deg)";bar.append(en);
  o.append(hd,g,bar);document.body.append(o);
  c.rz=()=>{if(G_cs===c)G_render(c)};window.addEventListener("resize",c.rz);window.addEventListener("orientationchange",c.rz)}
 function G_status(c){const s=E("G_st");if(!s||G_cs!==c)return;const k=Object.keys(c.peers);
  if(c.t0)s.textContent=K_dur(Math.floor((Date.now()-c.t0)/1000))+" · "+(k.filter(x=>c.peers[x].con).length+1);
  else s.textContent=k.length?G_Lx("con"):(Object.keys(c.inv).length?G_Lx("ring"):G_Lx("wait"))}
-let G_bx=null;
+let G_bx=null,G_noAnim=false;
 /* короткий звук «зашёл / вышел», как в Discord */
 function G_blip(c,down){if(!c||c.deaf)return;
  try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const x=G_bx||(G_bx=new AC());if(x.state=="suspended")x.resume();
@@ -3464,6 +3488,7 @@ function G_render(c){const o=E("G_ui");if(!o||G_cs!==c)return;const g=o.querySel
   t.classList.toggle("gmain",!!q.m);
   t.style.setProperty("--k",Math.max(.55,Math.min(1.75,Math.min(q.w,q.h)*.4/72)).toFixed(3));
   if(fresh){void t.offsetWidth;t.classList.remove("gnew")}});
+  const pn=E("G_pn");if(pn)pn.textContent=list.filter(e=>e.k!="me"&&e.k!="add").map(e=>nm(G_user(c,e))).join(", ")||G_Lx(c.video?"tv":"t");
  G_status(c)}
 /* кто говорит: фиолетовая обводка плитки */
 function G_speak(c){const o=E("G_ui");if(!o)return;
