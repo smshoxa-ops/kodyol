@@ -601,6 +601,15 @@ body:has(#v-chat:not([hidden]) #th:not([hidden])) #c-chat #thh{top:0;margin:0 -1
 #K_callUI.kdhide .kdbar{transform:translateY(140px);opacity:0;pointer-events:none}
 #K_callUI.kdhide .kdlb,#K_callUI.kdhide .kdbadge{opacity:0}
 #K_callUI.kdhide .kdtiles{top:calc(env(safe-area-inset-top,0px) + 80px);bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}
+#K_callUI .kdbar.many .kdbb{width:54px}#K_callUI .kdbar.many .kdbb.end{width:72px}
+#K_callUI .kdbb.on{background:rgba(138,47,208,.3);color:#e2b8ff;box-shadow:inset 0 0 0 1px rgba(168,85,247,.55)}
+#K_callUI .kdscr{z-index:2;background:#000;border-radius:22px;overflow:hidden;gap:0}
+#K_callUI .kdscrt{background:#000;border-radius:22px}
+#K_callUI .kdscrt video{object-fit:contain;background:#000}
+#K_callUI .kdfs{position:absolute;top:12px;right:12px;z-index:5;width:40px;height:40px;border:0;border-radius:50%;background:rgba(24,24,30,.78);color:#fff;display:grid;place-items:center;cursor:pointer;transition:opacity .25s}
+#K_callUI .kdfs svg{width:20px;height:20px}
+#K_callUI .kdsb{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 66px);z-index:4;border:0;border-radius:999px;padding:8px 16px;background:#7a1fd1;color:#fff;font:600 13px/1.2 inherit;font-family:inherit;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);transition:opacity .25s}
+#K_callUI.kdhide .kdsb,#K_callUI.kdhide .kdfs{opacity:0;pointer-events:none}
 .kbub{position:fixed;z-index:280;width:68px;height:68px;border-radius:20px;overflow:hidden;background:#1d062a;color:#fff;touch-action:none;cursor:pointer;user-select:none;-webkit-user-select:none;animation:kbPop .42s cubic-bezier(.2,.9,.3,1.3) both,kbRing 2.2s ease-in-out .5s infinite;will-change:left,top,transform}
 .kbub.drag{transition:none!important;animation:none;box-shadow:0 14px 34px rgba(0,0,0,.55),0 0 0 2px rgba(184,60,255,.8);transform:scale(1.08)}
 .kbub.out{animation:kbOut .25s ease forwards}
@@ -2727,12 +2736,12 @@ window.IC.vcam='<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height
 window.IC.vflip='<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/>';
 window.IC.spk='<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>';
 const K_CL={
-ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон",sp:"Динамик",ce:"Аудиозвонок завершён",cm:"Пропущенный звонок",cn:"Нет ответа",cd:"Звонок отклонён",v:"Видеозвонок",vi:"Входящий видеозвонок",vce:"Видеозвонок завершён",cam:"Камера",fl:"Сменить",mc:"Нет доступа к камере или микрофону. Разреши их в настройках.",x:"Не удалось соединиться",mn:"Свернуть",mh:"Свайпни вниз, чтобы свернуть"},
-uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon",sp:"Karnay",ce:"Audio qo'ng'iroq tugadi",cm:"O'tkazib yuborilgan qo'ng'iroq",cn:"Javob bermadi",cd:"Qo'ng'iroq rad etildi",v:"Video qo'ng'iroq",vi:"Kiruvchi video qo'ng'iroq",vce:"Video qo'ng'iroq tugadi",cam:"Kamera",fl:"Almashtirish",mc:"Kamera yoki mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",x:"Ulanib bo'lmadi",mn:"Kichraytirish",mh:"Kichraytirish uchun pastga suring"},
-en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone",sp:"Speaker",ce:"Audio call ended",cm:"Missed call",cn:"No answer",cd:"Call declined",v:"Video call",vi:"Incoming video call",vce:"Video call ended",cam:"Camera",fl:"Flip",mc:"No camera or microphone access. Allow them in settings.",x:"Couldn't connect",mn:"Minimize",mh:"Swipe down to minimize"},
-zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风",sp:"扬声器",ce:"语音通话已结束",cm:"未接来电",cn:"无人接听",cd:"通话已拒绝",v:"视频通话",vi:"视频来电",vce:"视频通话已结束",cam:"摄像头",fl:"翻转",mc:"无法使用摄像头或麦克风，请在设置中允许。",x:"无法连接",mn:"最小化",mh:"向下滑动可最小化"},
-es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono",sp:"Altavoz",ce:"Llamada de audio finalizada",cm:"Llamada perdida",cn:"Sin respuesta",cd:"Llamada rechazada",v:"Videollamada",vi:"Videollamada entrante",vce:"Videollamada finalizada",cam:"Cámara",fl:"Girar",mc:"Sin acceso a la cámara o al micrófono. Permítelo en ajustes.",x:"No se pudo conectar",mn:"Minimizar",mh:"Desliza hacia abajo para minimizar"},
-de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon",sp:"Lautsprecher",ce:"Audioanruf beendet",cm:"Verpasster Anruf",cn:"Keine Antwort",cd:"Anruf abgelehnt",v:"Videoanruf",vi:"Eingehender Videoanruf",vce:"Videoanruf beendet",cam:"Kamera",fl:"Wechseln",mc:"Kein Zugriff auf Kamera oder Mikrofon. Erlaube ihn in den Einstellungen.",x:"Verbindung fehlgeschlagen",mn:"Minimieren",mh:"Zum Minimieren nach unten wischen"}};
+ru:{call:"Позвонить",c:"Вызов…",i:"Входящий звонок",n:"Соединение…",a:"Принять",d:"Отклонить",e:"Завершить",m:"Нет доступа к микрофону. Разреши его в настройках.",o:"Не отвечает",f:"Звонок завершён",r:"Отклонено",u:"Звонки не поддерживаются на этом устройстве",mu:"Микрофон",sp:"Динамик",ce:"Аудиозвонок завершён",cm:"Пропущенный звонок",cn:"Нет ответа",cd:"Звонок отклонён",v:"Видеозвонок",vi:"Входящий видеозвонок",vce:"Видеозвонок завершён",cam:"Камера",fl:"Сменить",mc:"Нет доступа к камере или микрофону. Разреши их в настройках.",x:"Не удалось соединиться",mn:"Свернуть",mh:"Свайпни вниз, чтобы свернуть",sh:"Экран",ss:"Остановить показ",su:"Показ экрана не поддерживается на этом устройстве. Работает в браузере на компьютере.",sy:"Вы показываете экран",sv:"показывает экран"},
+uz:{call:"Qo'ng'iroq",c:"Chaqirilmoqda…",i:"Kiruvchi qo'ng'iroq",n:"Ulanmoqda…",a:"Qabul qilish",d:"Rad etish",e:"Tugatish",m:"Mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",o:"Javob bermadi",f:"Qo'ng'iroq tugadi",r:"Rad etildi",u:"Bu qurilmada qo'ng'iroq qo'llab-quvvatlanmaydi",mu:"Mikrofon",sp:"Karnay",ce:"Audio qo'ng'iroq tugadi",cm:"O'tkazib yuborilgan qo'ng'iroq",cn:"Javob bermadi",cd:"Qo'ng'iroq rad etildi",v:"Video qo'ng'iroq",vi:"Kiruvchi video qo'ng'iroq",vce:"Video qo'ng'iroq tugadi",cam:"Kamera",fl:"Almashtirish",mc:"Kamera yoki mikrofonga ruxsat yo'q. Sozlamalarda ruxsat bering.",x:"Ulanib bo'lmadi",mn:"Kichraytirish",mh:"Kichraytirish uchun pastga suring",sh:"Ekran",ss:"To'xtatish",su:"Bu qurilmada ekran namoyishi qo'llab-quvvatlanmaydi. Kompyuter brauzerida ishlaydi.",sy:"Siz ekranni ko'rsatmoqdasiz",sv:"ekranni ko'rsatmoqda"},
+en:{call:"Call",c:"Calling…",i:"Incoming call",n:"Connecting…",a:"Accept",d:"Decline",e:"End",m:"No microphone access. Allow it in settings.",o:"No answer",f:"Call ended",r:"Declined",u:"Calls are not supported on this device",mu:"Microphone",sp:"Speaker",ce:"Audio call ended",cm:"Missed call",cn:"No answer",cd:"Call declined",v:"Video call",vi:"Incoming video call",vce:"Video call ended",cam:"Camera",fl:"Flip",mc:"No camera or microphone access. Allow them in settings.",x:"Couldn't connect",mn:"Minimize",mh:"Swipe down to minimize",sh:"Screen",ss:"Stop sharing",su:"Screen sharing isn't supported on this device. It works in a desktop browser.",sy:"You are sharing your screen",sv:"is sharing their screen"},
+zh:{call:"通话",c:"呼叫中…",i:"来电",n:"连接中…",a:"接听",d:"拒绝",e:"结束",m:"无法使用麦克风，请在设置中允许。",o:"无人接听",f:"通话已结束",r:"已拒绝",u:"此设备不支持通话",mu:"麦克风",sp:"扬声器",ce:"语音通话已结束",cm:"未接来电",cn:"无人接听",cd:"通话已拒绝",v:"视频通话",vi:"视频来电",vce:"视频通话已结束",cam:"摄像头",fl:"翻转",mc:"无法使用摄像头或麦克风，请在设置中允许。",x:"无法连接",mn:"最小化",mh:"向下滑动可最小化",sh:"屏幕",ss:"停止共享",su:"此设备不支持屏幕共享，可在电脑浏览器中使用。",sy:"你正在共享屏幕",sv:"正在共享屏幕"},
+es:{call:"Llamar",c:"Llamando…",i:"Llamada entrante",n:"Conectando…",a:"Aceptar",d:"Rechazar",e:"Finalizar",m:"Sin acceso al micrófono. Permítelo en ajustes.",o:"Sin respuesta",f:"Llamada finalizada",r:"Rechazada",u:"Las llamadas no son compatibles con este dispositivo",mu:"Micrófono",sp:"Altavoz",ce:"Llamada de audio finalizada",cm:"Llamada perdida",cn:"Sin respuesta",cd:"Llamada rechazada",v:"Videollamada",vi:"Videollamada entrante",vce:"Videollamada finalizada",cam:"Cámara",fl:"Girar",mc:"Sin acceso a la cámara o al micrófono. Permítelo en ajustes.",x:"No se pudo conectar",mn:"Minimizar",mh:"Desliza hacia abajo para minimizar",sh:"Pantalla",ss:"Dejar de compartir",su:"Compartir pantalla no es compatible con este dispositivo. Funciona en el navegador del ordenador.",sy:"Estás compartiendo tu pantalla",sv:"está compartiendo su pantalla"},
+de:{call:"Anrufen",c:"Ruft an…",i:"Eingehender Anruf",n:"Verbinde…",a:"Annehmen",d:"Ablehnen",e:"Beenden",m:"Kein Mikrofonzugriff. Erlaube ihn in den Einstellungen.",o:"Keine Antwort",f:"Anruf beendet",r:"Abgelehnt",u:"Anrufe werden auf diesem Gerät nicht unterstützt",mu:"Mikrofon",sp:"Lautsprecher",ce:"Audioanruf beendet",cm:"Verpasster Anruf",cn:"Keine Antwort",cd:"Anruf abgelehnt",v:"Videoanruf",vi:"Eingehender Videoanruf",vce:"Videoanruf beendet",cam:"Kamera",fl:"Wechseln",mc:"Kein Zugriff auf Kamera oder Mikrofon. Erlaube ihn in den Einstellungen.",x:"Verbindung fehlgeschlagen",mn:"Minimieren",mh:"Zum Minimieren nach unten wischen",sh:"Bildschirm",ss:"Teilen beenden",su:"Bildschirmfreigabe wird auf diesem Gerät nicht unterstützt. Sie funktioniert im Desktop-Browser.",sy:"Du teilst deinen Bildschirm",sv:"teilt den Bildschirm"}};
 const K_Cx=k=>(K_CL[window.lang]||K_CL.en)[k];
 /* TURN-серверы для звонков между разными странами и сетями.
    Вставь сюда массив iceServers из metered.ca: Dashboard → TURN Server → Instructions.
@@ -2806,7 +2815,7 @@ function K_callUI(u){
  if(!re)o.style.animation="kcIn .38s cubic-bezier(.2,.9,.3,1) both";
  const c=K_cs,vid=!!(c&&c.video),meU=UM[me.uid]||(typeof MY!="undefined"?MY:null)||{};
  const I=(d,off)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+(off?'<path d="M4 4l16 16"/>':'')+'</svg>';
- const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',flip:'<path d="M20 7h-9a5 5 0 0 0-5 5M4 17h9a5 5 0 0 0 5-5"/><path d="M17 4l3 3-3 3M7 14l-3 3 3 3"/>',chev:'<path d="M6 9l6 6 6-6"/>',chat:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>',arr:'<path d="M9 6l6 6-6 6"/>'};
+ const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',scr:'<rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17v4M9.5 11.5L12 9l2.5 2.5M12 9v5"/>',cam:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 10l5-3v10l-5-3"/>',spk:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',flip:'<path d="M20 7h-9a5 5 0 0 0-5 5M4 17h9a5 5 0 0 0 5-5"/><path d="M17 4l3 3-3 3M7 14l-3 3 3 3"/>',chev:'<path d="M6 9l6 6 6-6"/>',chat:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>',arr:'<path d="M9 6l6 6-6 6"/>'};
  const bt=(cls,html,lbl,fn)=>{const b=mk("button",cls);b.innerHTML=html;b.setAttribute("aria-label",lbl);b.onclick=()=>fn(b);return b};
  /* шапка */
  const hd=mk("div","kdhd");
@@ -2832,13 +2841,14 @@ function K_callUI(u){
  }
  tiles.append(T1.t,T2.t);
  /* нижняя панель */
- const bar=mk("div","kdbar");
+ const bar=mk("div","kdbar"+(vid?" many":""));
  const tg=(ic,lbl,kind)=>bt("kdbb",I(P[ic]),lbl,b=>{const k=K_cs;const t=k&&k.stream&&(kind=="a"?k.stream.getAudioTracks()[0]:k.stream.getVideoTracks()[0]);if(!t)return;t.enabled=!t.enabled;const off=!t.enabled;b.classList.toggle("off",off);b.innerHTML=I(P[ic],off);
   if(kind=="a")T2.t.classList.toggle("mu",off);else{const lv=E("callLV");if(lv)lv.style.visibility=off?"hidden":"visible";T2.a.style.display=off?"":"none"}});
  if(vid)bar.append(tg("cam",K_Cx("cam"),"v"),bt("kdbb",I(P.flip),K_Cx("fl"),()=>K_flip(K_cs)));
+ const shb=bt("kdbb",I(P.scr),K_Cx("sh"),()=>{const k=K_cs;if(k)K_share(k,!k.ss)});shb.id="K_shbtn";if(c&&c.ss)shb.classList.add("on");bar.append(shb);
  bar.append(tg("mic",K_Cx("mu"),"a"));
  const en=bt("kdbb end",ico("phone"),K_Cx("e"),()=>K_endCall(true,K_Cx("f")));const es=en.querySelector("svg");if(es)es.style.transform="rotate(135deg)";bar.append(en);
- o.append(hd,tiles,bar);document.body.append(o);K_minSetup(o,u);
+ o.append(hd,tiles,bar);document.body.append(o);K_minSetup(o,u);K_shView(K_cs);K_shBan(K_cs);
  /* тап по пустому месту — скрыть/показать кнопки */
  let px=0,py=0;o.addEventListener("pointerdown",e=>{px=e.clientX;py=e.clientY},true);
  o.addEventListener("click",e=>{if(e.target.closest("button"))return;if(Math.hypot(e.clientX-px,e.clientY-py)>10)return;o.classList.toggle("kdhide")});
@@ -2921,21 +2931,78 @@ function K_minSetup(o,u){if(!K_cs||K_cs.inc)return;
    setTimeout(()=>{if(!K_min&&E("K_callUI")===o){o.style.transition="";o.style.overflow=""}},420)}};
  o.addEventListener("pointerup",up);o.addEventListener("pointercancel",up)}
 window.addEventListener("resize",()=>{const b=E("K_bub");if(b)K_bubPos(b)});
+/* ===== Показ экрана во время звонка (как в Discord) ===== */
+async function K_share(c,on){
+ if(!c||K_cs!=c||c.shBusy)return;
+ const btn=E("K_shbtn");
+ if(on){
+  if(!c.pc||!c.nego){toast(K_Cx("n"),0);return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia){toast(K_Cx("su"),0);return}
+  c.shBusy=1;let ds;
+  try{ds=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:{ideal:15,max:30}},audio:false})}
+  catch(e){c.shBusy=0;if(e&&e.name!="NotAllowedError"&&e.name!="AbortError")toast(K_Cx("su"),0);return}
+  c.shBusy=0;const t=ds.getVideoTracks()[0];
+  if(!t||K_cs!=c||!c.pc){ds.getTracks().forEach(x=>x.stop());return}
+  try{t.contentHint="detail"}catch(e){}
+  c.ss=ds;c.ssn=c.pc.addTrack(t,ds);
+  t.onended=()=>{if(K_cs==c&&c.ss===ds)K_share(c,false)};
+  K_sigSend(c,{k:"sh",on:1});
+ }else{
+  const ds=c.ss;if(!ds)return;
+  ds.getTracks().forEach(x=>{x.onended=null;x.stop()});
+  try{c.pc&&c.ssn&&c.pc.removeTrack(c.ssn)}catch(e){}
+  c.ss=null;c.ssn=null;K_sigSend(c,{k:"sh",on:0});
+ }
+ const b2=E("K_shbtn");if(b2)b2.classList.toggle("on",!!c.ss);
+ K_shBan(c)}
+function K_shBan(c){const o=E("K_callUI");if(!o)return;let b=E("K_shb");
+ if(!(c&&K_cs==c&&c.ss)){if(b)b.remove();return}
+ if(!b){b=mk("button","kdsb");b.id="K_shb";b.onclick=()=>{if(K_cs)K_share(K_cs,false)};o.append(b)}
+ b.textContent=K_Cx("sy")+" · "+K_Cx("ss")}
+function K_shGot(c,track){c.shT=track;
+ track.onunmute=()=>{if(c.shT===track){c.shOn=true;K_shView(c)}};
+ track.onended=()=>{if(c.shT===track){c.shT=null;c.shOn=false;K_shView(c)}};
+ if(!track.muted)c.shOn=true;K_shView(c)}
+function K_shView(c){const o=E("K_callUI");if(!o)return;let w=E("K_shv");
+ const show=!!(c&&K_cs==c&&c.shT&&c.shOn);
+ if(!show){if(w){const v=w.querySelector("video");if(v)v.srcObject=null;w.remove();try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}return}
+ if(!w){w=mk("div","kdtiles kdscr");w.id="K_shv";
+  const t=mk("div","kdtile kdscrt"),v=document.createElement("video");v.autoplay=true;v.muted=true;v.setAttribute("playsinline","");
+  const lb=mk("div","kdlb");lb.append(mk("span",null,nm(UM[c.peer]||{})+" "+K_Cx("sv")));
+  const fb=mk("button","kdfs");fb.setAttribute("aria-label","Fullscreen");
+  fb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+  fb.onclick=e=>{e.stopPropagation();const fe=document.fullscreenElement||document.webkitFullscreenElement;
+   if(fe){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+   else{const rq=t.requestFullscreen||t.webkitRequestFullscreen;if(rq)rq.call(t);else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen()}};
+  t.append(v,lb,fb);w.append(t);const bar=o.querySelector(".kdbar");o.insertBefore(w,bar)}
+ const v=w.querySelector("video");
+ if(v.dataset.tid!=c.shT.id){v.dataset.tid=c.shT.id;v.srcObject=new MediaStream([c.shT]);v.play&&v.play().catch(()=>{})}}
 function K_sendIce(c,cand){const x=JSON.stringify(cand);if(!c.ready){c.q.push(x);return}addDoc(collection(db,"calls",c.id,"ice"),{uid:me.uid,c:x}).catch(()=>{})}
 function K_addC(c,x){const p=c.pc;if(p&&p.remoteDescription)p.addIceCandidate(JSON.parse(x)).catch(()=>{});else c.pend.push(x)}
 function K_flushC(c){const a=c.pend;c.pend=[];a.forEach(x=>K_addC(c,x))}
-function K_listenIce(c){c.un.push(onSnapshot(collection(db,"calls",c.id,"ice"),s=>s.docChanges().forEach(ch=>{if(ch.type=="added"){const x=ch.doc.data();if(x.uid!=me.uid)K_addC(c,x.c)}}),()=>{}))}
+function K_sigSend(c,m){addDoc(collection(db,"calls",c.id,"sig"),{uid:me.uid,m:JSON.stringify(m)}).catch(e=>toast(e.code||e.message,0))}
+async function K_sig(c,m){const pc=c.pc;if(!pc||K_cs!=c||!m)return;
+ if(m.k=="sh"){c.shOn=!!m.on;if(!m.on)c.shT=null;K_shView(c);return}
+ if(m.k=="d"&&m.d){const d=m.d,pol=c.role=="b",col=d.type=="offer"&&(c.mk||pc.signalingState!="stable");
+  if(!pol&&col)return;
+  try{await pc.setRemoteDescription(d);
+   if(d.type=="offer"){const an=await pc.createAnswer();await pc.setLocalDescription(an);K_sigSend(c,{k:"d",d:{type:an.type,sdp:an.sdp}})}
+   if(c.shT){const tr=pc.getTransceivers().find(x=>x.receiver.track===c.shT);if(tr&&(tr.currentDirection=="inactive"||tr.currentDirection=="sendonly")){c.shT=null;c.shOn=false}}
+   K_shView(c)}catch(e){}}}
+function K_listenIce(c){c.un.push(onSnapshot(collection(db,"calls",c.id,"sig"),s=>s.docChanges().forEach(ch=>{if(ch.type=="added"){const x=ch.doc.data();if(x.uid!=me.uid){let m=null;try{m=JSON.parse(x.m)}catch(e){}K_sig(c,m)}}}),()=>{}));
+ c.un.push(onSnapshot(collection(db,"calls",c.id,"ice"),s=>s.docChanges().forEach(ch=>{if(ch.type=="added"){const x=ch.doc.data();if(x.uid!=me.uid)K_addC(c,x.c)}}),()=>{}))}
 function K_watch(c){clearTimeout(c.ct);c.ct=setTimeout(()=>{const p=c.pc;if(K_cs==c&&p&&p.connectionState!="connected"&&p.iceConnectionState!="connected"&&p.iceConnectionState!="completed")K_endCall(true,K_Cx("x"))},25000)}
 function K_newPC(c){const pc=new RTCPeerConnection(K_ICE_CFG);c.pc=pc;c.stream.getTracks().forEach(t=>pc.addTrack(t,c.stream));
  const au=document.createElement("audio");au.autoplay=true;au.setAttribute("playsinline","");document.body.append(au);c.au=au;
- pc.ontrack=e=>{au.srcObject=e.streams[0];au.play&&au.play().catch(()=>{});c.remote=e.streams[0];if(c.video){const rv=E("callRV");if(rv){rv.srcObject=c.remote;rv.style.display="block";rv.play&&rv.play().catch(()=>{})}const ca=E("callAv");if(ca)ca.style.display="none"}K_bubVid()};
+ pc.ontrack=e=>{const st0=e.streams[0];if(e.track.kind=="video"&&st0&&c.rid&&st0.id!==c.rid){K_shGot(c,e.track);return}if(st0&&!c.rid)c.rid=st0.id;au.srcObject=e.streams[0];au.play&&au.play().catch(()=>{});c.remote=e.streams[0];if(c.video){const rv=E("callRV");if(rv){rv.srcObject=c.remote;rv.style.display="block";rv.play&&rv.play().catch(()=>{})}const ca=E("callAv");if(ca)ca.style.display="none"}K_bubVid()};
  pc.onicecandidate=e=>{if(e.candidate)K_sendIce(c,e.candidate)};pc.oniceconnectionstatechange=()=>{if(pc.iceConnectionState=="failed"&&K_cs==c)K_endCall(true,K_Cx("x"))};
- pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected")clearTimeout(c.ct);if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
+ pc.onconnectionstatechange=()=>{const s=pc.connectionState;if(s=="connected"){clearTimeout(c.ct);c.nego=true}if(s=="connected"&&!c.tm){c.t0=Date.now();const f=()=>{const t=Math.floor((Date.now()-c.t0)/1000);K_setSt(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))};f();c.tm=setInterval(f,1000)}if(s=="failed"&&K_cs==c)K_endCall(true,K_Cx("f"))};
+ pc.onnegotiationneeded=async()=>{if(!c.nego||K_cs!=c)return;try{c.mk=true;const off=await pc.createOffer();if(pc.signalingState!="stable")return;await pc.setLocalDescription(off);K_sigSend(c,{k:"d",d:{type:off.type,sdp:off.sdp}})}catch(e){}finally{c.mk=false}};
  return pc}
 function K_endCall(notify,msg){const c=K_cs;if(!c)return;K_cs=null;K_logCall(c);K_ring(false);K_islRm();clearInterval(c.tm);clearTimeout(c.to);clearTimeout(c.ct);
  c.un.forEach(f=>{try{f()}catch(e){}});
  if(notify)updateDoc(doc(db,"calls",c.id),{status:c.inc?"declined":"ended"}).catch(()=>{});
- try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
+ try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{c.ss&&c.ss.getTracks().forEach(t=>{t.onended=null;t.stop()})}catch(e){}c.ss=null;
  if(c.au)c.au.remove();
  const u=E("K_callUI");if(u){if(msg&&!K_min){const e=E("callSt");if(e)e.textContent=msg;setTimeout(()=>u.remove(),1200)}else u.remove()}
  if(K_min&&msg)toast(msg,0);K_min=false;K_bubRm()}

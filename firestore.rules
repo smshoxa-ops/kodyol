@@ -141,6 +141,16 @@ service cloud.firestore {
           && request.resource.data.c is string && request.resource.data.c.size() < 2000;
         allow update, delete: if false;
       }
+
+      // Сигналы внутри звонка: показ экрана (повторное согласование WebRTC)
+      match /sig/{id} {
+        allow read: if callMember(callId);
+        allow create: if callMember(callId)
+          && request.resource.data.keys().hasOnly(['uid','m'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.m is string && request.resource.data.m.size() < 60000;
+        allow update, delete: if false;
+      }
     }
 
     // «В сети»: время последней активности, пишет только владелец
