@@ -452,6 +452,14 @@ service cloud.firestore {
       allow update: if false;
     }
 
+    // Бейджи тарифов: читают все вошедшие, выдаёт только владелец
+    match /badges/{uid} {
+      allow read: if signedIn();
+      allow create, update: if isOwner() && request.resource.data.keys().hasOnly(['pl','exp'])
+        && request.resource.data.pl in ['std','pro','max'] && request.resource.data.exp is number;
+      allow delete: if isOwner();
+    }
+
     // Блокировки: ставит и снимает только владелец; пользователь видит только свою
     match /bans/{uid} {
       allow read: if request.auth != null && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");

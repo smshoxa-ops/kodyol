@@ -2205,7 +2205,7 @@ function pColl(box,card,ban,bd){
  requestAnimationFrame(()=>{measure();last=-1;upd()});setTimeout(onR,400)}
 function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  if(!own){const bk=mk("button");bk.innerHTML=ico("back");bk.onclick=()=>window.show(prev||"find");top.append(bk)}
- if(own){const pb=mk("button","stpb");pb.innerHTML=ico("stplus");pb.onclick=rlUpload;top.append(pb)}{const sp=mk("span",null,nm(u));if(isV(uid))sp.append(VB(18));top.append(sp)}if(own){const mb=mk("button","mb");mb.id="mb";mb.type="button";mb.setAttribute("aria-label","menu");mb.innerHTML=ico("menu");mb.style.marginLeft="auto";mb.onclick=()=>window.menu(!dr.classList.contains("o"));top.append(mb)}box.append(top);
+ if(own){const pb=mk("button","stpb");pb.innerHTML=ico("stplus");pb.onclick=rlUpload;top.append(pb)}{const sp=mk("span",null,nm(u));if(isV(uid))sp.append(VB(18));sp.append(PB(uid));top.append(sp)}if(own){const mb=mk("button","mb");mb.id="mb";mb.type="button";mb.setAttribute("aria-label","menu");mb.innerHTML=ico("menu");mb.style.marginLeft="auto";mb.onclick=()=>window.menu(!dr.classList.contains("o"));top.append(mb)}box.append(top);
  const card=mk("div","pcard pcol"),ban=mk("div","pban");
  if(u.banner){const bm=mk("img");bm.src=u.banner;bm.alt="";bm.draggable=false;ban.append(bm)}
  if(own){const cb=mk("button","pbc");cb.type="button";cb.setAttribute("aria-label",X("pcb"));cb.innerHTML=ico("stgal")+" <span>"+X("pcb")+"</span>";const bf=mk("input");bf.type="file";bf.accept="image/*";bf.hidden=true;cb.onclick=()=>bf.click();
@@ -2213,7 +2213,7 @@ function prof(box,u,uid,own){box.innerHTML="";const top=mk("div","hd");
  const bd=mk("div","pbody");
  const p=mk("div","pf");const aw=mk("div","stw");aw.append(av(u,92));p.append(aw);stBind(aw,uid,own);const st=mk("div","st");
  st.innerHTML='<div><b>'+(u.learned||0)+'</b><span>'+T.done+'</span></div><div><b class="s1">0</b><span>'+T.fol+'</span></div><div><b class="s2">0</b><span>'+T.fng+'</span></div>';p.append(st);
- const idr=mk("div","prow"),idn=mk("div","pid"),nmb=mk("b",null,nm(u));if(isV(uid))nmb.append(VB(16));idn.append(nmb);if(u.username)idn.append(mk("span",null,"@"+u.username));
+ const idr=mk("div","prow"),idn=mk("div","pid"),nmb=mk("b",null,nm(u));if(isV(uid))nmb.append(VB(16));nmb.append(PB(uid));idn.append(nmb);if(u.username)idn.append(mk("span",null,"@"+u.username));
  const pr=mk("div","pr");idr.append(idn,pr);bd.append(p,idr);if(u.bio&&!own)bd.append(mk("div","pbio",u.bio));{const sh=mk("div","pbshade"),pn=mk("div","pbn");const pnm=mk("span",null,nm(u));pn.append(pnm);if(isV(uid))pn.append(VB(16));ban.append(sh,pn)}card.append(ban,bd);box.append(card);pColl(box,card,ban,bd);if(own){const pg=mk("div");pg.id="rlprog";pg.hidden=true;box.append(pg);rlProgPaint()}pTabs(box,uid,own);
  counts(uid,(f1,f2,isf)=>{box.querySelector(".s1").textContent=(OWNER_FAKE&&isV(uid))?vFol(uid):f1;box.querySelector(".s2").textContent=f2;pr.innerHTML="";
   if(own){const e=mk("button",null,T.edt);e.onclick=()=>window.show("edit");const h=mk("button",null,T.shr);h.onclick=share;pr.append(e,h);}
@@ -2554,8 +2554,17 @@ function stOnSync(){const sr=E("strow");if(!sr||!me||!STC||STC.u!=me.uid)return;
 const OWNER_FAKE=true,OWNER_FOL={ru:"3,4 млн",en:"3.4M",uz:"3,4 mln"};
 /* v93: другие пользователи с галочкой и своим числом подписчиков (UID -> счётчик) */
 const VIP_X={"BYy8X5NX0AR0GFscuPTaglPhfEN2":{ru:"1,5 млн",en:"1.5M",uz:"1,5 mln"}};
-const VSET=new Set();
-function vLoad(){if(!me)return Promise.resolve();return getDocs(collection(db,"verified")).then(q=>{VSET.clear();q.docs.forEach(d=>VSET.add(d.id))}).catch(()=>{})}
+const VSET=new Set(),BSET=new Map();
+function vLoad(){if(!me)return Promise.resolve();
+ const b=getDocs(collection(db,"badges")).then(q=>{BSET.clear();q.docs.forEach(d=>{const v=d.data();if(v&&v.pl&&+v.exp>Date.now())BSET.set(d.id,v.pl)})}).catch(()=>{});
+ return Promise.all([getDocs(collection(db,"verified")).then(q=>{VSET.clear();q.docs.forEach(d=>VSET.add(d.id))}).catch(()=>{}),b])}
+function PB(uid){const f=document.createDocumentFragment();
+ let k=BSET.get(uid);if(me&&uid==me.uid&&window.K_PK&&window.K_PK()!="free")k=window.K_PK();
+ const N={std:"Standard",pro:"Pro",max:"Max"},C={std:"linear-gradient(135deg,#8202cc,#c07cff)",pro:"linear-gradient(135deg,#1cb0f6,#7b5cff)",max:"linear-gradient(135deg,#ffb800,#ff6a00)"};
+ if(!k||!N[k])return f;
+ const e=document.createElement("span");e.className="pbd";e.textContent=N[k];
+ e.style.cssText="display:inline-block;vertical-align:2px;margin-left:6px;padding:2px 8px;border-radius:999px;font:800 10.5px/1.5 system-ui,sans-serif;letter-spacing:.3px;color:"+(k=="max"?"#2a1600":"#fff")+";background:"+C[k]+";box-shadow:0 0 10px "+(k=="max"?"#ffb80066":"#8202cc55");
+ f.append(e);return f}
 function isV(u){return !!u&&(u==ADMIN_UID||!!VIP_X[u]||VSET.has(u))}
 function vFol(u){if(u==ADMIN_UID)return OWNER_FOL[window.lang]||OWNER_FOL.en;const o=VIP_X[u];return o?(o[window.lang]||o.en):null}
 function VB(z){const e=document.createElement("span");e.className="vbd";e.title="FION";e.style.cssText="display:inline-flex;vertical-align:-3px;margin-left:5px;line-height:0";z=z||16;
@@ -3798,6 +3807,24 @@ const PLAN_DAYS=30,HP_FREE=5;
 let PLAN=null,PEXP=0;
 function planOn(){return !!(PLAN&&PEXP>Date.now())}
 window.K_HP=function(){if(!planOn())return HP_FREE;const pl=PLANS.find(x=>x.k==PLAN);return pl?(pl.h||Infinity):HP_FREE};
+window.K_PK=function(){return planOn()?PLAN:"free"};
+window.K_CANEXP=function(){const k=window.K_PK();return !!(me&&(isAdm()||k=="pro"||k=="max"))};
+window.K_explain=async function(list,lg){
+ if(!me)throw new Error("login");
+ if(!window.K_CANEXP())throw new Error("plan");
+ if(!isAdm()&&TOK<TOK_PER_Q)throw new Error("tokens");
+ const LN={ru:"русском",uz:"узбекском",en:"английском",zh:"китайском",es:"испанском",de:"немецком"};
+ const sys="Ты дружелюбный репетитор по программированию. Ученик ошибся в тесте. Для каждой ошибки на "+(LN[lg]||"русском")+" языке коротко (2-4 предложения): почему ответ ученика неверный, что значит правильный ответ и один совет, как запомнить. Без таблиц и без markdown-заголовков. Обращайся на «ты».";
+ const prompt=list.map((z,i)=>(i+1)+") Тема: "+z.t+(z.d?"\nОписание: "+z.d:"")+(z.c?"\nКод: "+z.c:"")+"\nОтвет ученика: "+(z.mine||"—")+"\nПравильный ответ: "+z.right).join("\n\n");
+ const{I,ai}=await aiLoad();
+ for(let i=0;i<AI_MODELS.length;i++){
+  for(const nt of[false,true]){
+   try{
+    const m=I.getGenerativeModel(ai,{model:AI_MODELS[i],systemInstruction:sys,generationConfig:{maxOutputTokens:900,temperature:.4,...(nt?{}:{thinkingConfig:{thinkingBudget:0}})}});
+    const r=await m.generateContent(prompt);const txt=String(r.response.text()||"").trim();
+    if(txt){if(!isAdm())updateDoc(doc(db,"subs",me.uid),{tokens:increment(-TOK_PER_Q)}).catch(()=>{});return txt}
+   }catch(e){console.warn("FION explain:",AI_MODELS[i],e)}}}
+ throw new Error("ai")};
 const AI_FREE=false;/* true = ИИ бесплатен для всех (тест). Поставь false, чтобы включить платный доступ */
 /* Баланс = документ subs/{uid} с полем tokens. Начисляешь сам в панели на экране ИИ (только для ADMIN_UID). */
 const PW={
@@ -3805,8 +3832,8 @@ const PW={
  uz:{t:"AI uchun tokenlar",d:"Paketni tanlang. 50 token = AI ga 1 ta savol, paket 30 kun amal qiladi. To'lov Telegram orqali.",b:"Sotib olish",tk:"token",l:"Kirish va sotib olish",s:"«Sotib olish» ni bosing, Telegramga yozing va to'lang. Tokenlar to'lovdan keyin qo'lda qo'shiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish",bal:"Tokenlar:",top:"To'ldirish",cls:"Yopish",pop:"Ommabop",f1:"50 token = 1 savol",f2:"30 kun",f3:"Sifatli AI javobi",f3n:"Oddiy AI javobi",hn:"O'qishda {n} ♥",hi:"O'qishda cheksiz ♥"},
  en:{t:"AI tokens",d:"Pick a pack. 50 tokens = 1 AI question, each pack lasts 30 days. Pay via Telegram.",b:"Buy",tk:"tokens",l:"Sign in to buy",s:"Tap Buy, message us in Telegram and pay. Tokens are added manually after payment.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy",bal:"Tokens:",top:"Top up",cls:"Close",pop:"Popular",f1:"50 tokens = 1 question",f2:"30 days",f3:"Quality AI answer",f3n:"Standard AI answer",hn:"{n} ♥ in lessons",hi:"Unlimited ♥ in lessons"}};
 let PRO=false,TOK=0,proUn=null,buyOpen=false;
-function proWatch(u){proUn&&proUn();proUn=null;PRO=false;TOK=0;PLAN=null;PEXP=0;buyOpen=false;
- if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{const v=d.exists()?d.data():{};TOK=Math.max(0,Math.floor(+v.tokens||0));PLAN=v.plan||null;PEXP=+v.exp||0;const dead=PLAN&&PEXP&&PEXP<=Date.now();PRO=TOK>=TOK_PER_Q&&!dead;aiGate()},()=>{TOK=0;PRO=false;PLAN=null;PEXP=0;aiGate()});
+function proWatch(u){proUn&&proUn();proUn=null;PRO=false;TOK=0;PLAN=null;PEXP=0;buyOpen=false;window.K_PREADY=false;
+ if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{const v=d.exists()?d.data():{};TOK=Math.max(0,Math.floor(+v.tokens||0));PLAN=v.plan||null;PEXP=+v.exp||0;window.K_PREADY=true;const dead=PLAN&&PEXP&&PEXP<=Date.now();PRO=TOK>=TOK_PER_Q&&!dead;aiGate()},()=>{TOK=0;PRO=false;PLAN=null;PEXP=0;aiGate()});
  else aiGate()}
 function isAdm(){return !!(me&&ADMIN_UID&&me.uid===ADMIN_UID)}
 window.IC.support='<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.7-1.8 2.5-4 2.5h-2"/>';
@@ -3859,7 +3886,7 @@ function aiGate(){
   bt.onclick=async()=>{const id=i.value.trim(),n=Math.floor(+am.value);if(!id||!(n>0)){m.textContent="Введите код и число токенов";return}m.textContent="...";
    try{const r=doc(db,"subs",id),d=await getDoc(r);const cur=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;
     const o=d.exists()?d.data():{};const nd={tokens:cur+n};if(selPlan){nd.plan=selPlan;nd.exp=Date.now()+PLAN_DAYS*864e5}else if(o.plan){nd.plan=o.plan;nd.exp=+o.exp||0}
-    await setDoc(r,nd);m.textContent="Готово. "+(cur+n)+" токенов"+(selPlan?", тариф "+selPlan+" на 30 дней":"")}
+    await setDoc(r,nd);if(selPlan)await setDoc(doc(db,"badges",id),{pl:selPlan,exp:nd.exp});m.textContent="Готово. "+(cur+n)+" токенов"+(selPlan?", тариф "+selPlan+" на 30 дней":"")}
    catch(err){m.textContent="Ошибка: "+err.message}};
   p.append(h,i,q,am,bt,m);return}
  if(ok&&!buyOpen)return;
@@ -3932,7 +3959,7 @@ window.ask=async function(t){
 .kd-st .e{font-size:22px;line-height:1;display:inline-block}
 .kd-st.fire .e{animation:kdFlame 1.4s ease-in-out infinite;transform-origin:50% 90%}
 .kd-st.fire.off{filter:grayscale(1);opacity:.55}.kd-st.fire.off .e{animation:none}
-.kd-st.xp{color:var(--b)}.kd-st.hp{color:var(--r)}
+.kd-st.xp{color:var(--b)}.kd-st.hp{color:var(--r)}.kd-st.hp small{font-size:11px;font-weight:800;opacity:.85}
 .kd-tk{width:42px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:var(--card);border:2px solid var(--bd);cursor:pointer;padding:0;color:var(--tx)}
 .kd-tk:active{transform:scale(.92)}
 .kd-bk{width:36px;height:36px;border-radius:50%;border:0;background:var(--bd);color:var(--tx);display:grid;place-items:center;cursor:pointer;padding:0}
@@ -4474,6 +4501,62 @@ S.done=S.done||{};S.chest=S.chest||{};S.xp=S.xp||0;
 function save(quiet){if(!quiet)S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(!quiet)try{window.dispatchEvent(new Event("kd:save"))}catch(e){}}
 function snd(n){try{if(window.KS)KS.play(n)}catch(e){}}
 function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
+/* ---------- сердца: общий запас, +1 каждые 30 минут ---------- */
+var HK="kd_hearts2",HREG=1800000;
+function hsave(o){try{localStorage.setItem(HK,JSON.stringify(o))}catch(e){}}
+function hst(){var o=null;try{o=JSON.parse(localStorage.getItem(HK))}catch(e){}
+ if(!o||typeof o!=="object")o={};
+ var u=S.uid||"";if(o.u&&u&&o.u!==u)o={};
+ if(u)o.u=u;
+ if(o.m===undefined)o.m=5;
+ if(o.h===undefined){o.h=o.m||5;o.t=Date.now()}
+ o.b=o.b||0;o.rw=o.rw||{};o.pk=o.pk||"free";if(!o.t)o.t=Date.now();return o}
+function hsync(o){var m;
+ if(window.K_PREADY&&window.K_HP){m=window.K_HP();
+  var pk=window.K_PK?window.K_PK():"free",mm=m===Infinity?0:m;
+  if(o.pk!==pk){if(pk!=="free"){o.h=m===Infinity?5:m;o.t=Date.now()}else o.h=Math.min(o.h,5);o.pk=pk;o.m=mm;hsave(o)}
+  else if(o.m!==mm){o.m=mm;hsave(o)}}
+ else m=o.m===0?Infinity:o.m;
+ if(m!==Infinity){
+  if(o.h>=m){o.h=m;o.t=Date.now()}
+  else{var n=Math.floor((Date.now()-o.t)/HREG);if(n>0){o.h=Math.min(m,o.h+n);o.t=o.h>=m?Date.now():o.t+n*HREG;hsave(o)}}}
+ return m}
+window.K_HEART={
+ get:function(){var o=hst(),m=hsync(o);return m===Infinity?Infinity:o.h+o.b},
+ lose:function(){var o=hst(),m=hsync(o);if(m===Infinity)return;if(o.b>0)o.b--;else{if(o.h>=m)o.t=Date.now();o.h=Math.max(0,o.h-1)}hsave(o)},
+ next:function(){var o=hst(),m=hsync(o);if(m===Infinity||o.h>=m)return 0;return Math.max(0,HREG-(Date.now()-o.t))}};
+function hn(h){return h===Infinity?"\u221e":h}
+function hfmt(ms){var t=Math.ceil(ms/1000),m=Math.floor(t/60),s=t%60;return m+":"+(s<10?"0":"")+s}
+var XT={
+ru:{noH:"Сердца закончились",noP:"Следующее сердце через",buy:"Купить тариф",cl:"Закрыть",ex:"🤖 Разбор ошибок от ИИ",exL:"🔒 Разбор ошибок от ИИ (Pro / Max)",exW:"ИИ разбирает ошибки…",exT:"Стоит 50 токенов",exN:"Не хватает токенов, пополни в разделе ИИ",exE:"ИИ сейчас недоступен, попробуй позже",st:"Серия дней",stP:"Занимайся каждый день и получай сердца:",s7:"7 дней подряд: +5 ♥",s30:"30 дней подряд: +15 ♥",stG:"Награда за серию!",stGP:"Добавлено сердец:",ok:"Отлично"},
+en:{noH:"Out of hearts",noP:"Next heart in",buy:"Get a plan",cl:"Close",ex:"🤖 AI mistake review",exL:"🔒 AI mistake review (Pro / Max)",exW:"AI is reviewing your mistakes…",exT:"Costs 50 tokens",exN:"Not enough tokens, top up in the AI tab",exE:"AI is unavailable right now, try later",st:"Day streak",stP:"Study every day and earn hearts:",s7:"7 days in a row: +5 ♥",s30:"30 days in a row: +15 ♥",stG:"Streak reward!",stGP:"Hearts added:",ok:"Great"},
+uz:{noH:"Yuraklar tugadi",noP:"Keyingi yurak:",buy:"Tarif olish",cl:"Yopish",ex:"🤖 AI xatolar tahlili",exL:"🔒 AI xatolar tahlili (Pro / Max)",exW:"AI xatolarni tahlil qilmoqda…",exT:"50 token turadi",exN:"Token yetarli emas, AI bo'limida to'ldiring",exE:"AI hozir mavjud emas, keyinroq urinib ko'ring",st:"Kunlik seriya",stP:"Har kuni o'qing va yuraklar oling:",s7:"7 kun ketma-ket: +5 ♥",s30:"30 kun ketma-ket: +15 ♥",stG:"Seriya mukofoti!",stGP:"Qo'shilgan yuraklar:",ok:"Zo'r"}};
+function xt(k){var d=XT[window.lang]||XT.en;return d[k]||XT.en[k]}
+function kdModal(inner,after){var m=document.createElement("div");m.className="kd-mod";m.innerHTML="<div>"+inner+"</div>";document.body.appendChild(m);m.onclick=function(e){if(e.target===m)m.remove()};if(after)after(m);return m}
+function noHearts(){var ms=window.K_HEART.next();
+ kdModal(mascot(96,"sad")+"<h3>"+esc(xt("noH"))+"</h3><p>"+esc(xt("noP"))+" <b>"+hfmt(ms||1000)+"</b></p><button class=\"kd-btn g\" id=\"nhB\">"+esc(xt("buy"))+"</button><button class=\"kd-btn ln\" id=\"nhC\">"+esc(xt("cl"))+"</button>",function(m){
+  m.querySelector("#nhC").onclick=function(){m.remove()};
+  m.querySelector("#nhB").onclick=function(){m.remove();try{show("ai")}catch(e){}}})}
+function streakCheck(sn){if(!sn)return 0;var o=hst(),m=hsync(o),d=new Date();d.setDate(d.getDate()-(sn-1));var key=dk(d),got=0,ch=false;
+ [[7,5],[30,15]].forEach(function(a){if(sn>=a[0]&&o.rw[a[0]]!==key){o.rw[a[0]]=key;ch=true;if(m!==Infinity)got+=a[1]}});
+ if(got)o.b+=got;if(ch)hsave(o);return got}
+function streakUi(sn){
+ var f=$("kdFire");if(f)f.onclick=function(){
+  kdModal(mascot(96,"happy")+"<h3>"+esc(xt("st"))+": "+sn+"</h3><p>"+esc(xt("stP"))+"<br>"+(sn>=7?"✅ ":"🔥 ")+esc(xt("s7"))+"<br>"+(sn>=30?"✅ ":"🔥 ")+esc(xt("s30"))+"</p><button class=\"kd-btn g\" id=\"stOk\">"+esc(xt("ok"))+"</button>",function(m){m.querySelector("#stOk").onclick=function(){m.remove()}})};
+ var g=streakCheck(sn);
+ if(g)setTimeout(function(){kdModal(mascot(110,"happy")+"<h3>"+esc(xt("stG"))+"</h3><p>"+esc(xt("stGP"))+" <b>+"+g+" ♥</b></p><button class=\"kd-btn g\" id=\"stOk\">"+esc(xt("ok"))+"</button>",function(m){m.querySelector("#stOk").onclick=function(){m.remove()}});var n=$("kdHn");if(n)n.textContent=hn(window.K_HEART.get())},350)}
+setInterval(function(){var n=document.getElementById("kdHn");if(!n)return;n.textContent=hn(window.K_HEART.get());var t=document.getElementById("kdHt");if(t){var ms=window.K_HEART.next();t.textContent=ms?hfmt(ms):""}},1000);
+function aiBox(){if(!P||!P.mist||!P.mist.length)return "";var can=window.K_CANEXP&&window.K_CANEXP();
+ return '<div id="kpAi" style="margin-top:16px"><button class="kd-btn '+(can?"g":"ln")+'" id="kpAiB" type="button">'+esc(xt(can?"ex":"exL"))+'</button>'+(can?'<small style="display:block;margin-top:6px;opacity:.7;text-align:center">'+esc(xt("exT"))+'</small>':'')+'</div>'}
+function aiBind(){var b=$("kpAiB");if(!b||!P||!P.mist)return;var ms=P.mist.slice();
+ b.onclick=function(){
+  if(!window.K_CANEXP||!window.K_CANEXP()){closeP();try{show("ai")}catch(e){}return}
+  b.disabled=true;b.textContent=xt("exW");
+  window.K_explain(ms,window.lang||"ru").then(function(txt){
+   txt=txt.replace(/\*\*/g,"").replace(/^#+\s*/gm,"");var bx=$("kpAi");
+   if(bx)bx.innerHTML='<div style="text-align:left;white-space:pre-wrap;line-height:1.5;font-size:14px;padding:14px;border-radius:16px;background:var(--card);border:2px solid var(--bd)">'+esc(txt)+'</div>'
+  }).catch(function(e){var m=String(e&&e.message||e);b.disabled=false;b.textContent=xt("ex");var bx=$("kpAi");
+   var n=document.createElement("small");n.style.cssText="display:block;margin-top:8px;color:var(--r);text-align:center";n.textContent=m=="tokens"?xt("exN"):xt("exE");if(bx)bx.append(n)})}}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),x=a[i];a[i]=a[j];a[j]=x}return a}
 function cards(l){return D.filter(function(x){return x.l==l})}
@@ -4547,9 +4630,9 @@ function renderPath(){
  var banL=curL||ls[ls.length-1],banI=curL?li:ls.length-1;
  var html='<div class="kd-top"><button class="kd-bk" id="kdHome" aria-label="home">'+ico("back")+'</button>'+
   '<button class="kd-tk" id="kdSw" aria-label="'+esc(L.chg)+'">'+TR[tr].e+'</button>'+
-  '<button class="kd-st fire'+(sn?'':' off')+'"><span class="e">'+ei("fire",24)+'</span>'+sn+'</button>'+
+  '<button class="kd-st fire'+(sn?'':' off')+'" id="kdFire"><span class="e">'+ei("fire",24)+'</span>'+sn+'</button>'+
   '<button class="kd-st xp"><span class="e">'+ei("bolt",24)+'</span><span id="kdXp">'+S.xp+'</span></button>'+
-  '<button class="kd-st hp"><span class="e">'+ei("heart",24)+'</span>'+(function(){var h=window.K_HP?window.K_HP():5;return h===Infinity?"∞":h})()+'</button></div>'+
+  '<button class="kd-st hp" id="kdHp"><span class="e">'+ei("heart",24)+'</span><span id="kdHn">'+hn(window.K_HEART.get())+'</span><small id="kdHt"></small></button></div>'+
   '<div class="kd-ban"><div class="tx"><small>'+esc(L.sec)+' 1 · '+esc(L.mod)+' '+(banI+1)+'</small><b>'+esc(LL[banL-1]||"")+'</b></div><button id="kdNotes" aria-label="notes">'+ico("books")+'</button></div>'+
   '<div class="kd-path">';
  it.forEach(function(x){
@@ -4576,7 +4659,7 @@ function renderPath(){
   j++});
  html+='</div>';
  h.innerHTML=html;
- $("kdHome").onclick=function(){show("home")};
+ $("kdHome").onclick=function(){show("home")};streakUi(sn);
  $("kdSw").onclick=function(){mode="choose";pickTr=S.tr;kdRender()};
  $("kdNotes").onclick=function(){if(banL){cur=banL;openLesson(banL)}};
  h.querySelectorAll(".kd-mas").forEach(function(m){m.onclick=function(e){e.stopPropagation();kdFan(m)}});
@@ -4693,8 +4776,9 @@ function kdNeon(btn,o,done){
   requestAnimationFrame(frame)}
  requestAnimationFrame(frame)}
 function startLesson(l){
+ if(window.K_HEART.get()<=0){noHearts();return}
  if(openRow){openRow.classList.remove("open");openRow=null}
- P={l:l,q:build(l),i:0,hearts:(window.K_HP?window.K_HP():5),ok:0,wrong:0,total:0,sel:null,lock:false,answered:0};
+ P={l:l,q:build(l),i:0,hearts:window.K_HEART.get(),ok:0,wrong:0,total:0,sel:null,lock:false,answered:0};
  P.total=P.q.length;P.t0=Date.now();
  var d=$("kdp");d.hidden=false;document.body.style.overflow="hidden";snd("fold");drawShell();showStep()}
 function drawShell(){
@@ -4771,7 +4855,8 @@ function verdict(good,answer,quiet){
   $("kpMain").onclick=function(){P.i++;next()};
   var r=$("kpMain").getBoundingClientRect();if(Math.random()<.5)confetti(innerWidth/2,innerHeight-120,16)}
  else{
-  P.wrong++;P.answered++;P.hearts--;snd("err");vib(60);kMood("sad");
+  try{if(!P.mist)P.mist=[];var mine="";if(s.t=="pick"||s.t=="code")mine=(s.o[P.sel]||{}).s||"";else if(s.t=="asm")mine=(s.line||[]).join(" ");var tp=s.x?s.x.t:"";if(tp&&P.mist.length<6&&!P.mist.some(function(z){return z.t===tp}))P.mist.push({t:tp,d:s.x.d||"",c:s.x.c||"",mine:mine,right:answer})}catch(e){}
+   P.wrong++;P.answered++;window.K_HEART.lose();P.hearts=window.K_HEART.get();snd("err");vib(60);kMood("sad");
   var hp=$("kpHp");hp.classList.remove("hit");void hp.offsetWidth;hp.classList.add("hit");$("kpH").textContent=P.hearts===Infinity?"∞":Math.max(0,P.hearts);
   if(!s.again&&s.t!="intro"){var cl={};for(var k in s)cl[k]=s[k];cl.again=true;cl.line=[];if(cl.t=="pick"||cl.t=="code")cl.o=shuf(s.o);P.q.push(cl);P.total++}
   ft("no",'<div class="kp-fb">'+mascot(58,"sad","kp-mc")+'<div><b>'+esc(L.no)+'</b><span>'+esc(L.right)+' '+esc(answer)+'</span></div></div><button class="kd-btn g" id="kpMain">'+esc(L.nx)+'</button>');
@@ -4795,8 +4880,8 @@ function finish(){
  S.done[l]=Math.max(S.done[l]||0,acc>=90?3:acc>=60?2:1);S.xp+=gain;save();
  try{cards(l).forEach(function(x){var i=D.indexOf(x);if(st.dn.indexOf(i)<0)st.dn.push(i)});if(window.save)window.save()}catch(e){}
  $("kpBar").style.width="100%";snd("send");
- $("kpBody").innerHTML='<div class="kp-end">'+mascot(140,"happy")+'<h2>'+esc(L.done)+'</h2><p class="sub">'+esc(L.doneS)+'</p><div class="kp-stats"><div class="kp-sc" style="--c:var(--y);--i:0"><small>'+esc(L.xp)+'</small><b id="cX">0</b></div><div class="kp-sc" style="--c:var(--g);--i:1"><small>'+esc(L.acc)+'</small><b id="cA">0%</b></div><div class="kp-sc" style="--c:var(--r);--i:2"><small>'+esc(L.hearts)+'</small><b>'+ei("heart",18)+' '+(P.hearts===Infinity?"∞":Math.max(0,P.hearts))+'</b></div></div></div>';
- ft("",'<button class="kd-btn g" id="kpMain">'+esc(L.cont)+'</button>');
+ $("kpBody").innerHTML='<div class="kp-end">'+mascot(140,"happy")+'<h2>'+esc(L.done)+'</h2><p class="sub">'+esc(L.doneS)+'</p><div class="kp-stats"><div class="kp-sc" style="--c:var(--y);--i:0"><small>'+esc(L.xp)+'</small><b id="cX">0</b></div><div class="kp-sc" style="--c:var(--g);--i:1"><small>'+esc(L.acc)+'</small><b id="cA">0%</b></div><div class="kp-sc" style="--c:var(--r);--i:2"><small>'+esc(L.hearts)+'</small><b>'+ei("heart",18)+' '+(P.hearts===Infinity?"∞":Math.max(0,P.hearts))+'</b></div></div>'+aiBox()+'</div>';
+ aiBind();ft("",'<button class="kd-btn g" id="kpMain">'+esc(L.cont)+'</button>');
  $("kpMain").onclick=function(){closeP();setTimeout(function(){var n=$("kd")&&$("kd").querySelector(".kd-n.cur");if(n)n.scrollIntoView({block:"center",behavior:"smooth"})},250)};
  count($("cX"),gain,"+",900);count($("cA"),acc,"",900,"%");
  var w=innerWidth;confetti(w/2,innerHeight*.35,140);setTimeout(function(){confetti(w*.2,innerHeight*.4,70)},250);setTimeout(function(){confetti(w*.8,innerHeight*.4,70)},450)}
