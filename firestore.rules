@@ -230,7 +230,9 @@ service cloud.firestore {
     match /subs/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63");
       allow create, update: if signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"
-        && request.resource.data.keys().hasOnly(["tokens"]) && request.resource.data.tokens is int && request.resource.data.tokens >= 0;
+        && request.resource.data.keys().hasOnly(["tokens","plan","exp"]) && request.resource.data.tokens is int && request.resource.data.tokens >= 0
+        && (!("plan" in request.resource.data) || request.resource.data.plan in ["std","pro","max"])
+        && (!("exp" in request.resource.data) || request.resource.data.exp is number);
       allow update: if signedIn() && request.auth.uid == uid
         && resource.data.tokens is int && resource.data.tokens >= 50
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["tokens"])

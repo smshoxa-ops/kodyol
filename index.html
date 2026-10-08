@@ -1523,7 +1523,7 @@ var _rh=R.home;R.home=function(){_rh();var h=hw();$("whatT").textContent=h.b;$("
 var AC=null,lastT=0;
 function unlock(){try{if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=new C()}if(AC.state!=="running")AC.resume()}catch(x){}}
 ["pointerdown","touchend","click","keydown"].forEach(function(ev){document.addEventListener(ev,unlock,{capture:true,passive:true})});
-function tick(){if(!AC||AC.state!=="running")return;var t=AC.currentTime,now=performance.now();if(now-lastT<28)return;lastT=now;
+function tick(){return;if(!AC||AC.state!=="running")return;var t=AC.currentTime,now=performance.now();if(now-lastT<28)return;lastT=now;
  try{var o=AC.createOscillator(),gn=AC.createGain();o.type="sine";o.frequency.setValueAtTime(1900,t);o.frequency.exponentialRampToValueAtTime(1100,t+.03);
  gn.gain.setValueAtTime(0.0001,t);gn.gain.exponentialRampToValueAtTime(.07,t+.002);gn.gain.exponentialRampToValueAtTime(.0001,t+.045);
  o.connect(gn);gn.connect(AC.destination);o.start(t);o.stop(t+.06)}catch(x){}}
@@ -1605,7 +1605,7 @@ function fire(k){
 function init(){
  if(AC&&!ctx){ctx=new AC();Object.keys(FILES).forEach(function(k){dec(k,function(){})})}
  if(ctx&&ctx.state!="running"&&ctx.resume)ctx.resume()}
-KS.play=function(n){if(!KS.on)return;var k=MAP[n];if(!k)return;try{init();fire(k)}catch(e){}};
+KS.play=function(n){if(!KS.on)return;if(n!=="fold")return;var k=MAP[n];if(!k)return;try{init();fire(k)}catch(e){}};
 KS.set=function(v){KS.on=!!v;try{localStorage.setItem("kssnd",v?"1":"0")}catch(e){}if(v)KS.play("pop")};
 /* разбудить звук при первом касании, чтобы первый клик тоже звучал */
 document.addEventListener("pointerdown",function(){if(KS.on)try{init()}catch(e){}},{capture:true,once:true});
@@ -3793,16 +3793,20 @@ const TG_USER="whxxxk";
 const ADMIN_UID="bzZme2xA34ciRWWo7xxwsY98IF63";
 /* Тарифы-токены: 50 токенов = 1 вопрос к ИИ (для всех). Токены не сгорают. */
 const TOK_PER_Q=50;
-const PLANS=[{n:"Start",p:7,t:2000},{n:"Pro",p:15,t:7000,hot:1},{n:"Max",p:50,t:25000}];
+const PLANS=[{n:"Standard",k:"std",p:7,t:2000,h:15,q:0},{n:"Pro",k:"pro",p:15,t:7000,hot:1,h:40,q:1},{n:"Max",k:"max",p:50,t:25000,h:0,q:1}];
+const PLAN_DAYS=30,HP_FREE=5;
+let PLAN=null,PEXP=0;
+function planOn(){return !!(PLAN&&PEXP>Date.now())}
+window.K_HP=function(){if(!planOn())return HP_FREE;const pl=PLANS.find(x=>x.k==PLAN);return pl?(pl.h||Infinity):HP_FREE};
 const AI_FREE=false;/* true = ИИ бесплатен для всех (тест). Поставь false, чтобы включить платный доступ */
 /* Баланс = документ subs/{uid} с полем tokens. Начисляешь сам в панели на экране ИИ (только для ADMIN_UID). */
 const PW={
- ru:{t:"Токены для ИИ",d:"Выберите пакет. 50 токенов = 1 вопрос к ИИ, токены не сгорают. Оплата через Telegram.",b:"Купить",tk:"токенов",l:"Войти, чтобы купить",s:"Нажмите «Купить», напишите в Telegram и оплатите. Токены начислят вручную после оплаты.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать",bal:"Токенов:",top:"Пополнить",cls:"Закрыть",pop:"Популярный",f1:"50 токенов = 1 вопрос",f2:"Не сгорают",f3:"Качественные ответы ИИ"},
- uz:{t:"AI uchun tokenlar",d:"Paketni tanlang. 50 token = AI ga 1 ta savol, tokenlar yonmaydi. To'lov Telegram orqali.",b:"Sotib olish",tk:"token",l:"Kirish va sotib olish",s:"«Sotib olish» ni bosing, Telegramga yozing va to'lang. Tokenlar to'lovdan keyin qo'lda qo'shiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish",bal:"Tokenlar:",top:"To'ldirish",cls:"Yopish",pop:"Ommabop",f1:"50 token = 1 savol",f2:"Yonmaydi",f3:"Sifatli AI javoblari"},
- en:{t:"AI tokens",d:"Pick a pack. 50 tokens = 1 AI question, tokens never expire. Pay via Telegram.",b:"Buy",tk:"tokens",l:"Sign in to buy",s:"Tap Buy, message us in Telegram and pay. Tokens are added manually after payment.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy",bal:"Tokens:",top:"Top up",cls:"Close",pop:"Popular",f1:"50 tokens = 1 question",f2:"Never expire",f3:"Quality AI answers"}};
+ ru:{t:"Токены для ИИ",d:"Выберите пакет. 50 токенов = 1 вопрос к ИИ, пакет действует 30 дней. Оплата через Telegram.",b:"Купить",tk:"токенов",l:"Войти, чтобы купить",s:"Нажмите «Купить», напишите в Telegram и оплатите. Токены начислят вручную после оплаты.",n:"Оплата ещё не подключена.",c:"Ваш код:",cp:"Скопировать",bal:"Токенов:",top:"Пополнить",cls:"Закрыть",pop:"Популярный",f1:"50 токенов = 1 вопрос",f2:"30 дней",f3:"Качественный ответ ИИ",f3n:"Нормальный ответ ИИ",hn:"{n} ♥ в обучении",hi:"Бесконечные ♥ в обучении"},
+ uz:{t:"AI uchun tokenlar",d:"Paketni tanlang. 50 token = AI ga 1 ta savol, paket 30 kun amal qiladi. To'lov Telegram orqali.",b:"Sotib olish",tk:"token",l:"Kirish va sotib olish",s:"«Sotib olish» ni bosing, Telegramga yozing va to'lang. Tokenlar to'lovdan keyin qo'lda qo'shiladi.",n:"To'lov hali ulanmagan.",c:"Sizning kodingiz:",cp:"Nusxa olish",bal:"Tokenlar:",top:"To'ldirish",cls:"Yopish",pop:"Ommabop",f1:"50 token = 1 savol",f2:"30 kun",f3:"Sifatli AI javobi",f3n:"Oddiy AI javobi",hn:"O'qishda {n} ♥",hi:"O'qishda cheksiz ♥"},
+ en:{t:"AI tokens",d:"Pick a pack. 50 tokens = 1 AI question, each pack lasts 30 days. Pay via Telegram.",b:"Buy",tk:"tokens",l:"Sign in to buy",s:"Tap Buy, message us in Telegram and pay. Tokens are added manually after payment.",n:"Payments are not connected yet.",c:"Your code:",cp:"Copy",bal:"Tokens:",top:"Top up",cls:"Close",pop:"Popular",f1:"50 tokens = 1 question",f2:"30 days",f3:"Quality AI answer",f3n:"Standard AI answer",hn:"{n} ♥ in lessons",hi:"Unlimited ♥ in lessons"}};
 let PRO=false,TOK=0,proUn=null,buyOpen=false;
-function proWatch(u){proUn&&proUn();proUn=null;PRO=false;TOK=0;buyOpen=false;
- if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{TOK=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;PRO=TOK>=TOK_PER_Q;aiGate()},()=>{TOK=0;PRO=false;aiGate()});
+function proWatch(u){proUn&&proUn();proUn=null;PRO=false;TOK=0;PLAN=null;PEXP=0;buyOpen=false;
+ if(u)proUn=onSnapshot(doc(db,"subs",u.uid),d=>{const v=d.exists()?d.data():{};TOK=Math.max(0,Math.floor(+v.tokens||0));PLAN=v.plan||null;PEXP=+v.exp||0;const dead=PLAN&&PEXP&&PEXP<=Date.now();PRO=TOK>=TOK_PER_Q&&!dead;aiGate()},()=>{TOK=0;PRO=false;PLAN=null;PEXP=0;aiGate()});
  else aiGate()}
 function isAdm(){return !!(me&&ADMIN_UID&&me.uid===ADMIN_UID)}
 window.IC.support='<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.7-1.8 2.5-4 2.5h-2"/>';
@@ -3848,13 +3852,14 @@ function aiGate(){
   const h=document.createElement("h3");h.textContent="Панель владельца";
   const i=document.createElement("input");i.placeholder="Код покупателя";i.style.cssText="width:100%;padding:12px;border-radius:12px;border:1px solid #8886;margin:8px 0;box-sizing:border-box;background:transparent;color:inherit";
   const am=document.createElement("input");am.type="number";am.min="1";am.placeholder="Сколько токенов";am.style.cssText=i.style.cssText;
-  const q=document.createElement("div");q.style.cssText="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px";
-  PLANS.forEach(pl=>{const b=document.createElement("button");b.type="button";b.textContent="$"+pl.p+" · "+pl.t;b.style.cssText="padding:8px 12px;border-radius:10px;border:1px solid #8886;background:transparent;color:inherit;cursor:pointer";b.onclick=()=>{am.value=pl.t};q.append(b)});
+  let selPlan=null;const q=document.createElement("div");q.style.cssText="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px";
+  PLANS.forEach(pl=>{const b=document.createElement("button");b.type="button";b.textContent="$"+pl.p+" · "+pl.t;b.style.cssText="padding:8px 12px;border-radius:10px;border:1px solid #8886;background:transparent;color:inherit;cursor:pointer";b.onclick=()=>{am.value=pl.t;selPlan=pl.k;m.textContent="Тариф: "+pl.n+" · 30 дней"};q.append(b)});
   const bt=document.createElement("button");bt.className="pw-b";bt.textContent="Начислить токены";
-  const m=document.createElement("p");
+  var m=document.createElement("p");
   bt.onclick=async()=>{const id=i.value.trim(),n=Math.floor(+am.value);if(!id||!(n>0)){m.textContent="Введите код и число токенов";return}m.textContent="...";
    try{const r=doc(db,"subs",id),d=await getDoc(r);const cur=d.exists()?Math.max(0,Math.floor(+d.data().tokens||0)):0;
-    await setDoc(r,{tokens:cur+n});m.textContent="Готово. Теперь у покупателя "+(cur+n)+" токенов"}
+    const o=d.exists()?d.data():{};const nd={tokens:cur+n};if(selPlan){nd.plan=selPlan;nd.exp=Date.now()+PLAN_DAYS*864e5}else if(o.plan){nd.plan=o.plan;nd.exp=+o.exp||0}
+    await setDoc(r,nd);m.textContent="Готово. "+(cur+n)+" токенов"+(selPlan?", тариф "+selPlan+" на 30 дней":"")}
    catch(err){m.textContent="Ошибка: "+err.message}};
   p.append(h,i,q,am,bt,m);return}
  if(ok&&!buyOpen)return;
@@ -3867,7 +3872,7 @@ function aiGate(){
   const nm=document.createElement("div");nm.className="pn";nm.textContent=pl.n;
   const pr=document.createElement("div");pr.className="pp";pr.textContent="$"+pl.p;
   const tk=document.createElement("div");tk.className="pt";tk.textContent=pl.t.toLocaleString("ru-RU")+" "+x.tk;
-  const ul=document.createElement("ul");[x.f1,x.f2,x.f3].forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.append(li)});
+  const ul=document.createElement("ul");[x.f1,x.f2,pl.q?x.f3:x.f3n,pl.h?x.hn.replace("{n}",pl.h):x.hi].forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.append(li)});
   const b=document.createElement("button");b.className="pw-b";b.type="button";b.textContent=me?x.b:x.l;
   b.onclick=()=>{if(!me){window.show("me");return}if(!TG_USER){alert(x.n);return}window.open("https://t.me/"+TG_USER+"?text="+encodeURIComponent("FION AI "+pl.n+" $"+pl.p+" ("+pl.t+" токенов). Мой код: "+me.uid),"_blank","noopener")};
   cd.append(nm,pr,tk,ul,b);row.append(cd)});
@@ -4544,7 +4549,7 @@ function renderPath(){
   '<button class="kd-tk" id="kdSw" aria-label="'+esc(L.chg)+'">'+TR[tr].e+'</button>'+
   '<button class="kd-st fire'+(sn?'':' off')+'"><span class="e">'+ei("fire",24)+'</span>'+sn+'</button>'+
   '<button class="kd-st xp"><span class="e">'+ei("bolt",24)+'</span><span id="kdXp">'+S.xp+'</span></button>'+
-  '<button class="kd-st hp"><span class="e">'+ei("heart",24)+'</span>5</button></div>'+
+  '<button class="kd-st hp"><span class="e">'+ei("heart",24)+'</span>'+(function(){var h=window.K_HP?window.K_HP():5;return h===Infinity?"∞":h})()+'</button></div>'+
   '<div class="kd-ban"><div class="tx"><small>'+esc(L.sec)+' 1 · '+esc(L.mod)+' '+(banI+1)+'</small><b>'+esc(LL[banL-1]||"")+'</b></div><button id="kdNotes" aria-label="notes">'+ico("books")+'</button></div>'+
   '<div class="kd-path">';
  it.forEach(function(x){
@@ -4689,11 +4694,11 @@ function kdNeon(btn,o,done){
  requestAnimationFrame(frame)}
 function startLesson(l){
  if(openRow){openRow.classList.remove("open");openRow=null}
- P={l:l,q:build(l),i:0,hearts:5,ok:0,wrong:0,total:0,sel:null,lock:false,answered:0};
+ P={l:l,q:build(l),i:0,hearts:(window.K_HP?window.K_HP():5),ok:0,wrong:0,total:0,sel:null,lock:false,answered:0};
  P.total=P.q.length;P.t0=Date.now();
  var d=$("kdp");d.hidden=false;document.body.style.overflow="hidden";snd("fold");drawShell();showStep()}
 function drawShell(){
- $("kdp").innerHTML='<div class="kp-top"><button class="kp-x" id="kpX" aria-label="close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><div class="kp-bar"><i id="kpBar"></i></div><div class="kp-hp" id="kpHp"><span class="e">'+ei("heart",24)+'</span><span id="kpH">'+P.hearts+'</span></div></div><div class="kp-body" id="kpBody"></div><div class="kp-ft" id="kpFt"><div class="in" id="kpIn"></div></div>';
+ $("kdp").innerHTML='<div class="kp-top"><button class="kp-x" id="kpX" aria-label="close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><div class="kp-bar"><i id="kpBar"></i></div><div class="kp-hp" id="kpHp"><span class="e">'+ei("heart",24)+'</span><span id="kpH">'+(P.hearts===Infinity?"∞":P.hearts)+'</span></div></div><div class="kp-body" id="kpBody"></div><div class="kp-ft" id="kpFt"><div class="in" id="kpIn"></div></div>';
  $("kpX").onclick=quitAsk}
 function setBar(){var p=Math.min(100,Math.round(100*P.i/P.total));var b=$("kpBar");if(b)b.style.width=Math.max(p,P.i?4:0)+"%"}
 function ft(cls,html){var e=$("kpFt");e.className="kp-ft "+(cls||"");$("kpIn").innerHTML=html}
@@ -4767,7 +4772,7 @@ function verdict(good,answer,quiet){
   var r=$("kpMain").getBoundingClientRect();if(Math.random()<.5)confetti(innerWidth/2,innerHeight-120,16)}
  else{
   P.wrong++;P.answered++;P.hearts--;snd("err");vib(60);kMood("sad");
-  var hp=$("kpHp");hp.classList.remove("hit");void hp.offsetWidth;hp.classList.add("hit");$("kpH").textContent=Math.max(0,P.hearts);
+  var hp=$("kpHp");hp.classList.remove("hit");void hp.offsetWidth;hp.classList.add("hit");$("kpH").textContent=P.hearts===Infinity?"∞":Math.max(0,P.hearts);
   if(!s.again&&s.t!="intro"){var cl={};for(var k in s)cl[k]=s[k];cl.again=true;cl.line=[];if(cl.t=="pick"||cl.t=="code")cl.o=shuf(s.o);P.q.push(cl);P.total++}
   ft("no",'<div class="kp-fb">'+mascot(58,"sad","kp-mc")+'<div><b>'+esc(L.no)+'</b><span>'+esc(L.right)+' '+esc(answer)+'</span></div></div><button class="kd-btn g" id="kpMain">'+esc(L.nx)+'</button>');
   $("kpMain").onclick=function(){P.i++;if(P.hearts<=0)return dead();next()}}
@@ -4790,7 +4795,7 @@ function finish(){
  S.done[l]=Math.max(S.done[l]||0,acc>=90?3:acc>=60?2:1);S.xp+=gain;save();
  try{cards(l).forEach(function(x){var i=D.indexOf(x);if(st.dn.indexOf(i)<0)st.dn.push(i)});if(window.save)window.save()}catch(e){}
  $("kpBar").style.width="100%";snd("send");
- $("kpBody").innerHTML='<div class="kp-end">'+mascot(140,"happy")+'<h2>'+esc(L.done)+'</h2><p class="sub">'+esc(L.doneS)+'</p><div class="kp-stats"><div class="kp-sc" style="--c:var(--y);--i:0"><small>'+esc(L.xp)+'</small><b id="cX">0</b></div><div class="kp-sc" style="--c:var(--g);--i:1"><small>'+esc(L.acc)+'</small><b id="cA">0%</b></div><div class="kp-sc" style="--c:var(--r);--i:2"><small>'+esc(L.hearts)+'</small><b>'+ei("heart",18)+' '+Math.max(0,P.hearts)+'</b></div></div></div>';
+ $("kpBody").innerHTML='<div class="kp-end">'+mascot(140,"happy")+'<h2>'+esc(L.done)+'</h2><p class="sub">'+esc(L.doneS)+'</p><div class="kp-stats"><div class="kp-sc" style="--c:var(--y);--i:0"><small>'+esc(L.xp)+'</small><b id="cX">0</b></div><div class="kp-sc" style="--c:var(--g);--i:1"><small>'+esc(L.acc)+'</small><b id="cA">0%</b></div><div class="kp-sc" style="--c:var(--r);--i:2"><small>'+esc(L.hearts)+'</small><b>'+ei("heart",18)+' '+(P.hearts===Infinity?"∞":Math.max(0,P.hearts))+'</b></div></div></div>';
  ft("",'<button class="kd-btn g" id="kpMain">'+esc(L.cont)+'</button>');
  $("kpMain").onclick=function(){closeP();setTimeout(function(){var n=$("kd")&&$("kd").querySelector(".kd-n.cur");if(n)n.scrollIntoView({block:"center",behavior:"smooth"})},250)};
  count($("cX"),gain,"+",900);count($("cA"),acc,"",900,"%");
@@ -5069,6 +5074,8 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});
 body.rl-on{background:#000}body.rl-on .tb,body.rl-on .apk{display:none!important}
 .rl{position:fixed;inset:0;z-index:15;background:#000;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--rlb:calc(env(safe-area-inset-bottom,0px) + 100px)}
 .rl[hidden]{display:none}
+.rl::before,.rl::after{content:"";position:absolute;left:0;right:0;z-index:30;pointer-events:none;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(28px) saturate(1.3);backdrop-filter:blur(28px) saturate(1.3)}
+.rl::before{bottom:100%;height:160px}.rl::after{top:100%;height:260px}
 .rl-feed{position:absolute;inset:0;overflow-y:scroll;overflow-x:hidden;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .rl-feed::-webkit-scrollbar{display:none}
 .rl-it{position:relative;height:100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:#000}
