@@ -5399,6 +5399,7 @@ html body{--kdN:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/
 body:has(#v-chat:not([hidden])) .tb{display:none}
 body:has(#v-chat:not([hidden])) #v-chat>.wrap.pg{padding-top:0;padding-bottom:0}
 
+html:has(#v-chat:not([hidden])){background:linear-gradient(#8f45ee,#8f45ee) top/100% 140px no-repeat var(--bg)}
 /* ---------- список диалогов ---------- */
 html body #c-chat .kdi-top{position:relative;margin:calc(-1*env(safe-area-inset-top,0px)) -16px 6px;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 18px;border-radius:0 0 38px 38px;background:var(--kdN),var(--kdG);color:#fff;overflow:hidden;box-shadow:0 20px 40px -24px rgba(138,62,230,.6)}
 .kdi-sr{display:flex;align-items:center;gap:10px}
@@ -5494,4 +5495,10 @@ html body #c-chat .bar #cs{width:64px;height:50px;border-radius:999px;background
 html body #c-chat .bar:has(#ci:not(:placeholder-shown)) #cs{background:linear-gradient(135deg,#a456f7,#6a22c9)}
 @media (prefers-reduced-motion:reduce){.kdi-top .strow,.kdi-ch svg,.kdi-ttl{transition:none}}
 </style>
+<script>
+/* v180: строка состояния iPhone становится фиолетовой на экране сообщений */
+(function(){try{var m=document.querySelector('meta[name="theme-color"]');if(!m)return;var base=m.getAttribute("content"),last="";
+function sy(){var v=document.getElementById("v-chat"),c=v&&!v.hidden?"#8f45ee":base;if(c!==last){last=c;m.setAttribute("content",c)}}
+new MutationObserver(sy).observe(document.body,{attributes:true,attributeFilter:["hidden"],subtree:true});sy()}catch(e){}})();
+</script>
 </body></html>
