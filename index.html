@@ -4326,6 +4326,60 @@ body:has(#v-fold:not([hidden]) .kd-ch) #bn{display:none}
 @keyframes kdStar{0%,100%{transform:scale(1) rotate(0)}30%{transform:scale(1.2) rotate(-9deg)}60%{transform:scale(1.08) rotate(8deg)}}
 @keyframes kdCurGlow{0%,100%{box-shadow:0 7px 0 #6d28d9,0 0 16px rgba(168,85,247,.4)}50%{box-shadow:0 7px 0 #6d28d9,0 0 34px rgba(192,132,252,.85)}}
 @media(prefers-reduced-motion:reduce){.kd-n.cur,.kd-n.cur svg{animation:none}}
+/* ---- экран «Серия дней» ---- */
+.sk{position:fixed;inset:0;z-index:615;background:var(--bg);color:var(--tx);overflow-y:auto;-webkit-overflow-scrolling:touch;animation:kdSheet .42s cubic-bezier(.2,.9,.3,1) both}
+.sk.out{animation:skOut .27s ease-in forwards}
+@keyframes skOut{to{transform:translateY(100%)}}
+.sk-top{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 12px) 12px 10px;background:#6d28d9;color:#fff}
+.sk-top b{font-size:19px;font-weight:800}
+.sk-i{width:42px;height:42px;border:0;background:none;display:grid;place-items:center;cursor:pointer;color:#fff}
+.sk-i svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.sk-hw{background:linear-gradient(180deg,#6d28d9 0,#8b3df0 100%);padding-bottom:26px}
+.sk-hero{position:relative;display:flex;align-items:center;justify-content:space-between;padding:10px 24px 4px;overflow:hidden}
+.sk-n{font-size:96px;line-height:1;font-weight:900;color:#fff;letter-spacing:-2px;text-shadow:0 5px 0 rgba(60,10,120,.45);animation:skNum .7s cubic-bezier(.2,1.6,.4,1) both}
+.sk-l{font-size:24px;font-weight:800;color:#fff;margin-top:6px;animation:kdSlide .5s .15s both}
+.sk-hero:after{content:"";position:absolute;right:-10px;top:-20px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(216,180,254,.5),transparent 68%);pointer-events:none;animation:skGlow 2.4s ease-in-out infinite}
+.sk-fl{position:relative;z-index:1}
+.sk-fl.an{transform-origin:50% 92%;animation:skFlIn .7s cubic-bezier(.2,1.6,.4,1) both,skFlame 1.9s .7s ease-in-out infinite}
+.sk-sp i{position:absolute;width:8px;height:8px;border-radius:50%;background:#f5d0fe;opacity:0;animation:skSpark 2.6s ease-out infinite}
+.sk-sp i:nth-child(1){right:60px;bottom:30px}.sk-sp i:nth-child(2){right:30px;bottom:50px;animation-delay:.7s}.sk-sp i:nth-child(3){right:100px;bottom:20px;animation-delay:1.4s}.sk-sp i:nth-child(4){right:75px;bottom:60px;animation-delay:2s}
+.sk-msg{margin:14px 16px 0;display:flex;gap:14px;align-items:center;padding:18px;border-radius:20px;background:#150c24;color:#f3e8ff;animation:kdSlide .5s .25s both}
+.sk-msg i{flex:none;display:grid}.sk-msg i svg{width:44px;height:44px;fill:#e9d5ff;stroke:none;animation:skTw 2.2s ease-in-out infinite}
+.sk-msg p{margin:0;font-size:18px;line-height:1.45;font-weight:600}
+.sk-body{max-width:560px;margin:0 auto;padding:22px 16px calc(env(safe-area-inset-bottom,0px) + 40px)}
+.sk-body>*{animation:kdSlide .5s both}.sk-body>*:nth-child(1){animation-delay:.2s}.sk-body>*:nth-child(2){animation-delay:.28s}.sk-body>*:nth-child(3){animation-delay:.36s}.sk-body>*:nth-child(4){animation-delay:.44s}.sk-body>*:nth-child(5){animation-delay:.52s}.sk-body>*:nth-child(6){animation-delay:.6s}
+.sk-mh{display:flex;justify-content:space-between;align-items:center}.sk-mh h3{margin:0;font-size:24px}
+.sk-ar{width:38px;height:38px;border:0;background:none;color:var(--mu);font-size:30px;line-height:1;cursor:pointer}.sk-ar:disabled{opacity:.25}
+.sk-st{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.sk-st>div{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:8px;border:2px solid var(--bd);border-radius:18px;padding:12px 14px}
+.sk-st b{font-size:24px}.sk-st small{grid-column:1/-1;color:var(--mu);font-size:14px;margin-top:2px}.sk-st i{display:grid}
+.sk-cal{border:2px solid var(--bd);border-radius:22px;padding:16px 8px}
+.sk-wd{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-weight:800;color:var(--mu);font-size:14px;margin-bottom:12px;text-transform:capitalize}
+.sk-g{display:grid;grid-template-columns:repeat(7,1fr);row-gap:8px}.sk-g.sw{animation:kdSlideIn .3s both}
+.sk-d{height:44px;display:grid;place-items:center;font-weight:800;font-size:17px;color:var(--mu);border-radius:22px;animation:skPop .45s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--i)*14ms)}
+.sk-d.a{color:#fff;background:#9a4cf4}
+.sk-d.a.l{border-top-left-radius:0;border-bottom-left-radius:0}.sk-d.a.r{border-top-right-radius:0;border-bottom-right-radius:0;box-shadow:1px 0 0 #9a4cf4}
+.sk-d.t{box-shadow:0 0 0 2px #e9d5ff inset,0 0 14px rgba(168,85,247,.65)}
+.sk-d.t:not(.a){color:var(--tx);box-shadow:0 0 0 2px #a855f7 inset}
+.sk-gt{margin:26px 4px 14px;font-size:22px}
+.sk-gl{position:relative;display:flex;justify-content:space-between;align-items:center;border:2px solid var(--bd);border-radius:22px;padding:22px 16px}
+.sk-tr{position:absolute;left:38px;right:38px;top:50%;height:12px;margin-top:-6px;border-radius:6px;background:var(--bd)}
+.sk-tr i{display:block;height:100%;width:var(--p);border-radius:6px;background:linear-gradient(90deg,#a855f7,#c084fc);animation:skFill 1.1s .6s cubic-bezier(.3,.9,.3,1) both}
+.sk-bd{position:relative;z-index:1;width:46px;height:50px;border-radius:12px;background:var(--bg);border:2px solid var(--bd);display:grid;place-items:end center;padding-bottom:5px;overflow:hidden}
+.sk-bd:before{content:"";position:absolute;left:0;right:0;top:0;height:13px;background:var(--bd)}
+.sk-bd b{font-size:18px;color:var(--mu);position:relative}
+.sk-bd.ok{border-color:#a855f7;background:linear-gradient(rgba(168,85,247,.2),rgba(168,85,247,.2)),var(--bg);animation:skPop .5s .9s cubic-bezier(.2,1.7,.4,1) both}.sk-bd.ok:before{background:#a855f7}.sk-bd.ok b{color:var(--tx)}
+.sk-rw{margin-top:18px;padding:14px 16px;border-radius:18px;background:var(--card);border:2px solid var(--bd);line-height:1.75;font-weight:600}
+@keyframes skGlow{0%,100%{opacity:.6;transform:scale(.95)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes skNum{from{opacity:0;transform:scale(.4)}}
+@keyframes skPop{from{opacity:0;transform:scale(.4)}}
+@keyframes skFill{from{width:0}}
+@keyframes skFlIn{from{opacity:0;transform:scale(.2) rotate(-25deg)}}
+@keyframes skFlame{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.07,1.11) rotate(2.5deg)}}
+@keyframes skSpark{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:translateY(-46px) scale(1.2)}}
+@keyframes skTw{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(12deg)}}
+@media(prefers-reduced-motion:reduce){.sk *{animation:none!important}}
+
 
 /* ===== Неоновая анимация кнопок НАЧАТЬ (4 сек, с загрузкой) и ПОНЯТНО (короткая) ===== */
 #kdNeon{position:fixed;inset:0;z-index:2147483000;touch-action:none;-webkit-user-select:none;user-select:none;cursor:wait}
@@ -4574,9 +4628,56 @@ function noHearts(){var ms=window.K_HEART.next();
 function streakCheck(sn){if(!sn)return 0;var o=hst(),m=hsync(o),d=new Date();d.setDate(d.getDate()-(sn-1));var key=dk(d),got=0,ch=false;
  [[7,5],[30,15]].forEach(function(a){if(sn>=a[0]&&o.rw[a[0]]!==key){o.rw[a[0]]=key;ch=true;if(m!==Infinity)got+=a[1]}});
  if(got)o.b+=got;if(ch)hsave(o);return got}
+/* ---------- экран «Серия дней» (как в Duolingo, но фиолетовый) ---------- */
+var SKT={
+ru:{d:["день в серии!","дня в серии!","дней в серии!"],dm:"Дней занятий",rec:"Рекорд серии",goal:"Цель для серии",z:"Позанимайся сегодня, чтобы начать серию!",n:"До цели в {g} дн. осталось: {n}",mx:"Ты выполнил все цели, так держать!",sh:"Моя серия в FION: {n} дн. подряд!"},
+en:{d:["day streak!","day streak!","day streak!"],dm:"Days studied",rec:"Best streak",goal:"Streak goal",z:"Study today to start your streak!",n:"{n} more day(s) to the {g}-day goal",mx:"You cleared every goal, keep it up!",sh:"My FION streak: {n} days in a row!"},
+uz:{d:["kunlik seriya!","kunlik seriya!","kunlik seriya!"],dm:"O'qigan kunlar",rec:"Eng yaxshi seriya",goal:"Seriya maqsadi",z:"Seriyani boshlash uchun bugun o'qing!",n:"{g} kunlik maqsadgacha yana {n} kun",mx:"Barcha maqsadlar bajarildi, davom eting!",sh:"FION'dagi seriyam: {n} kun ketma-ket!"}};
+var SKL={ru:"ru-RU",en:"en-US",uz:"uz-UZ"};
+function skt(k){var d=SKT[window.lang]||SKT.en;return d[k]!=null?d[k]:SKT.en[k]}
+function skDay(sn){if(window.lang!="ru")return skt("d")[0];var a=sn%10,b=sn%100;return skt("d")[(a==1&&b!=11)?0:(a>=2&&a<=4&&(b<12||b>14))?1:2]}
+function skIdx(k){var p=k.split("-");return Math.round(Date.UTC(+p[0],+p[1]-1,+p[2])/864e5)}
+function skBest(){var a=st.dy.map(skIdx).sort(function(x,y){return x-y}),b=0,c=0,p=-9;a.forEach(function(v){if(v===p)return;c=(v===p+1)?c+1:1;if(c>b)b=c;p=v});return b}
+function skFlame(w,id,an){return '<svg class="sk-fl'+(an?' an':'')+'" width="'+w+'" height="'+w+'" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="'+id+'a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#7c3aed"/></linearGradient><linearGradient id="'+id+'b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5d0fe"/><stop offset="1" stop-color="#d8b4fe"/></linearGradient></defs><path d="M50 5C58 21 82 33 82 61C82 81 68 95 50 95C32 95 18 81 18 61C18 47 26 39 32 31C34 39 38 43 42 43C40 29 44 15 50 5Z" fill="url(#'+id+'a)" stroke="#f5f3ff" stroke-width="5" stroke-linejoin="round"/><path d="M50 53C56 63 64 67 64 77C64 86 58 91 50 91C42 91 36 86 36 77C36 67 44 63 50 53Z" fill="url(#'+id+'b)"/></svg>'}
+function openStreak(sn){
+ if($("skO"))return;
+ var loc=SKL[window.lang]||"en-US",now=new Date(),vy=now.getFullYear(),vm=now.getMonth(),best=Math.max(skBest(),sn),goals=[1,7,14,30,50],nx=0,i;
+ for(i=0;i<goals.length;i++)if(sn<goals[i]){nx=goals[i];break}
+ var msg=!sn?skt("z"):nx?skt("n").replace("{g}",nx).replace("{n}",nx-sn):skt("mx"),gp=0;
+ if(sn>0){var gi=0;for(i=0;i<goals.length;i++)if(sn>=goals[i])gi=i;gp=gi>=goals.length-1?1:(gi+(sn-goals[gi])/(goals[gi+1]-goals[gi]))/(goals.length-1)}
+ var wd="";for(i=0;i<7;i++)wd+="<span>"+esc(new Date(2024,0,1+i).toLocaleDateString(loc,{weekday:"short"}))+"</span>";
+ var bd="";goals.forEach(function(g){bd+='<span class="sk-bd'+(sn>=g?" ok":"")+'"><b>'+g+'</b></span>'});
+ var o=document.createElement("div");o.id="skO";o.className="sk";
+ o.innerHTML='<div class="sk-top"><button class="sk-i" id="skX" aria-label="close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><b>'+esc(xt("st"))+'</b><button class="sk-i" id="skS" aria-label="share"><svg viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5L12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button></div>'+
+ '<div class="sk-hw"><div class="sk-hero"><div class="sk-sp"><i></i><i></i><i></i><i></i></div><div><div class="sk-n" id="skN">0</div><div class="sk-l">'+esc(skDay(sn))+'</div></div>'+skFlame(150,"skh",1)+'</div>'+
+ '<div class="sk-msg"><i>'+SVG_STAR+'</i><p>'+esc(msg)+'</p></div></div>'+
+ '<div class="sk-body"><div class="sk-mh"><h3 id="skM"></h3><div><button class="sk-ar" id="skP" aria-label="prev">&#8249;</button><button class="sk-ar" id="skNx" aria-label="next">&#8250;</button></div></div>'+
+ '<div class="sk-st"><div><i><svg viewBox="0 0 24 24" width="30" height="30"><circle cx="12" cy="12" r="11" fill="#a855f7"/><path d="M7 12.5l3.3 3.3L17 9" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></i><b id="skC">0</b><small>'+esc(skt("dm"))+'</small></div>'+
+ '<div><i>'+skFlame(30,"skm",0)+'</i><b>'+best+'</b><small>'+esc(skt("rec"))+'</small></div></div>'+
+ '<div class="sk-cal"><div class="sk-wd">'+wd+'</div><div class="sk-g" id="skG"></div></div>'+
+ '<h3 class="sk-gt">'+esc(skt("goal"))+'</h3><div class="sk-gl"><div class="sk-tr"><i style="--p:'+(gp*100).toFixed(1)+'%"></i></div>'+bd+'</div>'+
+ '<div class="sk-rw">'+esc(xt("stP"))+'<br>'+(sn>=7?"✅ ":"🎁 ")+esc(xt("s7"))+'<br>'+(sn>=30?"✅ ":"🎁 ")+esc(xt("s30"))+'</div></div>';
+ document.body.appendChild(o);var ov=document.body.style.overflow;document.body.style.overflow="hidden";snd("pop");
+ var q=function(s){return o.querySelector(s)};
+ function draw(){var g=q("#skG"),first=new Date(vy,vm,1),off=(first.getDay()+6)%7,nd=new Date(vy,vm+1,0).getDate(),h="",c=0,t=dk(now);
+  var has=function(d){return st.dy.indexOf(vy+"-"+(vm+1)+"-"+d)>-1};
+  for(var k=0;k<off;k++)h+="<span></span>";
+  for(var d=1;d<=nd;d++){var col=(off+d-1)%7,a=has(d),cl="sk-d";
+   if(a){c++;cl+=" a";if(col>0&&d>1&&has(d-1))cl+=" l";if(col<6&&d<nd&&has(d+1))cl+=" r"}
+   if(vy+"-"+(vm+1)+"-"+d===t)cl+=" t";
+   h+='<span class="'+cl+'" style="--i:'+(off+d)+'">'+d+'</span>'}
+  g.innerHTML=h;g.classList.remove("sw");void g.offsetWidth;g.classList.add("sw");
+  var mt=first.toLocaleDateString(loc,{month:"long",year:"numeric"});q("#skM").textContent=mt.charAt(0).toUpperCase()+mt.slice(1);
+  q("#skC").textContent=c;q("#skNx").disabled=(vy==now.getFullYear()&&vm==now.getMonth())}
+ draw();
+ q("#skP").onclick=function(){vm--;if(vm<0){vm=11;vy--}snd("pop");draw()};
+ q("#skNx").onclick=function(){if(vy==now.getFullYear()&&vm==now.getMonth())return;vm++;if(vm>11){vm=0;vy++}snd("pop");draw()};
+ q("#skX").onclick=function(){o.classList.add("out");document.body.style.overflow=ov;snd("pop");setTimeout(function(){o.remove()},270)};
+ q("#skS").onclick=function(){var tx=skt("sh").replace("{n}",sn);try{if(navigator.share)navigator.share({text:tx}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(tx)}catch(e){}};
+ if(typeof count=="function")count(q("#skN"),sn,"",900);else q("#skN").textContent=sn;
+ vib(20)}
 function streakUi(sn){
- var f=$("kdFire");if(f)f.onclick=function(){
-  kdModal(mascot(96,"happy")+"<h3>"+esc(xt("st"))+": "+sn+"</h3><p>"+esc(xt("stP"))+"<br>"+(sn>=7?"✅ ":"🔥 ")+esc(xt("s7"))+"<br>"+(sn>=30?"✅ ":"🔥 ")+esc(xt("s30"))+"</p><button class=\"kd-btn g\" id=\"stOk\">"+esc(xt("ok"))+"</button>",function(m){m.querySelector("#stOk").onclick=function(){m.remove()}})};
+ var f=$("kdFire");if(f)f.onclick=function(){openStreak(sn)};
  var g=streakCheck(sn);
  if(g)setTimeout(function(){kdModal(mascot(110,"happy")+"<h3>"+esc(xt("stG"))+"</h3><p>"+esc(xt("stGP"))+" <b>+"+g+" ♥</b></p><button class=\"kd-btn g\" id=\"stOk\">"+esc(xt("ok"))+"</button>",function(m){m.querySelector("#stOk").onclick=function(){m.remove()}});var n=$("kdHn");if(n)n.textContent=hn(window.K_HEART.get())},350)}
 setInterval(function(){var n=document.getElementById("kdHn");if(!n)return;n.textContent=hn(window.K_HEART.get());var t=document.getElementById("kdHt");if(t){var ms=window.K_HEART.next();t.textContent=ms?hfmt(ms):""}},1000);
