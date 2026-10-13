@@ -8,6 +8,8 @@ service cloud.firestore {
       return signedIn() && (chatId == 'general' || request.auth.uid in chatId.split('_'));
     }
     function isOwner() { return signedIn() && request.auth.uid == "bzZme2xA34ciRWWo7xxwsY98IF63"; }
+    // Блокировка: документ blocks/{кто_кого}. true, если `blocker` заблокировал `target`
+    function blockedBy(blocker, target) { return exists(/databases/$(database)/documents/blocks/$(blocker + '_' + target)); }
     function banned() { return exists(/databases/$(database)/documents/bans/$(request.auth.uid)); }
     // Вложение в сообщении (фото или файл): только метаданные и маленькое превью
     function validAtt(d) {
@@ -38,7 +40,7 @@ service cloud.firestore {
         && request.resource.data.photo is string && request.resource.data.photo.size() <= 30000
         && (!('banner' in request.resource.data) || (request.resource.data.banner is string && request.resource.data.banner.size() <= 65000))
         && request.resource.data.learned is number;
-      allow delete: if false;
+      allow delete: if signedIn() && request.auth.uid == uid;
     }
 
     // Реестр уникальных username
@@ -58,6 +60,19 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['a','b','ts'])
         && request.resource.data.a == request.auth.uid
         && id == request.auth.uid + '_' + request.resource.data.b;
+      allow delete: if signedIn() && (resource.data.a == request.auth.uid || resource.data.b == request.auth.uid);
+      allow update: if false;
+    }
+
+    // Блокировки пользователей: создаёт и снимает тот, кто блокирует; видят обе стороны
+    match /blocks/{id} {
+      allow read: if signedIn() && (resource.data.a == request.auth.uid || resource.data.b == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['a','b','ts'])
+        && request.resource.data.a == request.auth.uid
+        && request.resource.data.b is string && request.resource.data.b != request.auth.uid
+        && id == request.auth.uid + '_' + request.resource.data.b
+        && request.resource.data.ts == request.time;
       allow delete: if signedIn() && resource.data.a == request.auth.uid;
       allow update: if false;
     }
@@ -78,11 +93,12 @@ service cloud.firestore {
             || request.resource.data.get('lu', null) == request.auth.uid)
         && onlyOwnKey(request.resource.data, resource.data, 'rd')
         && onlyOwnKey(request.resource.data, resource.data, 'del');
-      allow delete: if false;
+      allow delete: if signedIn() && request.auth.uid in resource.data.members;
 
       match /msgs/{msgId} {
         allow read: if isMember(chatId);
         allow create: if isMember(chatId) && !banned()
+          && (chatId == 'general' || !blockedBy(chatId.split('_')[0] == request.auth.uid ? chatId.split('_')[1] : chatId.split('_')[0], request.auth.uid))
           && request.resource.data.keys().hasOnly(['uid','name','photo','text','ts','att'])
           && request.resource.data.uid == request.auth.uid
           && request.resource.data.text is string
@@ -94,7 +110,7 @@ service cloud.firestore {
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['hid'])
           && request.resource.data.hid.toSet().difference(resource.data.get('hid', []).toSet()).hasOnly([request.auth.uid]);
         // владелец может удалять сообщения только в общем чате
-        allow delete: if chatId == 'general' && isOwner();
+        allow delete: if (isMember(chatId) && resource.data.uid == request.auth.uid) || (chatId == 'general' && isOwner());
       }
 
       // Содержимое вложений (до ~680 КБ): читают участники чата, создаёт автор, менять нельзя
@@ -109,7 +125,7 @@ service cloud.firestore {
           && request.resource.data.data is string && request.resource.data.data.size() <= 950000
           && request.resource.data.ts == request.time;
         allow update: if false;
-        allow delete: if chatId == 'general' && isOwner();
+        allow delete: if (isMember(chatId) && resource.data.uid == request.auth.uid) || (chatId == 'general' && isOwner());
       }
     }
 
@@ -126,6 +142,7 @@ service cloud.firestore {
         && request.resource.data.from == request.auth.uid
         && request.resource.data.to is string && request.resource.data.to != request.auth.uid
         && request.resource.data.status == 'ringing'
+        && !blockedBy(request.resource.data.to, request.auth.uid)
         && request.resource.data.fromName is string && request.resource.data.fromName.size() <= 30
         && request.resource.data.ts == request.time;
       allow update: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid)
@@ -213,6 +230,7 @@ service cloud.firestore {
         && request.resource.data.video is bool
         && request.resource.data.ts == request.time
         && gIn(request.resource.data.gid)
+        && !blockedBy(request.resource.data.to, request.auth.uid)
         && exists(/databases/$(database)/documents/follows/$(request.auth.uid + '_' + request.resource.data.to));
       allow delete: if signedIn() && (resource.data.to == request.auth.uid || resource.data.from == request.auth.uid);
     }
@@ -223,7 +241,7 @@ service cloud.firestore {
       allow create, update: if signedIn() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['t'])
         && request.resource.data.t == request.time;
-      allow delete: if false;
+      allow delete: if signedIn() && request.auth.uid == uid;
     }
 
     // Токены ИИ: покупатель читает свой баланс и может только списывать по 50 токенов (1 вопрос); начислять может только владелец
@@ -419,7 +437,11 @@ service cloud.firestore {
     // Жалобы: создаёт любой вошедший, читает и закрывает только владелец
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.by == request.auth.uid
-        && request.resource.data.keys().hasOnly(['chat','msg','by','txt','from','fn','ts'])
+        && request.resource.data.keys().hasOnly(['chat','msg','by','txt','from','fn','ts','kind','tid','why'])
+        && (!('kind' in request.resource.data) || request.resource.data.kind in ['user','reel','post','comment','msg'])
+        && (!('tid' in request.resource.data) || (request.resource.data.tid is string && request.resource.data.tid.size() <= 120))
+        && (!('why' in request.resource.data) || request.resource.data.why in ['spam','abuse','nsfw','scam','other'])
+        && (!('txt' in request.resource.data) || (request.resource.data.txt is string && request.resource.data.txt.size() <= 500))
         && request.resource.data.ts == request.time;
       allow read, delete: if isOwner();
       allow update: if false;
@@ -441,7 +463,7 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st','reply','rts'])
         && request.resource.data.st == 'done'
         && (!('reply' in request.resource.data) || (request.resource.data.reply is string && request.resource.data.reply.size() <= 500));
-      allow delete: if isOwner();
+      allow delete: if isOwner() || (signedIn() && resource.data.uid == request.auth.uid);
     }
 
     // Галочки: читают все вошедшие, выдаёт и снимает только владелец
@@ -477,7 +499,7 @@ service cloud.firestore {
         && request.resource.data.chest is map && request.resource.data.chest.size() <= 100
         && request.resource.data.xp is number && request.resource.data.xp >= 0 && request.resource.data.xp < 1000000
         && request.resource.data.ts is number;
-      allow delete: if false;
+      allow delete: if signedIn() && request.auth.uid == uid;
     }
   }
 }
