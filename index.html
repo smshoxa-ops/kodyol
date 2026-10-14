@@ -459,7 +459,7 @@ body:has(#v-me:not([hidden]) .pcard) .tb,body:has(#v-user:not([hidden]) .pcard) 
 .hd .stpb{background:none;color:var(--tx);width:36px;height:36px;margin-right:-4px}.hd .stpb .i{width:28px;height:28px}
 #scam,#spv,#sview{position:fixed;inset:0;z-index:2500;background:#000;color:#fff;display:flex;flex-direction:column;overflow:hidden}
 #scam{align-items:center;justify-content:center}
-#scam .scfr{--r:1.7778;position:relative;overflow:hidden;background:#111;touch-action:none;width:min(100vw,calc(100vh*var(--r)));width:min(100vw,calc(100dvh*var(--r)));aspect-ratio:var(--r);max-height:100vh;max-height:100dvh;flex:none}
+#scam .scfr{--r:.5625;position:relative;overflow:hidden;background:#111;touch-action:none;width:min(100vw,calc(100vh*var(--r)));width:min(100vw,calc(100dvh*var(--r)));aspect-ratio:var(--r);max-height:100vh;max-height:100dvh;flex:none}
 #scam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:center}
 .scz{position:relative;display:flex;justify-content:center;align-items:flex-end;margin:0 auto 14px;touch-action:none;min-height:46px;user-select:none;-webkit-user-select:none}
 .zp{display:flex;align-items:center;gap:4px;padding:4px;border-radius:999px;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:opacity .22s,transform .3s cubic-bezier(.2,.9,.3,1.2)}
@@ -2404,7 +2404,7 @@ async function storyCam(){
  if(!me||document.getElementById("scam"))return;
  const o=mk("div"),bgv=mk("video","scbg"),fr=mk("div","scfr"),vd=mk("video"),top=mk("div","sct"),xb=mk("button"),fb=mk("button"),rb=mk("button","scrt"),bot=mk("div","scb"),zc=mk("div","scz"),dl=mk("div","zd"),zp=mk("div","zp"),row=mk("div","scr"),gal=mk("button","scg"),sh=mk("button","scs"),fp=mk("button","scf"),fi=mk("input");
  o.id="scam";[vd,bgv].forEach(v=>{v.muted=true;v.autoplay=true;v.setAttribute("playsinline","")});xb.innerHTML=ico("stx");fb.innerHTML=ico("stfo");
- const RT=[["16:9",16/9],["4:3",4/3],["9:16",9/16],["Full",0]];let ri=0;rb.textContent=RT[0][0];
+ const RT=[["9:16",9/16]];let ri=0;rb.textContent=RT[0][0];rb.style.visibility="hidden";rb.style.pointerEvents="none";
  /* циферблат зума */
  const K=24,R=470,CY=R+14,tk=[],MJ=[.5,1,2,3,5,10];
  for(let v=.5;v<1-1e-6;v+=.1)tk.push(v);for(let v=1;v<3-1e-6;v+=.2)tk.push(v);for(let v=3;v<=10+1e-6;v+=.5)tk.push(v);
@@ -2416,12 +2416,12 @@ async function storyCam(){
  const PZ=[.5,1,2,3],pb=PZ.map(v=>{const b=mk("button");b.dataset.v=v;zp.append(b);return b});
  zc.append(dl,zp);
  top.append(xb,rb,fb);fr.append(vd);
- gal.innerHTML=ico("stgal");sh.append(mk("i"));fp.innerHTML=ico("stflip");row.append(gal,sh,fp);bot.append(zc,row,mk("div","scl",XF("sto")));fi.type="file";fi.accept="image/*";fi.hidden=true;
+ gal.innerHTML=ico("stgal");sh.append(mk("i"));fp.innerHTML=ico("stflip");row.append(gal,sh,fp);const md=mk("div","rlc-md"),mp=mk("button",null,RC("ПУБЛИКАЦИЯ","POST")),m1=mk("button","on",RC("ИСТОРИЯ","STORY")),m2=mk("button",null,"REELS");mp.type=m1.type=m2.type="button";md.style.cssText="margin-top:10px;padding:0";mp.onclick=()=>{close();postCreate()};m2.onclick=()=>{close();rlUpload()};md.append(mp,m1,m2);bot.append(zc,row,md);fi.type="file";fi.accept="image/*";fi.hidden=true;
  o.append(bgv,fr,top,bot,fi);document.body.append(o);
  let stream=null,face="environment",torch=false,zoom=1,hw=null,lens="main",ultraId=null,scanned=false,minZ=1,maxZ=10,busy=false;
  const stop=()=>{stream&&stream.getTracks().forEach(t=>t.stop());stream=null};
  const close=()=>{stop();clearTimeout(dT);o.remove()};
- const ratio=()=>RT[ri][1]||(vd.videoWidth&&vd.videoHeight?vd.videoWidth/vd.videoHeight:9/16);
+ const ratio=()=>9/16;
  const sc=()=>hw?1:(lens=="ultra"?zoom/.5:zoom);
  const fm=z=>{const r=Math.round(z*10)/10;return(r%1?r.toFixed(1):String(r)).replace(/^0\./,".")};
  const wantLens=z=>(!hw&&ultraId&&face=="environment"&&z<1)?"ultra":"main";
@@ -2460,7 +2460,7 @@ async function storyCam(){
   g.drawImage(vd,sx,sy,cw,ch,0,0,c.width,c.height);
   c.toBlob(b=>b&&storyPrev({type:"photo",blob:b},close),"image/jpeg",.95)};
  sh.onclick=snap;
- rb.onclick=()=>{ri=(ri+1)%RT.length;rb.textContent=RT[ri][0];paint()};
+ /* v185: только 9:16, переключателя форматов нет */
  /* перетаскивание по линзам = крутим циферблат */
  let px=0,pz=1,pid=null,mv=false;
  zc.addEventListener("pointerdown",e=>{pid=e.pointerId;px=e.clientX;pz=zoom;mv=false;cancelAnimationFrame(tw)});
@@ -2476,7 +2476,7 @@ async function storyCam(){
  fb.onclick=async()=>{try{torch=!torch;await stream.getVideoTracks()[0].applyConstraints({advanced:[{torch}]});fb.innerHTML=ico(torch?"stfl":"stfo")}catch(e){torch=false}};
  xb.onclick=close;gal.onclick=()=>fi.click();
  fi.onchange=()=>{const f=fi.files[0];fi.value="";if(!f)return;
-  storyPrev({type:"photo",blob:f},close)};
+  const Rr=9/16;createImageBitmap(f).then(im=>{const iw=im.width,ih=im.height;let cw,ch;if(iw/ih>Rr){ch=ih;cw=ih*Rr}else{cw=iw;ch=iw/Rr}const k=Math.min(1,3840/Math.max(cw,ch)),c=document.createElement("canvas");c.width=Math.round(cw*k);c.height=Math.round(ch*k);const g=c.getContext("2d");g.imageSmoothingQuality="high";g.drawImage(im,(iw-cw)/2,(ih-ch)/2,cw,ch,0,0,c.width,c.height);c.toBlob(b=>storyPrev({type:"photo",blob:b||f},close),"image/jpeg",.95)}).catch(()=>storyPrev({type:"photo",blob:f},close))};
  paint();start()}
 function storyView(uid,list,aw){
  if(document.getElementById("sview"))return;const u=uid==me.uid?MY:(UM[uid]||{}),own=uid==me.uid,o=mk("div");o.id="sview";
