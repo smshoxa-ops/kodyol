@@ -4730,6 +4730,8 @@ window.K_HEART={
  lose:function(){var o=hst(),m=hsync(o);if(m===Infinity)return;if(o.b>0)o.b--;else{if(o.h>=m)o.t=Date.now();o.h=Math.max(0,o.h-1)}hsave(o)},
  next:function(){var o=hst(),m=hsync(o);if(m===Infinity||o.h>=m)return 0;return Math.max(0,HREG-(Date.now()-o.t))}};
 function hn(h){return h===Infinity?"\u221e":h}
+window.K_HEART.bonus=function(n){var o=hst(),m=hsync(o);if(m===Infinity)return false;o.b+=n;hsave(o);return true};
+window.kdMascot=mascot;window.kdFlame=function(w,id,an){return skFlame(w,id,an)};
 function hfmt(ms){var t=Math.ceil(ms/1000),m=Math.floor(t/60),s=t%60;return m+":"+(s<10?"0":"")+s}
 var XT={
 ru:{noH:"Сердца закончились",noP:"Следующее сердце через",buy:"Купить тариф",cl:"Закрыть",ex:"🤖 Разбор ошибок от ИИ",exL:"🔒 Разбор ошибок от ИИ (Pro / Max)",exW:"ИИ разбирает ошибки…",exT:"Стоит 50 токенов",exN:"Не хватает токенов, пополни в разделе ИИ",exE:"ИИ сейчас недоступен, попробуй позже",st:"Серия дней",stP:"Занимайся каждый день и получай сердца:",s7:"7 дней подряд: +5 ♥",s30:"30 дней подряд: +15 ♥",stG:"Награда за серию!",stGP:"Добавлено сердец:",ok:"Отлично"},
@@ -4792,9 +4794,29 @@ function openStreak(sn){
  q("#skS").onclick=function(){var tx=skt("sh").replace("{n}",sn);try{if(navigator.share)navigator.share({text:tx}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(tx)}catch(e){}};
  if(typeof count=="function")count(q("#skN"),sn,"",900);else q("#skN").textContent=sn;
  vib(20)}
+/* ---------- v186: награда за ежедневный заход (+1 сердце, на 7-й день +3) ---------- */
+var DRT={
+ru:{t:"Награда дня",d:"День {n} из 7",g:"Заходи каждый день: на 7-й день награда больше",b:"ЗАБРАТЬ"},
+en:{t:"Daily reward",d:"Day {n} of 7",g:"Come back every day: day 7 gives a bigger reward",b:"CLAIM"},
+uz:{t:"Kunlik sovg'a",d:"{n}-kun, jami 7",g:"Har kuni kiring: 7-kunda sovg'a kattaroq",b:"OLISH"}};
+function drt(k){var d=DRT[window.lang]||DRT.en;return d[k]!=null?d[k]:DRT.en[k]}
+function dailyReward(){try{
+ var u=S.uid||"";if(!u||!window.K_HEART||document.querySelector(".kd-dr"))return;
+ var o=null;try{o=JSON.parse(localStorage.getItem("kd_daily"))}catch(e){}
+ if(!o||typeof o!=="object"||o.u!==u)o={u:u,d:"",n:0};
+ var now=new Date(),t=dk(now);if(o.d===t)return;
+ var y=new Date(now);y.setDate(y.getDate()-1);
+ var n=o.d===dk(y)?(o.n||0)+1:1,day=(n-1)%7+1,amt=day===7?3:1;
+ if(!window.K_HEART.bonus(amt))return;
+ o.d=t;o.n=n;try{localStorage.setItem("kd_daily",JSON.stringify(o))}catch(e){}
+ var dots="";for(var i=1;i<=7;i++)dots+='<i class="'+(i<day?"on":i===day?"now":"")+(i===7?" big":"")+'">'+(i===7?"&#9733;":i)+'</i>';
+ kdModal('<div class="kd-dr">'+skFlame(96,"drw",1)+'<h3>'+esc(drt("t"))+'</h3><p>'+esc(drt("d").replace("{n}",day))+' &middot; <b>+'+amt+' &hearts;</b></p><div class="dr-row">'+dots+'</div><small class="dr-s">'+esc(drt("g"))+'</small><button class="kd-btn g" id="drOk">'+esc(drt("b"))+'</button></div>',function(m){m.querySelector("#drOk").onclick=function(){m.remove()}});
+ snd("pop");vib(30);var hn_=$("kdHn");if(hn_)hn_.textContent=hn(window.K_HEART.get())
+}catch(e){}}
 function streakUi(sn){
  var f=$("kdFire");if(f)f.onclick=function(){openStreak(sn)};
  var g=streakCheck(sn);
+ if(!g)setTimeout(dailyReward,700);
  if(g)setTimeout(function(){kdModal(mascot(110,"happy")+"<h3>"+esc(xt("stG"))+"</h3><p>"+esc(xt("stGP"))+" <b>+"+g+" ♥</b></p><button class=\"kd-btn g\" id=\"stOk\">"+esc(xt("ok"))+"</button>",function(m){m.querySelector("#stOk").onclick=function(){m.remove()}});var n=$("kdHn");if(n)n.textContent=hn(window.K_HEART.get())},350)}
 setInterval(function(){var n=document.getElementById("kdHn");if(!n)return;n.textContent=hn(window.K_HEART.get());var t=document.getElementById("kdHt");if(t){var ms=window.K_HEART.next();t.textContent=ms?hfmt(ms):""}},1000);
 function aiBox(){if(!P||!P.mist||!P.mist.length)return "";var can=window.K_CANEXP&&window.K_CANEXP();if(!can&&document.documentElement.classList.contains("is-app"))return "";
@@ -5726,5 +5748,76 @@ html body #c-chat .bar:has(#ci:not(:placeholder-shown)) #cs{background:linear-gr
 (function(){try{var m=document.querySelector('meta[name="theme-color"]');if(!m)return;var base=m.getAttribute("content"),last="";
 function sy(){var v=document.getElementById("v-chat"),c=v&&!v.hidden?"#8f45ee":base;if(c!==last){last=c;m.setAttribute("content",c)}}
 new MutationObserver(sy).observe(document.body,{attributes:true,attributeFilter:["hidden"],subtree:true});sy()}catch(e){}})();
+</script>
+<style id="kd-v186">
+/* v186: приветствие, награда дня, слабые телефоны */
+.kdw{position:fixed;inset:0;z-index:700;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 12px) 22px calc(env(safe-area-inset-bottom,0px) + 22px);--g:#8202cc;--gs:#6802a3;animation:kdFade .25s both;touch-action:pan-y}
+.kdw.out{opacity:0;transition:opacity .25s}
+.kdw-sk{align-self:flex-end;background:none;border:0;color:var(--mu);font:600 14px Poppins,system-ui,sans-serif;padding:10px 4px;cursor:pointer}
+.kdw-tr{flex:1;overflow:hidden;display:flex;align-items:center}
+.kdw-tk{display:flex;width:100%;transition:transform .45s cubic-bezier(.2,.8,.2,1);transform:translateX(calc(var(--i,0)*-100%))}
+.kdw-sl{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:0 6px}
+.kdw-pic{display:grid;place-items:center;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.28),rgba(168,85,247,0) 70%);margin-bottom:12px;animation:kdwF 3.2s ease-in-out infinite}
+.kdw-sl h2{margin:0;font-size:25px;line-height:1.2}
+.kdw-sl p{margin:0;max-width:330px;color:var(--mu);font-size:15px;line-height:1.5}
+.kdw-d{display:flex;justify-content:center;gap:7px;margin:14px 0 18px}
+.kdw-d i{width:8px;height:8px;border-radius:99px;background:var(--bd);transition:width .3s,background .3s}
+.kdw-d i.on{width:26px;background:#a855f7}
+@keyframes kdwF{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.dr-row{display:flex;justify-content:center;gap:6px;margin:0 0 12px}
+.dr-row i{font-style:normal;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 13px Poppins,system-ui,sans-serif;background:var(--bd);color:var(--mu)}
+.dr-row i.on{background:#7c3aed;color:#fff}
+.dr-row i.now{background:#a855f7;color:#fff;box-shadow:0 0 0 3px rgba(168,85,247,.35)}
+.dr-row i.big{border-radius:12px}
+.dr-s{display:block;margin:0 0 16px;color:var(--mu)}
+/* слабый телефон: убираем тяжёлые размытия и лишние анимации */
+html.kd-low *,html.kd-low *::before,html.kd-low *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html.kd-low .kdw-pic{animation:none}
+@media (prefers-reduced-motion:reduce){.kdw-pic{animation:none}.kdw-tk{transition:none}}
+</style>
+<script>
+/* v186: ленивая загрузка картинок и режим слабого телефона */
+(function(){try{
+var d=document.documentElement,m=navigator.deviceMemory||4,c=navigator.hardwareConcurrency||4;
+if(m<=2||c<=3)d.classList.add("kd-low");
+function fix(i){if(i.tagName==="IMG"){if(!i.hasAttribute("loading"))i.setAttribute("loading","lazy");if(!i.hasAttribute("decoding"))i.setAttribute("decoding","async")}}
+document.querySelectorAll("img").forEach(fix);
+new MutationObserver(function(ms){ms.forEach(function(r){r.addedNodes.forEach(function(n){if(n.nodeType!==1)return;if(n.tagName==="IMG")fix(n);else if(n.querySelectorAll)n.querySelectorAll("img").forEach(fix)})})}).observe(document.body,{childList:true,subtree:true});
+}catch(e){}})();
+</script>
+<script>
+/* v186: приветствие при первом запуске (3 экрана) */
+(function(){try{
+var K="kd_welcome";
+function has(k){try{return localStorage.getItem(k)!==null}catch(e){return true}}
+if(has(K))return;
+function done(){try{localStorage.setItem(K,"1")}catch(e){}}
+if(has("kd_duo")||has("ks")||has("kd_hearts2")){done();return}
+var L={
+ru:{sk:"Пропустить",nx:"ДАЛЕЕ",go:"НАЧАТЬ",s:[["Привет! Я KodBot","Здесь программирование учат шаг за шагом: от первых строк кода до профессии."],["Учись каждый день","Уроки, тесты, карточки и практика кода. Заходи каждый день: серия и награды ждут."],["Общайся и делись","Чат, истории, Reels и звонки с друзьями, а ещё AI-учитель, который отвечает на вопросы."]]},
+en:{sk:"Skip",nx:"NEXT",go:"START",s:[["Hi! I'm KodBot","Learn programming step by step, from your first lines of code to a career."],["Learn every day","Lessons, quizzes, flashcards and code practice. Come back daily for streaks and rewards."],["Chat and share","Chat, stories, Reels and calls with friends, plus an AI tutor that answers your questions."]]},
+uz:{sk:"O'tkazib yuborish",nx:"KEYINGI",go:"BOSHLASH",s:[["Salom! Men KodBotman","Dasturlashni bosqichma-bosqich o'rganing: birinchi kod qatoridan kasbgacha."],["Har kuni o'qing","Darslar, testlar, kartochkalar va kod mashqlari. Har kuni kiring: seriya va sovg'alar kutmoqda."],["Muloqot qiling","Do'stlar bilan chat, hikoyalar, Reels va qo'ng'iroqlar, hamda savollarga javob beradigan AI ustoz."]]}};
+function start(){
+ if(document.querySelector(".kdw"))return;
+ var t=L[window.lang]||L.en,n=t.s.length,i=0;
+ var chat='<svg width="120" height="120" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="kdwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><path d="M14 22h50a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H38l-14 12V60h-10a8 8 0 0 1-8-8V30a8 8 0 0 1 8-8z" fill="url(#kdwg)"/><path d="M40 44h40a8 8 0 0 1 8 8v20a8 8 0 0 1-8 8h-4v12L62 80H40a8 8 0 0 1-8-8V52a8 8 0 0 1 8-8z" fill="#f5d0fe" opacity=".9"/></svg>';
+ var pics=[window.kdMascot?window.kdMascot(140,"idle"):"",window.kdFlame?window.kdFlame(130,"kdwf",1):"",chat];
+ var sl="";t.s.forEach(function(x,k){sl+='<div class="kdw-sl"><div class="kdw-pic">'+pics[k]+'</div><h2></h2><p></p></div>'});
+ var o=document.createElement("div");o.className="kdw";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");
+ o.innerHTML='<button class="kdw-sk" type="button"></button><div class="kdw-tr"><div class="kdw-tk">'+sl+'</div></div><div class="kdw-d">'+t.s.map(function(){return"<i></i>"}).join("")+'</div><button class="kd-btn g" type="button"></button>';
+ o.querySelectorAll(".kdw-sl").forEach(function(e,k){e.querySelector("h2").textContent=t.s[k][0];e.querySelector("p").textContent=t.s[k][1]});
+ var tk=o.querySelector(".kdw-tk"),dots=o.querySelectorAll(".kdw-d i"),sk=o.querySelector(".kdw-sk"),bt=o.querySelector(".kd-btn");
+ sk.textContent=t.sk;
+ function draw(){tk.style.setProperty("--i",i);dots.forEach(function(e,k){e.classList.toggle("on",k===i)});bt.textContent=i===n-1?t.go:t.nx;sk.style.visibility=i===n-1?"hidden":"visible"}
+ function close(){done();o.classList.add("out");setTimeout(function(){o.remove()},260)}
+ function vb(){try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}}
+ bt.onclick=function(){vb();if(i<n-1){i++;draw()}else close()};
+ sk.onclick=close;
+ var x0=null;
+ o.addEventListener("touchstart",function(e){x0=e.touches[0].clientX},{passive:true});
+ o.addEventListener("touchend",function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(dx<-50&&i<n-1){i++;draw();vb()}else if(dx>50&&i>0){i--;draw();vb()}},{passive:true});
+ document.body.appendChild(o);draw()}
+if(document.readyState==="complete")setTimeout(start,400);else window.addEventListener("load",function(){setTimeout(start,400)});
+}catch(e){}})();
 </script>
 </body></html>
