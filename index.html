@@ -3949,7 +3949,7 @@ function aiGate(){
  const lk=document.createElement("a");lk.href="pricing.html";lk.textContent="Pricing · Terms · Refunds";lk.className="au-note";lk.style.display="block";p.append(lk)}
 E("ab").onclick=function(){window.show("home")};
 const _shAI=window.show;window.show=function(v){_shAI(v);if(v=="ai"){aiGate();aiLoad().catch(()=>{})}};
-(window.requestIdleCallback||setTimeout)(()=>aiLoad().catch(()=>{}),3000);
+setTimeout(()=>aiLoad().catch(()=>{}),3000);
 window.ask=async function(t){
  t=(t||"").trim();if(!t||aiBusy)return;
  if(!PRO&&!isAdm()&&!AI_FREE){aiGate();return}

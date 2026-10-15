@@ -1,10 +1,10 @@
-# FION: публикация в Google Play (v187, package: fion.app)
+# FION: публикация в Google Play (v188, package: ffion.app)
 
 ## A. Пока ждёте проверку личности
 1. `sh set-email.sh ваш@email` : подставит email во все страницы (privacy, terms, community, delete-account, pricing, refunds). Email должен быть тем же, что в Play Console.
 2. Firebase Console → Firestore → Rules → вставить `firestore.rules` → Publish (добавлен тип жалобы `ai`).
 3. Залить на сайт (репозиторий kodyol): index.html, sw.js, sitemap.xml, privacy/terms/community/delete-account/pricing/refunds.html. Проверить, что открываются /privacy.html и /delete-account.html.
-4. Пересобрать AAB на pwabuilder.com → Android → Package ID **fion.app**, versionCode 1, versionName 1.0.0. Выбрать «Use mine» и загрузить существующий signing.keystore (тогда отпечаток ключа остаётся прежним). Включить notifications, Play Billing НЕ включать. Target SDK 36.
+4. Пересобрать AAB на pwabuilder.com → Android → Package ID **ffion.app**, versionCode 1, versionName 1.0.0. Выбрать «Use mine» и загрузить существующий signing.keystore (тогда отпечаток ключа остаётся прежним). Включить notifications, Play Billing НЕ включать. Target SDK 36.
 5. Файл `well-known/assetlinks.json` положить в репозиторий **smshoxa-ops.github.io** по пути `.well-known/assetlinks.json` (корень хоста, не папка kodyol). Проверка: https://smshoxa-ops.github.io/.well-known/assetlinks.json
 6. Demo-аккаунт для проверяющих (email + пароль) + 2-й аккаунт для проверки жалоб/блокировки.
 7. Графика: feature graphic 1024×500, 2–8 скриншотов телефона (главная, уроки, чат, reels, профиль).
