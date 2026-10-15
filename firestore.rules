@@ -438,7 +438,7 @@ service cloud.firestore {
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.by == request.auth.uid
         && request.resource.data.keys().hasOnly(['chat','msg','by','txt','from','fn','ts','kind','tid','why'])
-        && (!('kind' in request.resource.data) || request.resource.data.kind in ['user','reel','post','comment','msg'])
+        && (!('kind' in request.resource.data) || request.resource.data.kind in ['user','reel','post','comment','msg','ai'])
         && (!('tid' in request.resource.data) || (request.resource.data.tid is string && request.resource.data.tid.size() <= 120))
         && (!('why' in request.resource.data) || request.resource.data.why in ['spam','abuse','nsfw','scam','other'])
         && (!('txt' in request.resource.data) || (request.resource.data.txt is string && request.resource.data.txt.size() <= 500))

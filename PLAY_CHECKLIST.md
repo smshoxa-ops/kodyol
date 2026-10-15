@@ -1,46 +1,43 @@
-# FION: чек-лист публикации в Google Play (v184)
+# FION: публикация в Google Play (v187, package: fion.app)
 
-## 0. Главное, что нужно знать заранее
-1. **Play принимает только AAB, а не APK.** `kodyol.apk` в проекте подходит для установки с сайта, но в Play Console его загрузить нельзя. Соберите `.aab` (PWABuilder.com или Bubblewrap) для того же сайта `https://smshoxa-ops.github.io/kodyol/`. В вашем APK `targetSdk = 36`, это то, что Google требует для новых приложений с 31.08.2026, новый билд тоже должен быть на 36. Package id в текущем APK: `io.github.smshoxa_ops.twa` (после первой загрузки в Play его менять нельзя; если хотите другое имя, меняйте сейчас).
-2. **Личный аккаунт разработчика, созданный после 13.11.2023:** перед выходом в Production нужно 14 дней закрытого тестирования минимум с 12 тестерами (у аккаунтов организации этого требования нет). Если у вас такой аккаунт, выложить «сегодня» в продакшен невозможно, но можно сегодня подготовить всё и запустить закрытый тест.
-3. **Оплата ИИ через Telegram и перевод на карту внутри приложения из Play запрещена** (цифровые товары должны идти через Google Play Billing, а ссылки на сторонние способы оплаты в приложении считаются нарушением). Я полностью убрал покупку, цены, Telegram и ссылки Pricing/Refunds в режиме приложения; на сайте всё осталось. Если нужен платный ИИ в приложении, нужен Google Play Billing + проверка покупок на сервере (Cloud Functions, тариф Blaze), это отдельная работа.
+## A. Пока ждёте проверку личности
+1. `sh set-email.sh ваш@email` : подставит email во все страницы (privacy, terms, community, delete-account, pricing, refunds). Email должен быть тем же, что в Play Console.
+2. Firebase Console → Firestore → Rules → вставить `firestore.rules` → Publish (добавлен тип жалобы `ai`).
+3. Залить на сайт (репозиторий kodyol): index.html, sw.js, sitemap.xml, privacy/terms/community/delete-account/pricing/refunds.html. Проверить, что открываются /privacy.html и /delete-account.html.
+4. Пересобрать AAB на pwabuilder.com → Android → Package ID **fion.app**, versionCode 1, versionName 1.0.0. Выбрать «Use mine» и загрузить существующий signing.keystore (тогда отпечаток ключа остаётся прежним). Включить notifications, Play Billing НЕ включать. Target SDK 36.
+5. Файл `well-known/assetlinks.json` положить в репозиторий **smshoxa-ops.github.io** по пути `.well-known/assetlinks.json` (корень хоста, не папка kodyol). Проверка: https://smshoxa-ops.github.io/.well-known/assetlinks.json
+6. Demo-аккаунт для проверяющих (email + пароль) + 2-й аккаунт для проверки жалоб/блокировки.
+7. Графика: feature graphic 1024×500, 2–8 скриншотов телефона (главная, уроки, чат, reels, профиль).
+8. Собрать 12+ тестеров (Gmail), создать Google-группу, попросить принять тест и не выходить 14 дней.
+9. Резервная копия signing.keystore и паролей (не на GitHub). Файл signing-key-info.txt никому не отправлять.
 
-## 1. Что сделано в коде
-- Жалобы на профили, reels, публикации, комментарии и сообщения; панель владельца обрабатывает их (удалить контент, бан).
-- Блокировка пользователей (в профиле, чате, reel, публикации), список заблокированных в Настройках; блокировка работает и на сервере (сообщения, звонки, приглашения).
-- Удаление аккаунта внутри приложения + публичная страница `delete-account.html`.
-- Политика конфиденциальности, условия, правила сообщества, согласие и 13+ на экране входа, документы в Настройках.
-- Оплата ИИ скрыта в приложении. Новые правила Firestore. Service worker v184.
+## B. После одобрения аккаунта
+1. Подтвердить телефон, пройти «Проверка разработчика Android».
+2. Create app: название FION, язык RU, App, Free.
+3. Включить Play App Signing, загрузить AAB в **Testing → Closed testing**.
+4. App signing → скопировать SHA-256 сертификата подписи → вставить вместо PASTE_PLAY_APP_SIGNING_SHA256_HERE в assetlinks.json → залить на сайт.
+5. Добавить тестеров, ждать 14 дней, затем Apply for production access.
 
-## 2. Что сделать вам (по порядку)
-1. **Firebase Console → Firestore → Rules → вставить `firestore.rules` → Publish.** Без этого блокировки, жалобы и удаление аккаунта не заработают.
-2. Залить в репозиторий сайта: `index.html`, `sw.js`, `manifest.json`, `sitemap.xml`, `privacy.html`, `terms.html`, `community.html`, `delete-account.html`, `refunds.html`, `pricing.html`. Проверьте, что открываются `/privacy.html` и `/delete-account.html`.
-3. Собрать AAB (см. п. 0.1), включить **Play App Signing**. В Play Console → Setup → App signing скопировать **SHA-256 сертификата подписи приложения** и добавить его в `https://smshoxa-ops.github.io/.well-known/assetlinks.json` (рядом с текущим отпечатком), иначе в приложении будет видна адресная строка браузера.
-4. Создать demo-аккаунт для проверяющих (email + пароль). Play Console → App content → **App access** → указать логин и пароль (без входа приложение не проверить).
-5. Заполнить App content:
-   - **Privacy policy:** `https://smshoxa-ops.github.io/kodyol/privacy.html`
-   - **Account deletion:** `https://smshoxa-ops.github.io/kodyol/delete-account.html` (+ отметить, что удаление есть в приложении)
-   - **Target audience:** 13+ (не «для детей»). **Ads:** нет рекламы.
-   - **User generated content:** да, есть жалобы, блокировка и модерация.
-   - **Content rating (анкета):** образовательное приложение; пользователи общаются и обмениваются контентом = Да; контент 18+/насилие в самом приложении = Нет (модерируется).
-6. **Data safety** (ответы):
-   - Собираются: *Personal info* (имя, email, ID пользователя), *Messages* (сообщения в чате), *Photos and videos* (фото, reels, аватар), *App activity* (прогресс, лайки, подписки), *Device or other IDs* (токен push-уведомлений), *User content*.
-   - Передача данных обработчикам (Firebase, Supabase, Cloudflare, Metered) для работы сервиса Google не считает «sharing»; рекламы и продажи данных нет.
-   - Шифрование при передаче: **Да**. Пользователь может запросить удаление: **Да** (ссылка выше). Данные нужны для работы приложения; можно ли отказаться: нет (аккаунт нужен).
-   - Звонки не записываются: аудио/видео звонков отмечать как «собираемые» не нужно.
-7. **Store listing:** название `FION`; иконка 512×512 (есть `icon-512.png`); **feature graphic 1024×500** и **минимум 2 скриншота телефона** (сделайте с вашего телефона: главная, уроки, чат, reels).
-8. Если аккаунт личный: создать **Closed testing**, добавить 12+ тестеров, 14 дней, затем «Apply for production access».
-9. Отправить на проверку (обычно 1 до 7 дней).
+## C. App content (ответы)
+- Privacy policy: https://smshoxa-ops.github.io/kodyol/privacy.html
+- Account deletion: https://smshoxa-ops.github.io/kodyol/delete-account.html (удаление есть и в приложении)
+- App access: нужен вход → логин/пароль demo-аккаунта
+- Ads: нет. Target audience: 13+ (не для детей). Категория: Education
+- User generated content: да (жалобы, блокировка, модерация)
+- Content rating: пользователи взаимодействуют и делятся контентом = Да; 18+/насилие = Нет
+- Financial features / Health / News / Government: нет
+- Data safety: Personal info (имя, email, ID), Messages, Photos and videos, App activity, Device IDs (push-токен), User content. Шифрование при передаче: да. Удаление по запросу: да. Данные не продаются; обработчики: Firebase, Supabase, Cloudflare, Metered. Вопросы к ИИ уходят в Google Gemini: указать как User content, обработка сервисом. Звонки не записываются.
+- AI-generated content: в приложении у каждого ответа ИИ есть кнопка «Пожаловаться».
 
-## 3. Тексты для Play Console
-**Краткое описание (RU, до 80):** Учись программированию: уроки, тесты, чат и Reels
-**Short (EN):** Learn coding with lessons, quizzes, chat and Reels
-**Qisqa (UZ):** Dasturlashni o'rganing: darslar, testlar, chat va Reels
-**Полное описание (RU):** FION помогает учиться программированию шаг за шагом: Full Stack, Frontend, Backend, Cybersecurity и Data Science. Короткие уроки в стиле игры, тесты, XP и сердечки, карта прогресса. Общайтесь с другими учениками в чате, делитесь публикациями и короткими видео Reels, звоните друг другу голосом и видео. Есть жалобы и блокировка пользователей, а аккаунт можно удалить в настройках. Для пользователей от 13 лет.
+## D. Тексты Store listing
+**Название:** FION
+**Short RU:** Учись программированию: уроки, тесты, чат и Reels
+**Short EN:** Learn coding with lessons, quizzes, chat and Reels
+**Short UZ:** Dasturlashni o'rganing: darslar, testlar, chat va Reels
+**Full RU:** FION помогает учиться программированию шаг за шагом: Full Stack, Frontend, Backend, Cybersecurity и Data Science. Короткие уроки в стиле игры, тесты, XP и сердечки, карта прогресса. Общайтесь с другими учениками в чате, делитесь публикациями и короткими видео Reels, звоните друг другу голосом и видео. ИИ-помощник объясняет ошибки. Есть жалобы и блокировка пользователей, а аккаунт можно удалить в настройках. Для пользователей от 13 лет.
+**Full EN:** FION helps you learn programming step by step: Full Stack, Frontend, Backend, Cybersecurity and Data Science. Short game-style lessons, quizzes, XP and hearts, and a progress map. Chat with other learners, share posts and short Reels videos, and make voice and video calls. An AI assistant explains your mistakes. You can report and block users, and delete your account in Settings. For ages 13 and up.
 
-## 4. Чего я не мог сделать и о чём нужно помнить
-- **Файлы reels в Supabase** после удаления аккаунта/reel автоматически не удаляются (у ключа `anon` нет права удаления). В политике написано «до 30 дней»: раз в месяц удаляйте в Supabase Storage → bucket `reels` файлы, которых нет в Firestore, или напишите мне, сделаем автоматическую очистку.
-- **Удаление аккаунта через Google-вход** в приложении: вход через Google внутри TWA у вас и так не работает, поэтому такие аккаунты создаются на сайте. Там удаление работает (с окном Google). Если появится ошибка, выйти и войти заново и сразу повторить.
-- **Модерация:** вы обещаете в условиях разбирать жалобы быстро (в тексте указано «обычно в течение 24 часов»). Заглядывайте в Панель владельца → Жалобы.
-- Контакт для связи сейчас только Telegram `@whxxxk`; Play Console всё равно потребует **email разработчика**: заведите отдельный и добавьте его в политику.
-- Сообщения, отправленные пользователем в **общий чат**, при удалении аккаунта удаляются; комментарии и лайки под чужим контентом остаются без профиля (это указано в политике).
+## E. Помнить
+- Reels-файлы в Supabase после удаления не чистятся автоматически: раз в месяц чистить bucket `reels` от файлов без записи в Firestore.
+- Жалобы смотреть ежедневно (Панель владельца → Жалобы): в условиях обещано 24 часа.
+- Каждое обновление AAB: versionCode +1.

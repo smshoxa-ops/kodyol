@@ -3978,7 +3978,7 @@ window.ask=async function(t){
  }catch(e){console.warn("FION AI load:",e);aiErr="load: "+String(e&&e.message||e)}
  aiBusy=false;clearTimeout(tm);
  if(!ok){aiIdx=0;u.remove();b.remove();const n=add("bt");n.textContent=(AI_OFF[lg]||AI_OFF.en)+(isAdm()&&aiErr?"\n["+aiErr.slice(0,400)+"]":"");n.style.whiteSpace="pre-wrap";oldAsk(t)}
- else window.scrollTo(0,document.body.scrollHeight)};
+ else{try{const at=String(b.textContent||"").slice(0,500),f=document.createElement("button");f.type="button";f.className="chip";f.style.cssText="font-size:11px;padding:2px 10px;margin-top:8px;display:block";f.textContent="\u2691 "+KPX("rep");f.onclick=()=>kpReport("ai","ai","",at);b.append(f)}catch(e){}window.scrollTo(0,document.body.scrollHeight)}};
 
 /* ===== v184: Google Play — жалобы, блокировки, удаление аккаунта, правила, без внешней оплаты в приложении ===== */
 const KP_L={
@@ -4032,7 +4032,7 @@ function kpUserMenu(uid,u){if(!me||!uid||uid==me.uid)return;const bl=KB.mine.has
  kpSheet("",[[KPX("rep"),()=>kpReport("user",uid,uid,(u&&(u.username||u.name))||"")],bl?[KPX("ublk"),()=>kpUnblock(uid)]:[KPX("blk"),()=>kpBlock(uid),"dg"]])}
 function kpPostMenu(p){if(!me||!p||p.uid==me.uid)return;
  kpSheet("",[[KPX("rep"),()=>kpReport("post",p.id,p.uid,p.cap)],[KPX("blk"),()=>kpBlock(p.uid),"dg"]])}
-function kpWhere(r){return({user:"профиль",reel:"reel",post:"публикация",comment:"комментарий"})[r.kind]||(r.chat=="general"?"общий чат":"личный чат")}
+function kpWhere(r){return({user:"профиль",reel:"reel",post:"публикация",comment:"комментарий",ai:"ответ ИИ"})[r.kind]||(r.chat=="general"?"общий чат":"личный чат")}
 function kpOwnAct(r,a,act,er){
  if(r.kind=="reel"&&r.tid)act(a,"Удалить reel",()=>deleteDoc(doc(db,"reels",r.tid)).then(()=>toast("Удалено",1)).catch(er));
  if(r.kind=="post"&&r.tid)act(a,"Удалить публикацию",()=>deleteDoc(doc(db,"posts",r.tid)).then(()=>toast("Удалено",1)).catch(er));
